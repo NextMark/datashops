@@ -2,7 +2,6 @@ package com.bigdata.datashops.server.quartz;
 
 import static com.bigdata.datashops.common.Constants.JOB_DEFAULT_OPERATOR;
 
-import java.time.Instant;
 import java.util.Date;
 
 import org.quartz.Job;
