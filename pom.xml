@@ -19,7 +19,6 @@
         <module>datashops-server</module>
         <module>datashops-rpc</module>
         <module>datashops-protocol</module>
-        <module>datashops-netty</module>
     </modules>
 
     <properties>
@@ -36,7 +35,7 @@
         <mysql.version>8.0.11</mysql.version>
         <commons.lang3.version>3.9</commons.lang3.version>
         <commons.io.version>2.5</commons.io.version>
-        <jjwt_version>0.9.1</jjwt_version>
+        <jjwt.version>0.9.1</jjwt.version>
         <commons.codec.version>1.12</commons.codec.version>
         <hive.jdbc.version>2.1.1</hive.jdbc.version>
         <curator.version>4.3.0</curator.version>
@@ -193,7 +192,7 @@
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>
                 <artifactId>jjwt</artifactId>
-                <version>${jjwt_version}</version>
+                <version>${jjwt.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-codec</groupId>
