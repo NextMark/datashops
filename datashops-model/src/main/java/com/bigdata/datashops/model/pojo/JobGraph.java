@@ -31,6 +31,9 @@ public class JobGraph extends BaseModel {
     // 0已删除，1存在
     private Integer status;
 
+    // 调度周期
+    private Integer schedulingPeriod;
+
     private String cronExpression;
 
     private String dependencies;

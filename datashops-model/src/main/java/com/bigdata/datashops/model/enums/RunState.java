@@ -3,7 +3,7 @@ package com.bigdata.datashops.model.enums;
 import java.util.HashMap;
 
 public enum RunState {
-    PREPARE(0, "has submitted"),
+    CREATED(0, "has submitted"),
     WAIT_FOR_RESOURCE(1, "wait for resource"),
     WAIT_FOR_DEPENDENCY(2, "wait for dependency"),
     WAIT_FOR_RUN(3, "wait for run"),
