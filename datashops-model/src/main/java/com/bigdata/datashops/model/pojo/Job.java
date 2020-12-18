@@ -28,12 +28,16 @@ public class Job extends BaseModel {
      */
     private String configJson;
 
-    // 0已删除，1存在
+    /**
+     * 0 delete 1 normal
+      */
     private Integer status;
 
     private Integer graphId;
 
     private String owner;
+
+    private String version;
 
     private String jobContext;
 }

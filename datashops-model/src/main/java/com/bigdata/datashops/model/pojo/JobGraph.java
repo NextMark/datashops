@@ -28,13 +28,27 @@ public class JobGraph extends BaseModel {
      */
     private String configJson;
 
-    // 0已删除，1存在
+    /**
+     * 0已删除，1存在
+     */
     private Integer status;
 
-    // 调度周期
+    /**
+     * 调度周期
+     */
     private Integer schedulingPeriod;
 
     private String cronExpression;
+
+    /**
+     * 下次调度时间
+     */
+    private String nextTriggerTime;
+
+    /**
+     * 0 关闭调度，1 开启调度
+     */
+    private int schedulerStatus;
 
     private String dependencies;
 

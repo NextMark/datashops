@@ -21,12 +21,16 @@ public class JobInstance extends BaseModel implements Comparable<JobInstance> {
 
     private String instanceId;
 
-    // graph vertex
+    /**
+     * graph、job
+      */
     private int type;
 
     private RunState state;
 
-    // 0 delete 1 normal
+    /**
+     * 0 delete 1 normal
+      */
     private Integer status;
 
     private String host;
@@ -47,9 +51,27 @@ public class JobInstance extends BaseModel implements Comparable<JobInstance> {
 
     private Integer failureStrategy;
 
+    /**
+     * 基准时间，依赖及指定数据时间用
+     */
     private Date baseTime;
 
+    /**
+     * 数据时间，执行SQL对应输出的数据时间
+     */
+    private Date dataTime;
+
     private Integer offset;
+
+    /**
+     * 依赖的节点，数组，逗号分隔
+     */
+    private String preDependency;
+
+    /**
+     * 下游依赖节点，数组，逗号分隔
+     */
+    private String postDependency;
 
     private String data;
 
