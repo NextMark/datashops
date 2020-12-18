@@ -64,7 +64,13 @@ public class JobInstance extends BaseModel implements Comparable<JobInstance> {
     private Integer offset;
 
     /**
-     * 依赖的节点，数组，逗号分隔
+     * 动态依赖数组，只保留还未成功的作业，全部成功后该字段为空
+     * 为防止频繁查库后续可依赖外部缓存
+     */
+    private String dynamicDependency;
+
+    /**
+     * 依赖的节点，数组，逗号分隔，12|0，13|1
      */
     private String preDependency;
 
