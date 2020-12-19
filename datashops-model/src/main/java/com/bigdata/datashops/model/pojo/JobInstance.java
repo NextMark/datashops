@@ -54,14 +54,12 @@ public class JobInstance extends BaseModel implements Comparable<JobInstance> {
     /**
      * 基准时间，依赖及指定数据时间用
      */
-    private Date baseTime;
+    private Date bizTime;
 
     /**
      * 数据时间，执行SQL对应输出的数据时间
      */
     private Date dataTime;
-
-    private Integer offset;
 
     /**
      * 动态依赖数组，只保留还未成功的作业，全部成功后该字段为空
@@ -70,7 +68,7 @@ public class JobInstance extends BaseModel implements Comparable<JobInstance> {
     private String dynamicDependency;
 
     /**
-     * 依赖的节点，数组，逗号分隔，12|0，13|1
+     * 依赖的节点，数组，逗号分隔，12|0，12|-3，13|1
      */
     private String preDependency;
 

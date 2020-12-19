@@ -22,7 +22,7 @@ public class JobDependency extends BaseModel {
     private int dependType;
 
     /**
-     * 依赖source偏移量，默认为0，检查对应同一个instance id就行
+     * 依赖作业的偏移，逗号分隔，0，-1，-5
      */
-    private int offset;
+    private String offset;
 }
