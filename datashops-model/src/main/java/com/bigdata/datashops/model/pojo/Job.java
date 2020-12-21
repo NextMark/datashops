@@ -19,6 +19,7 @@ public class Job extends BaseModel {
     private String description;
     /**
      * 作业类型
+     * {@link com.bigdata.datashops.model.enums.JobType}
      */
     @NotNull(message = "job type must not be null")
     private Integer type;

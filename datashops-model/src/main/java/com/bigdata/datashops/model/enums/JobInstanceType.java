@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public enum JobInstanceType {
     GRAPH(0, "graph"),
-    VERTEX(1, "vertex");
+    JOB(1, "job");
 
     JobInstanceType(int code, String name) {
         this.code = code;

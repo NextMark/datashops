@@ -22,7 +22,8 @@ public class JobInstance extends BaseModel implements Comparable<JobInstance> {
     private String instanceId;
 
     /**
-     * graph、job
+     * job instance type, graph、job
+     * {@link com.bigdata.datashops.model.enums.JobInstanceType}
       */
     private int type;
 

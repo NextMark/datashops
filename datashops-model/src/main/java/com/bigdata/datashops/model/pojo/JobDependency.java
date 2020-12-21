@@ -18,6 +18,7 @@ public class JobDependency extends BaseModel {
 
     /**
      * job instance type，graph or job
+     * {@link com.bigdata.datashops.model.enums.JobInstanceType}
       */
     private int dependType;
 
