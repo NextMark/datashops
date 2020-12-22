@@ -48,4 +48,11 @@ public class Constants {
      */
     public final static String JOB_DEFAULT_OPERATOR = "machine";
 
+    /**
+     * separator
+     */
+    public final static String SEPARATOR_COMMA = ",";
+    public final static String SEPARATOR_LINE = "\\|";
+
+
 }

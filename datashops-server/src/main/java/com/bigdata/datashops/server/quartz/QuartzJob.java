@@ -29,7 +29,7 @@ public class QuartzJob implements Job {
     @Override
     public void execute(JobExecutionContext jobExecutionContext) {
         JobDataMap jobDataMap = jobExecutionContext.getMergedJobDataMap();
-        Long graphId = jobDataMap.getLong("graphId");
+        Integer graphId = jobDataMap.getInt("graphId");
         JobGraph graph = jobGraphService.getJobGraph(graphId);
 
         JobInstance instance = JobInstance.builder()
@@ -39,10 +39,10 @@ public class QuartzJob implements Job {
                                        .status(1)
                                        .retryTimes(graph.getRetryTimes())
                                        .retryInterval(graph.getRetryInterval())
-                                       .state(RunState.PREPARE)
+                                       .state(RunState.CREATED)
                                        .operator(JOB_DEFAULT_OPERATOR)
                                        .type(JobInstanceType.GRAPH.getCode())
-                                       .baseTime(new Date())
+                                       .bizTime(new Date())
                                        .build();
         jobInstanceService.save(instance);
 

@@ -27,7 +27,7 @@ public class BaseModel implements Serializable {
     @NotNull(message = "id must not be null")
     @Min(value = 1, message = "id must be a positive integer")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
     /**
      * 记录创建时间
      */

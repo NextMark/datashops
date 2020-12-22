@@ -15,9 +15,9 @@ import lombok.EqualsAndHashCode;
 @Builder
 @Table(name = "t_job_instance")
 public class JobInstance extends BaseModel implements Comparable<JobInstance> {
-    private Long graphId;
+    private Integer graphId;
 
-    private Long jobId;
+    private Integer jobId;
 
     private String instanceId;
 
