@@ -13,6 +13,10 @@ public class JobInstanceService extends AbstractMysqlPagingAndSortingQueryServic
         return findByQuery(filters);
     }
 
+    public JobInstance findJobInstance(String filter) {
+        return findOneByQuery(filter);
+    }
+
     public JobInstance save(JobInstance jobInstance) {
         return save(jobInstance);
     }

@@ -228,11 +228,6 @@
                 <artifactId>quartz-jobs</artifactId>
                 <version>${quartz.version}</version>
             </dependency>
-            <dependency>
-                <groupId>com.cronutils</groupId>
-                <artifactId>cron-utils</artifactId>
-                <version>${cron.utils.version}</version>
-            </dependency>
 
             <dependency>
                 <groupId>io.grpc</groupId>

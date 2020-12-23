@@ -58,6 +58,11 @@
             <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.cronutils</groupId>
+            <artifactId>cron-utils</artifactId>
+            <version>${cron.utils.version}</version>
+        </dependency>
 
     </dependencies>
 

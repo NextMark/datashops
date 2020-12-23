@@ -34,10 +34,18 @@ public class Job extends BaseModel {
       */
     private Integer status;
 
+    /**
+     * 调度周期
+     */
+    private Integer schedulingPeriod;
+
     private Integer graphId;
 
     private String owner;
 
+    /**
+     * 后续把历史版本写入其他表
+     */
     private String version;
 
     private String jobContext;

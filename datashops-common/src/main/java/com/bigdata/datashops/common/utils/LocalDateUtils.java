@@ -4,11 +4,13 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAccessor;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class LocalDateUtils {
@@ -127,6 +129,13 @@ public class LocalDateUtils {
      */
     private static final String SECOND = "second";
 
+    public static LocalDateTime dateToLocalDateTime(Date date) {
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+    }
+
+    public static Date localDateTimeToDate(LocalDateTime ldt) {
+        return Date.from(ldt.atZone( ZoneId.systemDefault()).toInstant());
+    }
     /**
      * 获取当前日期和时间字符串.
      *

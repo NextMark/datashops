@@ -1,5 +1,7 @@
 package com.bigdata.datashops.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.bigdata.datashops.dao.data.service.AbstractMysqlPagingAndSortingQueryService;
@@ -11,5 +13,8 @@ public class JobService extends AbstractMysqlPagingAndSortingQueryService<Job, S
         return findById(id.toString());
     }
 
+    public List<Job> findJobs(String filters) {
+        return findByQuery(filters);
+    }
 
 }

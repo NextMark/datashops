@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.model.enums.RunState;
 import com.bigdata.datashops.model.pojo.JobInstance;
 import com.bigdata.datashops.server.queue.JobQueue;
@@ -33,17 +34,17 @@ public class Finder {
             }
             status.add(runState.toString());
         }
-        String filters = "state=" + StringUtils.join(status, ",");
+        String filters = "state=" + StringUtils.join(status, Constants.SEPARATOR_COMMA);
         List<JobInstance> statusList = jobInstanceService.findReadyJob(filters);
         if (statusList.size() > 0) {
-            LOG.info("Add status to queue, size {}", statusList.size());
+            LOG.info("Find {} jis, add to queue", statusList.size());
         }
         for (JobInstance instance : statusList) {
             boolean in = JobQueue.getInstance().getQueue().offer(instance);
             if (in) {
-                instance.setState(RunState.RUNNING);
+                instance.setState(RunState.RUNNING.getCode());
             } else {
-                instance.setState(RunState.WAIT_FOR_RUN);
+                instance.setState(RunState.WAIT_FOR_RUN.getCode());
             }
             instance.setUpdateTime(new Date());
             jobInstanceService.save(instance);

@@ -4,8 +4,6 @@ import java.util.Date;
 
 import javax.persistence.Table;
 
-import com.bigdata.datashops.model.enums.RunState;
-
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -27,7 +25,7 @@ public class JobInstance extends BaseModel implements Comparable<JobInstance> {
       */
     private int type;
 
-    private RunState state;
+    private int state;
 
     /**
      * 0 delete 1 normal
@@ -69,7 +67,8 @@ public class JobInstance extends BaseModel implements Comparable<JobInstance> {
     private String dynamicDependency;
 
     /**
-     * 依赖的节点，数组，逗号分隔，12|0，12|-3，13|1
+     * 依赖的图或节点，数组，逗号分隔
+     * example: type|id|offset，1|12|0，1|12|-3，1|13|1
      */
     private String preDependency;
 

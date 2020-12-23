@@ -60,7 +60,7 @@ public class JobGraph extends BaseModel {
 
     private Integer notifyType;
 
-    private Long priority;
+    private Integer priority;
 
     private String emails;
 
