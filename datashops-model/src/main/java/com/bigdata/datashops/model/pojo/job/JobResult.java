@@ -1,4 +1,4 @@
-package com.bigdata.datashops.model.pojo;
+package com.bigdata.datashops.model.pojo.job;
 
 import java.util.List;
 import java.util.Map;
@@ -12,6 +12,7 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 
 import com.bigdata.datashops.common.utils.JSONUtils;
 import com.bigdata.datashops.model.enums.DataType;
+import com.bigdata.datashops.model.pojo.BaseModel;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;

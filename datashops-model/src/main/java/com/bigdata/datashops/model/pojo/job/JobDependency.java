@@ -1,6 +1,8 @@
-package com.bigdata.datashops.model.pojo;
+package com.bigdata.datashops.model.pojo.job;
 
 import javax.persistence.Table;
+
+import com.bigdata.datashops.model.pojo.BaseModel;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

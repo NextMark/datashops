@@ -1,16 +1,20 @@
-package com.bigdata.datashops.model.pojo;
+package com.bigdata.datashops.model.pojo.job;
 
 import java.util.Date;
 
 import javax.persistence.Table;
 
+import com.bigdata.datashops.model.pojo.BaseModel;
+
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.extern.jackson.Jacksonized;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
+@Jacksonized
 @Table(name = "t_job_instance")
 public class JobInstance extends BaseModel implements Comparable<JobInstance> {
     private Integer graphId;
@@ -78,6 +82,8 @@ public class JobInstance extends BaseModel implements Comparable<JobInstance> {
     private String postDependency;
 
     private String data;
+
+    private int workerSelector;
 
     @Override
     public String toString() {

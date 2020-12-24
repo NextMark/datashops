@@ -2,7 +2,7 @@ package com.bigdata.datashops.server.queue;
 
 import java.util.concurrent.PriorityBlockingQueue;
 
-import com.bigdata.datashops.model.pojo.JobInstance;
+import com.bigdata.datashops.model.pojo.job.JobInstance;
 
 public class JobQueue {
     private static JobQueue instance;

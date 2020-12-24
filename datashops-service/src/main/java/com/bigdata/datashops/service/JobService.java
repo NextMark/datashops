@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.bigdata.datashops.dao.data.service.AbstractMysqlPagingAndSortingQueryService;
-import com.bigdata.datashops.model.pojo.Job;
+import com.bigdata.datashops.model.pojo.job.Job;
 
 @Service
 public class JobService extends AbstractMysqlPagingAndSortingQueryService<Job, String> {

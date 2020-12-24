@@ -1,14 +1,15 @@
-package com.bigdata.datashops.api.controller;
+package com.bigdata.datashops.api.controller.v1;
 
 import java.util.List;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bigdata.datashops.api.controller.BasicController;
 import com.bigdata.datashops.api.response.Result;
 import com.bigdata.datashops.api.utils.ValidatorUtil;
 import com.bigdata.datashops.common.utils.JSONUtils;
-import com.bigdata.datashops.model.pojo.Job;
+import com.bigdata.datashops.model.pojo.job.Job;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Lists;
 

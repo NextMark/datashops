@@ -4,6 +4,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import com.bigdata.datashops.model.pojo.rpc.Host;
 import com.bigdata.datashops.protocol.GrpcRequest;
@@ -13,6 +14,7 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.StatusRuntimeException;
 
+@Service
 public class GrpcRemotingClient {
     private final Logger LOG = LoggerFactory.getLogger(GrpcRemotingClient.class);
 

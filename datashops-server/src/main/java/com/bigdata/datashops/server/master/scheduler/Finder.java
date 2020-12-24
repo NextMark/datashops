@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.model.enums.RunState;
-import com.bigdata.datashops.model.pojo.JobInstance;
+import com.bigdata.datashops.model.pojo.job.JobInstance;
 import com.bigdata.datashops.server.queue.JobQueue;
 import com.bigdata.datashops.service.JobInstanceService;
 import com.google.common.collect.Lists;
@@ -37,7 +37,7 @@ public class Finder {
         String filters = "state=" + StringUtils.join(status, Constants.SEPARATOR_COMMA);
         List<JobInstance> statusList = jobInstanceService.findReadyJob(filters);
         if (statusList.size() > 0) {
-            LOG.info("Find {} jis, add to queue", statusList.size());
+            LOG.info("[Finder] find {} jis, add to queue", statusList.size());
         }
         for (JobInstance instance : statusList) {
             boolean in = JobQueue.getInstance().getQueue().offer(instance);

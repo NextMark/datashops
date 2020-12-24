@@ -2,7 +2,6 @@ package com.bigdata.datashops.service;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,7 +11,7 @@ import org.springframework.stereotype.Service;
 import com.bigdata.datashops.dao.data.domain.Pageable;
 import com.bigdata.datashops.dao.data.service.AbstractMysqlPagingAndSortingQueryService;
 import com.bigdata.datashops.model.dto.DtoJobResult;
-import com.bigdata.datashops.model.pojo.JobResult;
+import com.bigdata.datashops.model.pojo.job.JobResult;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Lists;
 

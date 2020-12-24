@@ -15,8 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.bigdata.datashops.common.utils.JobUtils;
 import com.bigdata.datashops.model.enums.JobInstanceType;
 import com.bigdata.datashops.model.enums.RunState;
-import com.bigdata.datashops.model.pojo.JobGraph;
-import com.bigdata.datashops.model.pojo.JobInstance;
+import com.bigdata.datashops.model.pojo.job.JobGraph;
+import com.bigdata.datashops.model.pojo.job.JobInstance;
 import com.bigdata.datashops.server.utils.JobHelper;
 import com.bigdata.datashops.service.JobGraphService;
 import com.bigdata.datashops.service.JobInstanceService;
@@ -59,8 +59,8 @@ public class QuartzJob implements Job {
         jobInstanceService.save(instance);
 
         String filter = String.format("graphId=%d;status=1", graphId);
-        List<com.bigdata.datashops.model.pojo.Job> jobs = jobService.findJobs(filter);
-        for (com.bigdata.datashops.model.pojo.Job job : jobs) {
+        List<com.bigdata.datashops.model.pojo.job.Job> jobs = jobService.findJobs(filter);
+        for (com.bigdata.datashops.model.pojo.job.Job job : jobs) {
             JobInstance ji = JobInstance.builder()
                                      .graphId(graphId)
                                      .jobId(job.getId())
