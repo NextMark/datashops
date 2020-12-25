@@ -23,7 +23,7 @@ public class GrpcProcessor implements InitializingBean {
         this.executorService = ThreadUtil.newDaemonFixedThreadExecutor("", workerConfig.getWorkerJobThreads());
     }
 
-    public void process(GrpcRequest.Request request) {
+    public void processJobExec(GrpcRequest.Request request) {
         GrpcRequest.RequestType type = request.getRequestType();
         switch (type) {
             case JOB_EXECUTE_REQUEST:

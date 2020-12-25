@@ -10,12 +10,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>datashops-protocol</artifactId>
+    <name>datashops-protocol</name>
 
     <dependencies>
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
-            <version>${protobuf.version}</version>
+            <version>${protobuf.java.version}</version>
         </dependency>
 
         <dependency>

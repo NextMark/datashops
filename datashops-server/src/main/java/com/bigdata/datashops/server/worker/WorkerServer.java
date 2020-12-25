@@ -10,6 +10,7 @@ import com.bigdata.datashops.rpc.GrpcRemotingServer;
 import com.bigdata.datashops.rpc.GrpcServerConfig;
 
 public class WorkerServer {
+    @Autowired
     private GrpcRemotingServer grpcRemotingServer;
 
     @Autowired
@@ -19,8 +20,6 @@ public class WorkerServer {
     public void run() throws IOException, InterruptedException {
         workerRegistry.registry();
 
-        GrpcServerConfig grpcServerConfig = new GrpcServerConfig();
-        grpcRemotingServer = new GrpcRemotingServer(grpcServerConfig);
         grpcRemotingServer.start();
         grpcRemotingServer.blockUntilShutdown();
 

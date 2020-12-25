@@ -3,6 +3,10 @@ package com.bigdata.datashops.rpc;
 import java.io.IOException;
 import java.util.List;
 
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
 import com.bigdata.datashops.protocol.GrpcRequest;
 import com.bigdata.datashops.protocol.RequestServiceGrpc;
 import com.google.common.collect.Lists;
@@ -10,11 +14,17 @@ import com.google.common.collect.Lists;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
+@SpringBootTest(classes = GrpcRemotingServer.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class GrpcClientTest {
-    public static void main(String[] args) throws IOException, InterruptedException {
-        GrpcServerConfig grpcServerConfig = new GrpcServerConfig();
+    @Autowired
+    GrpcRemotingServer grpcRemotingServer;
+
+    @Autowired
+    GrpcServerConfig grpcServerConfig;
+
+    @Test
+    public void test() throws IOException, InterruptedException {
         grpcServerConfig.setPort(60001);
-        GrpcRemotingServer grpcRemotingServer = new GrpcRemotingServer(grpcServerConfig);
         grpcRemotingServer.start();
 
         Thread.sleep(10000);

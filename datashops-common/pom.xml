@@ -8,9 +8,9 @@
 		<version>1.0.0</version>
 	</parent>
 	<artifactId>datashops-common</artifactId>
+	<name>datashops-common</name>
 
 	<dependencies>
-
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>

@@ -7,7 +7,6 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.bigdata.datashops.rpc.GrpcRemotingServer;
-import com.bigdata.datashops.rpc.GrpcServerConfig;
 import com.bigdata.datashops.server.quartz.QuartzService;
 
 public class MasterServer {
@@ -17,13 +16,15 @@ public class MasterServer {
     @Autowired
     private MasterRegistry masterRegistry;
 
+    @Autowired
+    private GrpcRemotingServer grpcRemotingServer;
+
     @PostConstruct
     public void run() throws IOException, InterruptedException {
         masterRegistry.registry();
 
         quartzService.start();
 
-        GrpcRemotingServer grpcRemotingServer = new GrpcRemotingServer(new GrpcServerConfig());
         grpcRemotingServer.start();
         grpcRemotingServer.blockUntilShutdown();
 

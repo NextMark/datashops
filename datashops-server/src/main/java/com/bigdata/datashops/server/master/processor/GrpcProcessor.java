@@ -36,4 +36,11 @@ public class GrpcProcessor implements InitializingBean {
                 break;
         }
     }
+    public void processJobResponse(GrpcRequest.Request request) {
+
+    }
+
+    public void processHeartBeat(GrpcRequest.Request request) {
+
+    }
 }
