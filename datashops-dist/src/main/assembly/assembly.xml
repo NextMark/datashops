@@ -10,7 +10,10 @@
     <baseDirectory>${project.build.finalName}-datashops-bin</baseDirectory>
 
     <fileSets>
-
+        <fileSet>
+            <directory>${basedir}/target/lib</directory>
+            <outputDirectory>lib</outputDirectory>
+        </fileSet>
         <fileSet>
             <directory>${basedir}/../datashops-server/src/main/resources</directory>
             <includes>
