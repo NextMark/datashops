@@ -13,12 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.common.utils.JSONUtils;
 import com.bigdata.datashops.common.utils.NetUtils;
 import com.bigdata.datashops.model.pojo.job.JobInstance;
 import com.bigdata.datashops.model.pojo.rpc.Host;
 import com.bigdata.datashops.protocol.GrpcRequest;
-import com.bigdata.datashops.rpc.GrpcRemotingClient;
+import com.bigdata.datashops.server.rpc.GrpcRemotingClient;
 import com.bigdata.datashops.server.master.dispatch.SelectorContext;
 import com.bigdata.datashops.server.master.dispatch.selector.HostManager;
 import com.bigdata.datashops.server.zookeeper.ZookeeperOperator;
@@ -58,6 +59,9 @@ public class Dispatcher {
                                                   .setBody(ByteString.copyFrom(JSONUtils.toJsonString(ji).getBytes()))
                                                   .build();
             GrpcRequest.Response response = grpcRemotingClient.send(request, host);
+            if (response.getStatus() != Constants.RPC_SUCCESS) {
+
+            }
         }
     }
 }

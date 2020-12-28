@@ -24,17 +24,8 @@ public class GrpcProcessor implements InitializingBean {
     }
 
     public void processJobExec(GrpcRequest.Request request) {
-        GrpcRequest.RequestType type = request.getRequestType();
-        switch (type) {
-            case JOB_EXECUTE_REQUEST:
-                Runnable thread = new JobExecutor(request);
-                executorService.submit(thread);
-                break;
-            case JOB_EXECUTE_RESPONSE:
-                break;
-            default:
-                break;
-        }
+        Runnable thread = new JobExecutor(request);
+        executorService.submit(thread);
     }
 
 }

@@ -4,7 +4,8 @@ import java.util.HashMap;
 
 public enum DbType {
     HIVE(0, "hive"),
-    MYSQL(1, "mysql");
+    MYSQL(1, "mysql"),
+    CLICK_HOUSE(2, "clickhouse");
 
     DbType(int code, String name) {
         this.code = code;

@@ -3,7 +3,7 @@ package com.bigdata.datashops.model.enums;
 import java.util.HashMap;
 
 public enum  JobType {
-    HIVE(0, "hive"),
+    SQL(0, "hive"),
     SHELL(1, "shell"),
     SPARK(2, "spark"),
     FLINK(3, "flink");

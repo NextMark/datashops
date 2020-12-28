@@ -6,10 +6,10 @@ import com.bigdata.datashops.model.enums.JobType;
 
 public class JobManager {
     public static AbstractJob createJob(JobContext jobContext, Logger logger) {
-        JobType jobType = JobType.of(jobContext.getJobType());
+        JobType jobType = JobType.of(jobContext.getJobInstance().getType());
         switch (jobType) {
-            case HIVE:
-                return new HiveJob(jobContext, logger);
+            case SQL:
+                return new SqlJob(jobContext, logger);
             case SHELL:
             case SPARK:
             case FLINK:

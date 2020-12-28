@@ -7,8 +7,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.bigdata.datashops.common.Constants;
+import com.bigdata.datashops.common.utils.NetUtils;
 import com.bigdata.datashops.protocol.GrpcRequest;
 import com.bigdata.datashops.protocol.RequestServiceGrpc;
+import com.bigdata.datashops.server.master.processor.GrpcProcessor;
 
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
@@ -23,11 +26,11 @@ public class GrpcRemotingServer {
     @Autowired
     private GrpcServerConfig grpcServerConfig;
 
-//    @Autowired
-//    private GrpcProcessor masterGrpcProcessor;
-//
-//    @Autowired
-//    private com.bigdata.datashops.server.worker.processor.GrpcProcessor workerGrpcProcessor;
+    @Autowired
+    private GrpcProcessor masterGrpcProcessor;
+
+    @Autowired
+    private com.bigdata.datashops.server.worker.processor.GrpcProcessor workerGrpcProcessor;
 
     public void start() throws IOException {
         LOG.info("Grpc server starting...");
@@ -55,22 +58,26 @@ public class GrpcRemotingServer {
             LOG.info("[Grpc] receive request, rid {}, host {}, type {}", request.getRequestId(), request.getHost(),
                     request.getRequestType());
             // TODO
-//            GrpcRequest.RequestType type = request.getRequestType();
-//            switch (type) {
-//                case JOB_EXECUTE_REQUEST:
-//                    workerGrpcProcessor.processJobExec(request);
-//                    break;
-//                case JOB_EXECUTE_RESPONSE:
-//                    masterGrpcProcessor.processJobResponse(request);
-//                    break;
-//                case HEART_BEAT:
-//                    masterGrpcProcessor.processHeartBeat(request);
-//                    break;
-//                default:
-//                    break;
-//            }
+            GrpcRequest.RequestType type = request.getRequestType();
+            switch (type) {
+                case JOB_EXECUTE_REQUEST:
+                    workerGrpcProcessor.processJobExec(request);
+                    break;
+                case JOB_EXECUTE_RESPONSE:
+                    masterGrpcProcessor.processJobResponse(request);
+                    break;
+                case HEART_BEAT:
+                    masterGrpcProcessor.processHeartBeat(request);
+                    break;
+                default:
+                    break;
+            }
             GrpcRequest.Response response =
-                    GrpcRequest.Response.newBuilder().setHost(request.getHost() + " aa").build();
+                    GrpcRequest.Response.newBuilder()
+                            .setRequestId(request.getRequestId())
+                            .setStatus(Constants.RPC_SUCCESS)
+                            .setHost(NetUtils.getLocalAddress())
+                            .build();
             responseObserver.onNext(response);
             responseObserver.onCompleted();
         }

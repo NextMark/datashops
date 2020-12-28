@@ -21,6 +21,7 @@ public class Constants {
      */
     public static final String COM_MYSQL_JDBC_DRIVER = "com.mysql.jdbc.Driver";
     public static final String ORG_APACHE_HIVE_JDBC_HIVE_DRIVER = "org.apache.hive.jdbc.HiveDriver";
+    public static final String CLICK_HOUSE_JDBC = "ru.yandex.clickhouse.ClickHouseDriver";
 
     /**
      * jdbc url
@@ -53,6 +54,11 @@ public class Constants {
      */
     public final static String SEPARATOR_COMMA = ",";
     public final static String SEPARATOR_LINE = "\\|";
+
+    /**
+     * rpc
+     */
+    public final static Integer RPC_SUCCESS = 200;
 
 
 }

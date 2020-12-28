@@ -14,13 +14,6 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Jacksonized
 public class JobContext implements Serializable {
-    private String jobName;
-
-    private int jobType;
-
-    private String runPath;
-
-    private String jobParams;
 
     private JobInstance jobInstance;
 

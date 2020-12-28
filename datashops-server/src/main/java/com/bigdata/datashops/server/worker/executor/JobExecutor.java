@@ -24,12 +24,8 @@ public class JobExecutor implements Runnable {
         ByteString body = request.getBody();
         String bodyStr = body.toStringUtf8();
         JobContext context = JSONUtils.parseObject(bodyStr, JobContext.class);
-        JobContext jobContext = JobContext.builder()
-                                        .jobName(context.getJobName())
-                                        .jobType(context.getJobInstance().getType())
-                                        .build();
         Logger logger = LoggerFactory.getLogger("");
-        job = JobManager.createJob(jobContext, logger);
+        job = JobManager.createJob(context, logger);
         job.execute();
     }
 

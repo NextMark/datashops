@@ -1,4 +1,4 @@
-package com.bigdata.datashops.rpc;
+package com.bigdata.datashops.server.rpc;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -29,7 +29,8 @@ public class GrpcRemotingClient {
             LOG.error(e.getMessage(), e);
             return null;
         }
-        LOG.info("[Grpc] response {}", response.getBody());
+        LOG.info("[Grpc] code {}, request id {}, host, type {}", response.getStatus(), response.getRequestId(),
+                response.getRequestType());
         return response;
     }
 

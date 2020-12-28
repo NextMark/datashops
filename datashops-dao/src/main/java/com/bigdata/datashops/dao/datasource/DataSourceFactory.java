@@ -17,6 +17,8 @@ public class DataSourceFactory {
                     return JSONUtils.parseObject(parameter, MySQLDataSource.class);
                 case HIVE:
                     return JSONUtils.parseObject(parameter, HiveDataSource.class);
+                case CLICK_HOUSE:
+                    return JSONUtils.parseObject(parameter, ClickHouseDataSource.class);
                 default:
                     return null;
             }
@@ -32,6 +34,9 @@ public class DataSourceFactory {
                 break;
             case HIVE :
                 Class.forName(Constants.ORG_APACHE_HIVE_JDBC_HIVE_DRIVER);
+                break;
+            case CLICK_HOUSE:
+                Class.forName(Constants.CLICK_HOUSE_JDBC);
                 break;
             default:
                 LOG.error("not support sql type: {}, can't load class", dbType);
