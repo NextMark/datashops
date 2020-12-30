@@ -9,6 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.bigdata.datashops.protocol.GrpcRequest;
 import com.bigdata.datashops.protocol.RequestServiceGrpc;
+import com.bigdata.datashops.server.rpc.GrpcRemotingServer;
+import com.bigdata.datashops.server.rpc.GrpcServerConfig;
 import com.google.common.collect.Lists;
 
 import io.grpc.ManagedChannel;
@@ -32,12 +34,11 @@ public class GrpcClientTest {
         ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 60000).usePlaintext().build();
         RequestServiceGrpc.RequestServiceBlockingStub blockingStub = RequestServiceGrpc.newBlockingStub(channel);
 
-
         List<Integer> nums = Lists.newArrayList();
-        for(Integer i=1; i<5; i++){
+        for (Integer i = 1; i < 5; i++) {
             nums.add(i);
         }
-        for(Integer num: nums){
+        for (Integer num : nums) {
             Thread.sleep(1000);
             GrpcRequest.Request request = GrpcRequest.Request.newBuilder().setHost(num.toString()).build();
             GrpcRequest.Response response = blockingStub.send(request);

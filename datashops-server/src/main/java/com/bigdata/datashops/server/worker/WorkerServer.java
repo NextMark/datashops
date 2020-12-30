@@ -6,8 +6,8 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.bigdata.datashops.rpc.GrpcRemotingServer;
-import com.bigdata.datashops.rpc.GrpcServerConfig;
+import com.bigdata.datashops.server.rpc.GrpcRemotingServer;
+import com.bigdata.datashops.server.worker.registry.WorkerRegistry;
 
 public class WorkerServer {
     @Autowired
@@ -22,7 +22,6 @@ public class WorkerServer {
 
         grpcRemotingServer.start();
         grpcRemotingServer.blockUntilShutdown();
-
 
         Runtime.getRuntime().addShutdownHook(new Thread(this::close));
     }

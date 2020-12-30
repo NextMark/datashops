@@ -17,6 +17,7 @@ import lombok.extern.jackson.Jacksonized;
 @Jacksonized
 @Table(name = "t_job_instance")
 public class JobInstance extends BaseModel implements Comparable<JobInstance> {
+    private static final long serialVersionUID = 4244682210083826200L;
     private Integer graphId;
 
     private Integer jobId;
@@ -26,14 +27,18 @@ public class JobInstance extends BaseModel implements Comparable<JobInstance> {
     /**
      * job instance type, graph、job
      * {@link com.bigdata.datashops.model.enums.JobInstanceType}
-      */
+     */
     private int type;
 
+    /**
+     * job instance type, graph、job
+     * {@link com.bigdata.datashops.model.enums.RunState}
+     */
     private int state;
 
     /**
      * 0 delete 1 normal
-      */
+     */
     private Integer status;
 
     private String host;

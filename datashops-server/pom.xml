@@ -5,7 +5,7 @@
     <parent>
         <artifactId>datashops</artifactId>
         <groupId>com.bigdata.datashops</groupId>
-        <version>1.0.0</version>
+        <version>0.0.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -62,12 +62,13 @@
             <version>2.3.0.RELEASE</version>
             <scope>test</scope>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>com.bigdata.datashops</groupId>-->
-<!--            <artifactId>datashops-rpc</artifactId>-->
-<!--            <version>1.0.0</version>-->
-<!--            <scope>compile</scope>-->
-<!--        </dependency>-->
+
+        <dependency>
+            <groupId>com.github.oshi</groupId>
+            <artifactId>oshi-core</artifactId>
+            <version>${oshi.version}</version>
+        </dependency>
+
 
     </dependencies>
 

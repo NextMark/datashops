@@ -8,11 +8,11 @@ import org.springframework.stereotype.Component;
 
 import com.bigdata.datashops.protocol.GrpcRequest;
 import com.bigdata.datashops.server.executor.ThreadUtil;
-import com.bigdata.datashops.server.worker.executor.JobExecutor;
 import com.bigdata.datashops.server.worker.config.WorkerConfig;
+import com.bigdata.datashops.server.worker.executor.JobExecutor;
 
 @Component
-public class GrpcProcessor implements InitializingBean {
+public class WorkerGrpcProcessor implements InitializingBean {
     @Autowired
     private WorkerConfig workerConfig;
 

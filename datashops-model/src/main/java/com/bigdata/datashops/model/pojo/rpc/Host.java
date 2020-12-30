@@ -2,9 +2,11 @@ package com.bigdata.datashops.model.pojo.rpc;
 
 import java.util.Objects;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class Host {
     private String address;
 

@@ -12,7 +12,7 @@ import com.bigdata.datashops.server.master.config.MasterConfig;
 import com.bigdata.datashops.server.worker.executor.JobExecutor;
 
 @Component
-public class GrpcProcessor implements InitializingBean {
+public class MasterGrpcProcessor implements InitializingBean {
     @Autowired
     private MasterConfig masterConfig;
 
@@ -36,6 +36,7 @@ public class GrpcProcessor implements InitializingBean {
                 break;
         }
     }
+
     public void processJobResponse(GrpcRequest.Request request) {
 
     }

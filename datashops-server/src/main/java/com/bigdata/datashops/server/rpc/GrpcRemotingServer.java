@@ -1,4 +1,4 @@
-package com.bigdata.datashops.rpc;
+package com.bigdata.datashops.server.rpc;
 
 import java.io.IOException;
 
@@ -11,7 +11,8 @@ import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.common.utils.NetUtils;
 import com.bigdata.datashops.protocol.GrpcRequest;
 import com.bigdata.datashops.protocol.RequestServiceGrpc;
-import com.bigdata.datashops.server.master.processor.GrpcProcessor;
+import com.bigdata.datashops.server.master.processor.MasterGrpcProcessor;
+import com.bigdata.datashops.server.worker.processor.WorkerGrpcProcessor;
 
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
@@ -27,10 +28,10 @@ public class GrpcRemotingServer {
     private GrpcServerConfig grpcServerConfig;
 
     @Autowired
-    private GrpcProcessor masterGrpcProcessor;
+    private MasterGrpcProcessor masterGrpcProcessor;
 
     @Autowired
-    private com.bigdata.datashops.server.worker.processor.GrpcProcessor workerGrpcProcessor;
+    private WorkerGrpcProcessor workerGrpcProcessor;
 
     public void start() throws IOException {
         LOG.info("Grpc server starting...");
@@ -72,12 +73,9 @@ public class GrpcRemotingServer {
                 default:
                     break;
             }
-            GrpcRequest.Response response =
-                    GrpcRequest.Response.newBuilder()
-                            .setRequestId(request.getRequestId())
-                            .setStatus(Constants.RPC_SUCCESS)
-                            .setHost(NetUtils.getLocalAddress())
-                            .build();
+            GrpcRequest.Response response = GrpcRequest.Response.newBuilder().setRequestId(request.getRequestId())
+                                                    .setStatus(Constants.RPC_SUCCESS)
+                                                    .setHost(NetUtils.getLocalAddress()).build();
             responseObserver.onNext(response);
             responseObserver.onCompleted();
         }

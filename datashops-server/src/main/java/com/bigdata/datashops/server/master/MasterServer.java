@@ -6,8 +6,9 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.bigdata.datashops.rpc.GrpcRemotingServer;
+import com.bigdata.datashops.server.master.registry.MasterRegistry;
 import com.bigdata.datashops.server.quartz.QuartzService;
+import com.bigdata.datashops.server.rpc.GrpcRemotingServer;
 
 public class MasterServer {
     @Autowired

@@ -17,7 +17,6 @@ import com.bigdata.datashops.server.queue.JobQueue;
 import com.bigdata.datashops.service.JobInstanceService;
 import com.google.common.collect.Lists;
 
-
 @Component
 public class Finder {
     private static final Logger LOG = LoggerFactory.getLogger(Finder.class);

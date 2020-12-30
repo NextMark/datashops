@@ -1,4 +1,4 @@
-package com.bigdata.datashops.rpc;
+package com.bigdata.datashops.server.rpc;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
