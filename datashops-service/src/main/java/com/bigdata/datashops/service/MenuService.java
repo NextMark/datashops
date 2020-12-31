@@ -8,7 +8,7 @@ import com.bigdata.datashops.dao.data.service.AbstractMysqlPagingAndSortingQuery
 import com.bigdata.datashops.model.pojo.user.Menu;
 
 @Service
-public class MenuService extends AbstractMysqlPagingAndSortingQueryService<Menu, String> {
+public class MenuService extends AbstractMysqlPagingAndSortingQueryService<Menu, Integer> {
     public List<Menu> getMenus(String filter) {
         return findByQuery(filter);
     }

@@ -8,7 +8,7 @@ import com.bigdata.datashops.dao.data.service.AbstractMysqlPagingAndSortingQuery
 import com.bigdata.datashops.model.pojo.job.JobInstance;
 
 @Service
-public class JobInstanceService extends AbstractMysqlPagingAndSortingQueryService<JobInstance, String> {
+public class JobInstanceService extends AbstractMysqlPagingAndSortingQueryService<JobInstance, Integer> {
     public List<JobInstance> findReadyJob(String filters) {
         return findByQuery(filters);
     }
@@ -17,6 +17,7 @@ public class JobInstanceService extends AbstractMysqlPagingAndSortingQueryServic
         return findOneByQuery(filter);
     }
 
+    @Override
     public JobInstance save(JobInstance jobInstance) {
         return save(jobInstance);
     }

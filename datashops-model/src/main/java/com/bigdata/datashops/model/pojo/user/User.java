@@ -7,12 +7,14 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import com.bigdata.datashops.model.pojo.BaseModel;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name = "t_user")
+@JsonIgnoreProperties(value = {"password"})
 public class User extends BaseModel {
     private String name;
 

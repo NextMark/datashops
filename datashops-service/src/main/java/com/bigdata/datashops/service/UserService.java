@@ -10,12 +10,12 @@ import com.bigdata.datashops.dao.data.service.AbstractMysqlPagingAndSortingQuery
 import com.bigdata.datashops.model.pojo.user.User;
 
 @Service
-public class UserService extends AbstractMysqlPagingAndSortingQueryService<User, String> {
+public class UserService extends AbstractMysqlPagingAndSortingQueryService<User, Integer> {
     @Resource
     private PasswordEncoder passwordEncoder;
 
     public User getUserInfo(Integer uid) {
-        return findById(String.valueOf(uid));
+        return findById(uid);
     }
 
     public User getUser(String filter) {

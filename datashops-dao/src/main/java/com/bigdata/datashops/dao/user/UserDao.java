@@ -4,5 +4,5 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 
 import com.bigdata.datashops.model.pojo.user.User;
 
-public interface UserDao extends PagingAndSortingRepository<User, String> {
+public interface UserDao extends PagingAndSortingRepository<User, Integer> {
 }

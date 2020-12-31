@@ -8,9 +8,9 @@ import com.bigdata.datashops.dao.data.service.AbstractMysqlPagingAndSortingQuery
 import com.bigdata.datashops.model.pojo.job.Job;
 
 @Service
-public class JobService extends AbstractMysqlPagingAndSortingQueryService<Job, String> {
+public class JobService extends AbstractMysqlPagingAndSortingQueryService<Job, Integer> {
     public Job getJob(Integer id) {
-        return findById(id.toString());
+        return findById(id);
     }
 
     public List<Job> findJobs(String filters) {

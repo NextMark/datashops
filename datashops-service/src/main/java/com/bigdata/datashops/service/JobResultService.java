@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Lists;
 
 @Service
-public class JobResultService extends AbstractMysqlPagingAndSortingQueryService<JobResult, String> {
+public class JobResultService extends AbstractMysqlPagingAndSortingQueryService<JobResult, Integer> {
 
     public Page<Map<String, Object>> getJobResultPage(Pageable pageable, DtoJobResult dto) {
         List<JobResult> results = findByQuery(pageable.getFilters(), pageable.getSort());

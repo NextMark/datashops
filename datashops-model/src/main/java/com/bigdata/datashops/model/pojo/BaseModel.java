@@ -12,12 +12,14 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Data;
 
 @Data
 @MappedSuperclass
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class BaseModel implements Serializable {
     private static final long serialVersionUID = 1L;
     /**
@@ -27,7 +29,7 @@ public class BaseModel implements Serializable {
     @NotNull(message = "id must not be null")
     @Min(value = 1, message = "id must be a positive integer")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Integer id;
     /**
      * 记录创建时间
      */
