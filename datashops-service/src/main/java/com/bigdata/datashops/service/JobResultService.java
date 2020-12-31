@@ -3,7 +3,6 @@ package com.bigdata.datashops.service;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
@@ -18,9 +17,6 @@ import com.google.common.collect.Lists;
 @Service
 public class JobResultService extends AbstractMysqlPagingAndSortingQueryService<JobResult, String> {
 
-    @Autowired
-    private JobService jobService;
-
     public Page<Map<String, Object>> getJobResultPage(Pageable pageable, DtoJobResult dto) {
         List<JobResult> results = findByQuery(pageable.getFilters(), pageable.getSort());
         List<Map<String, Object>> vos = Lists.newArrayList();
@@ -31,6 +27,5 @@ public class JobResultService extends AbstractMysqlPagingAndSortingQueryService<
         sort(vos, dto.orderField, dto.orderType);
         return new PageImpl<>(safeSubList(vos, pageable), pageable, vos.size());
     }
-
 
 }

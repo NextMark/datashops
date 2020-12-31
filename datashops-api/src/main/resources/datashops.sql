@@ -2,6 +2,56 @@ CREATE DATABASE IF NOT EXISTS datashops;
 
 USE datashops;
 
+-- user
+CREATE TABLE `t_user`
+(
+    `id`              bigint(20) unsigned                              NOT NULL AUTO_INCREMENT COMMENT '用户Id',
+    `email`           varchar(64) CHARACTER SET utf8 COLLATE utf8_bin  NOT NULL COMMENT '邮箱',
+    `name`            varchar(32) CHARACTER SET utf8 COLLATE utf8_bin  NOT NULL COMMENT '用户名',
+    `password`        varchar(128) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '密码',
+    `avatar`          varchar(1024)                                             DEFAULT NULL COMMENT '头像',
+    `phone`           varchar(16)                                               DEFAULT NULL COMMENT '电话',
+    `last_login_time` TIMESTAMP                                                 DEFAULT NULL COMMENT '上一次登录时间',
+    `create_time`     TIMESTAMP                                        NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录的创建时间',
+    `update_time`     TIMESTAMP                                        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录的更新时间',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `ix_user_username` (`name`),
+    UNIQUE KEY `ix_user_email` (`email`),
+    UNIQUE KEY `ix_user_phone` (`phone`)
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8mb4
+    COMMENT ='用户表';
+
+CREATE TABLE `t_user_permission`
+(
+    `id`          bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Id',
+    `uid`         bigint(10)          NOT NULL COMMENT 'uid',
+    `menu_id`     bigint(10)          NOT NULL COMMENT 'menu_id',
+    `create_time` TIMESTAMP           NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录的创建时间',
+    `update_time` TIMESTAMP           NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录的更新时间',
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8mb4
+    COMMENT ='权限表';
+
+CREATE TABLE `t_user_menu`
+(
+    `id`          bigint(20) unsigned                              NOT NULL AUTO_INCREMENT COMMENT 'Id',
+    `path`        varchar(64) CHARACTER SET utf8 COLLATE utf8_bin  NOT NULL COMMENT '路径',
+    `name`        varchar(64) CHARACTER SET utf8 COLLATE utf8_bin  NOT NULL COMMENT '名称',
+    `meta`        varchar(512) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT 'meta',
+    `component`   varchar(128) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '组件',
+    `redirect`    varchar(128) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '重定向',
+    `create_time` TIMESTAMP                                        NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录的创建时间',
+    `update_time` TIMESTAMP                                        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录的更新时间',
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8mb4
+    COMMENT ='菜单表';
+
 -- job
 CREATE TABLE IF NOT EXISTS `job`
 (

@@ -2,6 +2,7 @@ package com.bigdata.datashops.model.pojo.job;
 
 import java.util.Date;
 
+import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import com.bigdata.datashops.model.pojo.BaseModel;
@@ -13,6 +14,7 @@ import lombok.extern.jackson.Jacksonized;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
+@Entity
 @Builder
 @Jacksonized
 @Table(name = "t_job_instance")

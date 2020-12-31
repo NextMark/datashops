@@ -1,5 +1,6 @@
 package com.bigdata.datashops.model.pojo.job;
 
+import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -11,6 +12,7 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
+@Entity
 @Table(name = "t_job_graph")
 public class JobGraph extends BaseModel {
     @NotBlank(message = "job name must not be empty")

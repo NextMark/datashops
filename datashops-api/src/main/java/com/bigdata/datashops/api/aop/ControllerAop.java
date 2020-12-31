@@ -23,6 +23,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.bigdata.datashops.api.config.security.jwt.JwtUtil;
 import com.bigdata.datashops.common.utils.JSONUtils;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -44,21 +45,23 @@ public class ControllerAop {
     private HttpServletRequest request;
 
     @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
     public void setRequest(HttpServletRequest request) {
         this.request = request;
     }
-
 
     @Pointcut("execution(* com.bigdata.datashops.api.controller..*.*(..))")
     public void requestHook() {
     }
 
     @Before("requestHook()")
-    public void doBefore(JoinPoint joinPoint){
+    public void doBefore(JoinPoint joinPoint) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         String method = request.getMethod();
-        if (method.equals(
-                HttpMethod.POST.name()) && joinPoint.getArgs().length > 0 && joinPoint.getArgs()[0] instanceof ObjectNode) {
+        if (method.equals(HttpMethod.POST.name()) && joinPoint.getArgs().length > 0 && joinPoint
+                                                                                               .getArgs()[0] instanceof ObjectNode) {
             REQUEST_BODY.set(JSONUtils.parseObject(joinPoint.getArgs()[0].toString()));
         } else {
             ObjectNode params = JSONUtils.createObjectNode();
@@ -66,7 +69,6 @@ public class ControllerAop {
             REQUEST_BODY.set(params);
         }
     }
-
 
     @Around(value = "com.bigdata.datashops.api.aop.ControllerAop.requestHook()")
     public Object around(ProceedingJoinPoint pjp) throws Throwable {
@@ -101,7 +103,7 @@ public class ControllerAop {
         // ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         // HttpServletRequest request = attributes.getRequest();
         LOG.info("[SPEND TIME: " + (System.currentTimeMillis() - REQUEST_BEGIN_TIME_TL.get()) + " ms] "
-                            + request.getRequestURI());
+                         + request.getRequestURI());
         POINT.remove();
         REQUEST_BEGIN_TIME_TL.remove();
         REQUEST_METHOD.remove();
@@ -120,6 +122,10 @@ public class ControllerAop {
             }
         }
         return remoteAddr;
+    }
+
+    public String getToken() {
+        return jwtUtil.getTokenFromRequest(request);
     }
 
 }

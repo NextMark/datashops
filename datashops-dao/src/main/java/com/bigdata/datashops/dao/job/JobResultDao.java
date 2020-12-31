@@ -1,4 +1,4 @@
-package com.bigdata.datashops.dao;
+package com.bigdata.datashops.dao.job;
 
 import org.springframework.data.repository.PagingAndSortingRepository;
 

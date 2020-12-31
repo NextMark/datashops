@@ -1,5 +1,6 @@
 package com.bigdata.datashops.model.pojo.job;
 
+import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -11,6 +12,7 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
+@Entity
 @Table(name = "t_job")
 public class Job extends BaseModel {
     @NotBlank(message = "job name must not be empty")
@@ -33,7 +35,7 @@ public class Job extends BaseModel {
 
     /**
      * 0 delete 1 normal
-      */
+     */
     private Integer status;
 
     /**

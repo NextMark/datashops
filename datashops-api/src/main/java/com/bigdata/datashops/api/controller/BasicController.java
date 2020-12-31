@@ -1,6 +1,5 @@
 package com.bigdata.datashops.api.controller;
 
-
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -12,10 +11,15 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bigdata.datashops.api.aop.ControllerAop;
-import com.bigdata.datashops.api.response.ResultCode;
+import com.bigdata.datashops.api.config.security.jwt.JwtUtil;
 import com.bigdata.datashops.api.response.Result;
+import com.bigdata.datashops.api.response.ResultCode;
 import com.bigdata.datashops.api.response.ResultGenerator;
+import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.service.JobResultService;
+import com.bigdata.datashops.service.MenuService;
+import com.bigdata.datashops.service.PermissionService;
+import com.bigdata.datashops.service.UserService;
 
 /**
  * Created by qinshiwei on 2018/1/30.
@@ -27,9 +31,20 @@ public class BasicController {
     @Autowired
     protected ControllerAop controllerAop;
 
+    @Autowired
+    protected JwtUtil jwtUtil;
 
     @Autowired
     protected JobResultService jobResultService;
+
+    @Autowired
+    protected UserService userService;
+
+    @Autowired
+    protected PermissionService permissionService;
+
+    @Autowired
+    protected MenuService menuService;
 
     private static final Map<String, Boolean> HAS_FACADE_METHOD = new ConcurrentHashMap<>();
     private static final Map<String, Method> FACADE_METHOD_CACHE = new ConcurrentHashMap<>();
@@ -84,10 +99,6 @@ public class BasicController {
         return ResultGenerator.genOkResult(result);
     }
 
-    protected Result resultJson(ResultCode resType) {
-        return ResultGenerator.genCustomResult(resType);
-    }
-
     protected Result ok() {
         return ResultGenerator.genOkResult();
     }
@@ -100,5 +111,15 @@ public class BasicController {
         return controllerAop.getClientIp();
     }
 
+    private String getToken() {
+        return controllerAop.getToken();
+    }
+
+    protected Integer getUid() {
+        String token = getToken();
+        String data = jwtUtil.getUsername(token);
+        data = data.split(Constants.SEPARATOR_USER_TOKEN_SALT)[0];
+        return Integer.valueOf(data);
+    }
 
 }
