@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 /**
  * Created by qinshiwei on 2017/9/5.
  */
-@JsonAutoDetect(fieldVisibility= JsonAutoDetect.Visibility.ANY)
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Pagination {
     private long count;
     private int pageSize;
@@ -22,6 +22,7 @@ public class Pagination {
         this.pageSize = pageSize;
         this.pageNum = pageNum;
         this.content = contentList;
+        this.totalPages = (int) (count / pageSize);
     }
 
     public Pagination(Page page) {
