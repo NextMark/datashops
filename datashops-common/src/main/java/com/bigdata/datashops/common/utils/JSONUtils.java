@@ -31,7 +31,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.fasterxml.jackson.databind.type.CollectionType;
 
-
 public class JSONUtils {
 
     private static final Logger LOG = LoggerFactory.getLogger(JSONUtils.class);
@@ -39,16 +38,13 @@ public class JSONUtils {
     /**
      * can use static singleton, inject: just make sure to reuse!
      */
-    private static final ObjectMapper objectMapper = new ObjectMapper()
-            .configure(FAIL_ON_UNKNOWN_PROPERTIES, false)
-            .configure(ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT, true)
-            .configure(READ_UNKNOWN_ENUM_VALUES_AS_NULL, true)
-            .setTimeZone(TimeZone.getDefault())
-            ;
+    private static final ObjectMapper objectMapper = new ObjectMapper().configure(FAIL_ON_UNKNOWN_PROPERTIES, false)
+                                                             .configure(ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT, true)
+                                                             .configure(READ_UNKNOWN_ENUM_VALUES_AS_NULL, true)
+                                                             .setTimeZone(TimeZone.getDefault());
 
     private JSONUtils() {
     }
-
 
     public static ArrayNode createArrayNode() {
         return objectMapper.createArrayNode();
@@ -65,7 +61,7 @@ public class JSONUtils {
     /**
      * json representation of object
      *
-     * @param object object
+     * @param object  object
      * @param feature feature
      * @return object to json string
      */
@@ -107,6 +103,15 @@ public class JSONUtils {
         return null;
     }
 
+    public static <T> T convertValue(Map map, Class<T> clazz) {
+        try {
+            return objectMapper.convertValue(map, clazz);
+        } catch (Exception e) {
+            LOG.error("parse object exception!", e);
+        }
+        return null;
+    }
+
     /**
      * json to list
      *
@@ -131,7 +136,6 @@ public class JSONUtils {
         return Collections.emptyList();
     }
 
-
     /**
      * check json object valid
      *
@@ -154,7 +158,6 @@ public class JSONUtils {
         return false;
     }
 
-
     /**
      * Method for finding a JSON Object field with specified name in this
      * node or its child nodes, and returning value it has.
@@ -174,7 +177,6 @@ public class JSONUtils {
         return node.toString();
     }
 
-
     /**
      * json to map
      * <p>
@@ -189,7 +191,8 @@ public class JSONUtils {
         }
 
         try {
-            return objectMapper.readValue(json, new TypeReference<Map<String, String>>() {});
+            return objectMapper.readValue(json, new TypeReference<Map<String, String>>() {
+            });
         } catch (Exception e) {
             LOG.error("json to map exception!", e);
         }
@@ -255,7 +258,6 @@ public class JSONUtils {
     public static boolean mapContains(Map<String, Object> first, Map<String, Object> second) {
         return first.entrySet().containsAll(second.entrySet());
     }
-
 
     /**
      * json serializer

@@ -11,22 +11,22 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
  */
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Pagination {
-    private long count;
+    private long total;
     private int pageSize;
     private int pageNum;
     private int totalPages;
     private List<?> content;
 
-    public Pagination(long count, int pageNum, int pageSize, List<?> contentList) {
-        this.count = count;
+    public Pagination(long total, int pageNum, int pageSize, List<?> contentList) {
+        this.total = total;
         this.pageSize = pageSize;
         this.pageNum = pageNum;
         this.content = contentList;
-        this.totalPages = (int) (count / pageSize);
+        this.totalPages = (int) (total / pageSize);
     }
 
     public Pagination(Page page) {
-        this.count = page.getTotalElements();
+        this.total = page.getTotalElements();
         this.pageSize = page.getSize();
         this.pageNum = page.getNumber() + 1;
         this.totalPages = page.getTotalPages();

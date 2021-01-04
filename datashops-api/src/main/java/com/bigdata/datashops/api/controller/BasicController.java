@@ -19,6 +19,8 @@ import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.service.JobResultService;
 import com.bigdata.datashops.service.MenuService;
 import com.bigdata.datashops.service.PermissionService;
+import com.bigdata.datashops.service.RolePermissionService;
+import com.bigdata.datashops.service.RoleService;
 import com.bigdata.datashops.service.UserService;
 
 /**
@@ -45,6 +47,12 @@ public class BasicController {
 
     @Autowired
     protected MenuService menuService;
+
+    @Autowired
+    protected RoleService roleService;
+
+    @Autowired
+    protected RolePermissionService rolePermissionService;
 
     private static final Map<String, Boolean> HAS_FACADE_METHOD = new ConcurrentHashMap<>();
     private static final Map<String, Method> FACADE_METHOD_CACHE = new ConcurrentHashMap<>();

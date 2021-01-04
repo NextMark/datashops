@@ -1,5 +1,6 @@
 package com.bigdata.datashops.model.pojo.user;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -9,6 +10,7 @@ import javax.persistence.Transient;
 import com.bigdata.datashops.common.utils.JSONUtils;
 import com.bigdata.datashops.model.pojo.BaseModel;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.collect.Lists;
 
 import lombok.Data;
 
@@ -25,12 +27,25 @@ public class Menu extends BaseModel {
 
     private String component;
 
-    private String redirect;
+    private Integer parentId;
+
+    private Boolean hidden;
+
+    private Integer sort;
+
+    private String authority;
+
+    private String parameters;
 
     @Transient
-    private List<Menu> children;
+    private List<Menu> children = Lists.newArrayList();
 
-    private ObjectNode getMeta() {
+    public ObjectNode getMeta() {
         return JSONUtils.parseObject(meta);
     }
+
+    public void setMeta(LinkedHashMap map) {
+        this.meta = JSONUtils.toJsonString(map);
+    }
+
 }

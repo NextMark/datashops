@@ -1,9 +1,7 @@
 package com.bigdata.datashops.api.controller.v1;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
@@ -17,9 +15,8 @@ import com.bigdata.datashops.api.config.security.jwt.JwtSetting;
 import com.bigdata.datashops.api.controller.BasicController;
 import com.bigdata.datashops.api.response.ResultCode;
 import com.bigdata.datashops.common.Constants;
+import com.bigdata.datashops.model.dto.DtoLogin;
 import com.bigdata.datashops.model.dto.DtoRegister;
-import com.bigdata.datashops.model.pojo.user.Menu;
-import com.bigdata.datashops.model.pojo.user.Permission;
 import com.bigdata.datashops.model.pojo.user.User;
 import com.google.common.collect.Maps;
 
@@ -53,18 +50,18 @@ public class UserController extends BasicController {
         return ok();
     }
 
-    @RequestMapping(value = "/login")
-    public Object login(String name, String phone, String password) {
+    @PostMapping(value = "/login")
+    public Object login(@RequestBody DtoLogin login) {
         Map<String, Object> map = Maps.newHashMap();
         String filter = null;
-        if (StringUtils.isNoneBlank(name)) {
-            filter = "name=" + name;
+        if (StringUtils.isNoneBlank(login.getName())) {
+            filter = "name=" + login.getName();
         }
-        if (StringUtils.isNoneBlank(phone)) {
-            filter = "phone=" + phone;
+        if (StringUtils.isNoneBlank(login.getPhone())) {
+            filter = "phone=" + login.getPhone();
         }
         User user = userService.getUser(filter);
-        if (!userService.verifyPassword(password, user.getPassword())) {
+        if (!userService.verifyPassword(login.getPassword(), user.getPassword())) {
             return fail(ResultCode.USER_INPUT_ILLEGAL);
         }
         user.setLastLoginTime(new Date());
@@ -72,6 +69,7 @@ public class UserController extends BasicController {
         String token = jwtUtil.sign(
                 String.format("%s%s%s%s%s", user.getId(), Constants.SEPARATOR_USER_TOKEN_SALT, user.getEmail(),
                         Constants.SEPARATOR_USER_TOKEN_SALT, user.getPhone()));
+        map.put("user", user);
         map.put(jwtSetting.getHeader(), token);
         return ok(map);
     }
@@ -83,13 +81,4 @@ public class UserController extends BasicController {
         return ok(user);
     }
 
-    @RequestMapping(value = "/getMenuList")
-    public Object getMenuList() {
-        int uid = getUid();
-        List<Permission> permissions = permissionService.getPermissionList(uid);
-        List ids = permissions.stream().map(Permission::getMenuId).collect(Collectors.toList());
-        String filter = "id=" + StringUtils.join(ids, Constants.SEPARATOR_COMMA);
-        List<Menu> menus = menuService.getMenus(filter);
-        return ok(menus);
-    }
 }

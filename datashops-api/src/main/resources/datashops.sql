@@ -28,6 +28,7 @@ CREATE TABLE `t_user_permission`
     `id`          bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Id',
     `uid`         bigint(10)          NOT NULL COMMENT 'uid',
     `menu_id`     bigint(10)          NOT NULL COMMENT 'menu_id',
+    `role_id`     bigint(10)          NOT NULL COMMENT 'role_id',
     `create_time` TIMESTAMP           NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录的创建时间',
     `update_time` TIMESTAMP           NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录的更新时间',
     PRIMARY KEY (`id`)
@@ -42,8 +43,12 @@ CREATE TABLE `t_user_menu`
     `path`        varchar(64) CHARACTER SET utf8 COLLATE utf8_bin  NOT NULL COMMENT '路径',
     `name`        varchar(64) CHARACTER SET utf8 COLLATE utf8_bin  NOT NULL COMMENT '名称',
     `meta`        varchar(512) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT 'meta',
+    `parent_id`   int                                              NOT NULL COMMENT 'parent id',
+    `hidden`      tinyint(1)                                       NOT NULL DEFAULT '0',
+    `sort`        int(11)                                          NOT NULL DEFAULT '10',
+    `authority`   varchar(128) CHARACTER SET utf8 COLLATE utf8_bin not null comment '',
+    `parameters`  varchar(128) CHARACTER SET utf8 COLLATE utf8_bin not null comment '',
     `component`   varchar(128) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '组件',
-    `redirect`    varchar(128) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '重定向',
     `create_time` TIMESTAMP                                        NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录的创建时间',
     `update_time` TIMESTAMP                                        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录的更新时间',
     PRIMARY KEY (`id`)
@@ -51,6 +56,31 @@ CREATE TABLE `t_user_menu`
   AUTO_INCREMENT = 1
   DEFAULT CHARSET = utf8mb4
     COMMENT ='菜单表';
+
+CREATE TABLE `t_user_role`
+(
+    `id`          bigint(20) unsigned                             NOT NULL AUTO_INCREMENT COMMENT 'Id',
+    `name`        varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '名称',
+    `create_time` TIMESTAMP                                       NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录的创建时间',
+    `update_time` TIMESTAMP                                       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录的更新时间',
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8mb4
+    COMMENT ='角色表';
+
+CREATE TABLE `t_user_role_permission`
+(
+    `id`          bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Id',
+    `role_id`     bigint(10)          NOT NULL COMMENT 'role id',
+    `menu_id`     bigint(10)          NOT NULL COMMENT 'menu id',
+    `create_time` TIMESTAMP           NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录的创建时间',
+    `update_time` TIMESTAMP           NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录的更新时间',
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8mb4
+    COMMENT ='角色权限表';
 
 -- job
 CREATE TABLE IF NOT EXISTS `job`

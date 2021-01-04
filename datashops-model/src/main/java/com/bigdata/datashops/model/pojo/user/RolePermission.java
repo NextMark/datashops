@@ -9,11 +9,9 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "t_user_permission")
-public class Permission extends BaseModel {
-    private Integer uid;
+@Table(name = "t_user_role_permission")
+public class RolePermission extends BaseModel {
+    private Integer roleId;
 
     private Integer menuId;
-
-    private Integer roleId;
 }
