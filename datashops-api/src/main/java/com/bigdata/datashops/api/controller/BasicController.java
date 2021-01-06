@@ -16,7 +16,10 @@ import com.bigdata.datashops.api.response.Result;
 import com.bigdata.datashops.api.response.ResultCode;
 import com.bigdata.datashops.api.response.ResultGenerator;
 import com.bigdata.datashops.common.Constants;
+import com.bigdata.datashops.service.JobGraphService;
+import com.bigdata.datashops.service.JobInstanceService;
 import com.bigdata.datashops.service.JobResultService;
+import com.bigdata.datashops.service.JobService;
 import com.bigdata.datashops.service.MenuService;
 import com.bigdata.datashops.service.PermissionService;
 import com.bigdata.datashops.service.RolePermissionService;
@@ -35,6 +38,15 @@ public class BasicController {
 
     @Autowired
     protected JwtUtil jwtUtil;
+
+    @Autowired
+    protected JobService jobService;
+
+    @Autowired
+    protected JobGraphService jobGraphService;
+
+    @Autowired
+    protected JobInstanceService jobInstanceService;
 
     @Autowired
     protected JobResultService jobResultService;

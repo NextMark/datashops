@@ -1,18 +1,12 @@
-package com.bigdata.datashops.model.pojo.job;
+package com.bigdata.datashops.model.dto;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
-import com.bigdata.datashops.model.pojo.BaseModel;
+import javax.validation.constraints.NotBlank;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
-@Entity
-@Table(name = "t_job")
-public class Job extends BaseModel {
+public class DtoJob {
+    @NotBlank(message = "job name must not be empty")
     private String name;
     /**
      * 作业描述
@@ -22,6 +16,7 @@ public class Job extends BaseModel {
      * 作业类型
      * {@link com.bigdata.datashops.model.enums.JobType}
      */
+    @NotBlank(message = "job type must not be null")
     private Integer type;
 
     /**
@@ -36,12 +31,13 @@ public class Job extends BaseModel {
 
     private Integer graphId;
 
+    @NotBlank(message = "must not be null")
     private String owner;
 
     /**
      * 后续把历史版本写入其他表
      */
-    //private String version;
+    private String version;
 
     private String jobContext;
 }

@@ -6,4 +6,6 @@ import lombok.Data;
 public class DtoPageQuery {
     private int pageSize = 20;
     private int pageNum = 0;
+
+    private String name;
 }

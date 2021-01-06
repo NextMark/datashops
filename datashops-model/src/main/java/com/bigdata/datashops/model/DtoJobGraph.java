@@ -1,25 +1,21 @@
-package com.bigdata.datashops.model.pojo.job;
+package com.bigdata.datashops.model;
 
-import java.util.Date;
-
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
-import com.bigdata.datashops.model.pojo.BaseModel;
+import javax.validation.constraints.NotBlank;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
-@Entity
-@Table(name = "t_job_graph")
-public class JobGraph extends BaseModel {
+public class DtoJobGraph {
+    @NotBlank(message = "job name must not be empty")
     private String name;
     /**
      * 作业描述
      */
     private String description;
+    /**
+     * 作业类型
+     */
+    private Integer type;
 
     /**
      * 作业配置
@@ -41,16 +37,20 @@ public class JobGraph extends BaseModel {
     /**
      * 下次调度时间
      */
-    private Date nextTriggerTime;
+    private String nextTriggerTime;
 
     /**
      * 0 关闭调度，1 开启调度
      */
     private int schedulerStatus;
 
+    private String dependencies;
+
     private Integer groupId;
 
     private String owner;
+
+    private Integer scheduleType;
 
     private Integer notifyType;
 
@@ -63,6 +63,8 @@ public class JobGraph extends BaseModel {
     private Integer baseTimeType;
 
     private Integer offset;
+
+    private String version;
 
     private Integer timeout;
 
