@@ -1,10 +1,12 @@
 package com.bigdata.datashops.model.pojo.user;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.bigdata.datashops.model.pojo.BaseModel;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -28,4 +30,14 @@ public class User extends BaseModel {
     private Date lastLoginTime;
 
     private String avatar;
+
+    @Transient
+    private List<Role> roleList;
+
+    public String getAvatar() {
+        if (this.avatar == null) {
+            return "https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2146034403,1504718527&fm=26&gp=0.jpg";
+        }
+        return this.avatar;
+    }
 }

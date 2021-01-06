@@ -27,7 +27,6 @@ CREATE TABLE `t_user_permission`
 (
     `id`          bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Id',
     `uid`         bigint(10)          NOT NULL COMMENT 'uid',
-    `menu_id`     bigint(10)          NOT NULL COMMENT 'menu_id',
     `role_id`     bigint(10)          NOT NULL COMMENT 'role_id',
     `create_time` TIMESTAMP           NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录的创建时间',
     `update_time` TIMESTAMP           NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录的更新时间',
@@ -73,10 +72,11 @@ CREATE TABLE `t_user_role_permission`
 (
     `id`          bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Id',
     `role_id`     bigint(10)          NOT NULL COMMENT 'role id',
-    `menu_id`     bigint(10)          NOT NULL COMMENT 'menu id',
+    `menu_id`     bigint(10)          NOT NULL COMMENT 'menu_id',
     `create_time` TIMESTAMP           NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录的创建时间',
     `update_time` TIMESTAMP           NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录的更新时间',
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `ix_rid_mid` (`role_id`, `menu_id`)
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   DEFAULT CHARSET = utf8mb4

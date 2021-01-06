@@ -1,22 +1,30 @@
 package com.bigdata.datashops.api.controller.v1;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bigdata.datashops.api.common.Pagination;
 import com.bigdata.datashops.api.config.security.jwt.JwtSetting;
 import com.bigdata.datashops.api.controller.BasicController;
 import com.bigdata.datashops.api.response.ResultCode;
 import com.bigdata.datashops.common.Constants;
+import com.bigdata.datashops.dao.data.domain.PageRequest;
 import com.bigdata.datashops.model.dto.DtoLogin;
+import com.bigdata.datashops.model.dto.DtoPageQuery;
 import com.bigdata.datashops.model.dto.DtoRegister;
+import com.bigdata.datashops.model.pojo.user.Permission;
 import com.bigdata.datashops.model.pojo.user.User;
 import com.google.common.collect.Maps;
 
@@ -46,7 +54,15 @@ public class UserController extends BasicController {
         user.setEmail(params.getEmail());
         user.setName(name);
         user.setPassword(pwd);
-        userService.register(user);
+        user = userService.register(user);
+
+        String[] roleIds = params.getRoleIds();
+        for (String id : roleIds) {
+            Permission permission = new Permission();
+            permission.setRoleId(Integer.valueOf(id));
+            permission.setUid(user.getId());
+            permissionService.save(permission);
+        }
         return ok();
     }
 
@@ -79,6 +95,23 @@ public class UserController extends BasicController {
         Integer uid = getUid();
         User user = userService.getUserInfo(uid);
         return ok(user);
+    }
+
+    @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
+    public Object delete(@RequestBody Map<String, Integer> id) {
+        userService.deleteById(id.get("id"));
+        return ok();
+    }
+
+    @RequestMapping(value = "/getUserList")
+    public Object getUserList(@RequestBody DtoPageQuery query) {
+        PageRequest pageable =
+                new PageRequest(query.getPageNum() - 1, query.getPageSize(), "", Sort.Direction.ASC, "createTime");
+        Page<User> user = userService.getUserList(pageable);
+        List<User> userList = user.getContent();
+        userService.fillRoles(userList);
+        Pagination pagination = new Pagination(user);
+        return ok(pagination);
     }
 
 }

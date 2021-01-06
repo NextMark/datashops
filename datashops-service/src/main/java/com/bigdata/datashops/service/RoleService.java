@@ -12,4 +12,8 @@ public class RoleService extends AbstractMysqlPagingAndSortingQueryService<Role,
     public Page<Role> getRoles(PageRequest pageRequest) {
         return pageByQuery(pageRequest);
     }
+
+    public Role getRole(Integer id) {
+        return findById(id);
+    }
 }

@@ -13,7 +13,5 @@ import lombok.Data;
 public class Permission extends BaseModel {
     private Integer uid;
 
-    private Integer menuId;
-
     private Integer roleId;
 }

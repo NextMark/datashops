@@ -1,7 +1,8 @@
 package com.bigdata.datashops.dao.user;
 
-import com.bigdata.datashops.dao.data.service.PagingAndSortingQueryService;
+import org.springframework.data.repository.PagingAndSortingRepository;
+
 import com.bigdata.datashops.model.pojo.user.Role;
 
-public interface RoleDao extends PagingAndSortingQueryService<Role, Integer> {
+public interface RoleDao extends PagingAndSortingRepository<Role, Integer> {
 }

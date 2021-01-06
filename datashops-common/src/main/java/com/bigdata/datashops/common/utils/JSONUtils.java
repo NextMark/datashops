@@ -200,6 +200,21 @@ public class JSONUtils {
         return null;
     }
 
+    public static <T> List<T> toList(String json) {
+        if (StringUtils.isEmpty(json)) {
+            return null;
+        }
+
+        try {
+            return objectMapper.readValue(json, new TypeReference<List<T>>() {
+            });
+        } catch (Exception e) {
+            LOG.error("json to map exception!", e);
+        }
+
+        return null;
+    }
+
     /**
      * json to map
      *

@@ -20,6 +20,7 @@ import com.bigdata.datashops.dao.data.domain.PageRequest;
 import com.bigdata.datashops.model.dto.DtoPageQuery;
 import com.bigdata.datashops.model.pojo.user.Menu;
 import com.bigdata.datashops.model.pojo.user.Permission;
+import com.bigdata.datashops.model.pojo.user.RolePermission;
 
 @RestController
 @RequestMapping("/v1/menu")
@@ -28,21 +29,24 @@ public class MenuController extends BasicController {
     public Object asyncMenu() {
         int uid = getUid();
         List<Permission> permissions = permissionService.getPermissionList(uid);
-        List ids = permissions.stream().map(Permission::getMenuId).collect(Collectors.toList());
-        String filter = "id=" + StringUtils.join(ids, Constants.SEPARATOR_COMMA);
+
+        List<Integer> roleIds = permissions.stream().map(Permission::getRoleId).collect(Collectors.toList());
+        String filter = "roleId=" + StringUtils.join(roleIds, Constants.SEPARATOR_COMMA);
+        List<RolePermission> rolePermissions = rolePermissionService.getRolePermission(filter);
+
+        List<Integer> menusIds = rolePermissions.stream().map(RolePermission::getMenuId).collect(Collectors.toList());
+        menusIds = menusIds.parallelStream().distinct().collect(Collectors.toList());
+        filter = "parentId=0;" + "id=" + StringUtils.join(menusIds, Constants.SEPARATOR_COMMA);
         List<Menu> menus = menuService.getMenus(filter);
-        menuService.fillChildren(menus);
+        menuService.fillChildren(menus, menusIds);
+
         return ok(menus);
     }
 
     @PostMapping(value = "/getMenuList")
     public Object getMenuList(@RequestBody DtoPageQuery query) {
-        int uid = getUid();
-        List<Permission> permissions = permissionService.getPermissionList(uid);
-        List ids = permissions.stream().map(Permission::getMenuId).collect(Collectors.toList());
-        String filter = "id=" + StringUtils.join(ids, Constants.SEPARATOR_COMMA);
         PageRequest pageable =
-                new PageRequest(query.getPageNum() - 1, query.getPageSize(), filter, Sort.Direction.ASC, "sort");
+                new PageRequest(query.getPageNum() - 1, query.getPageSize(), "parentId=0", Sort.Direction.ASC, "sort");
         Page<Menu> menus = menuService.getByPage(pageable);
         List<Menu> menuList = menus.getContent();
         menuService.fillChildren(menuList);
@@ -50,10 +54,41 @@ public class MenuController extends BasicController {
         return ok(pagination);
     }
 
+    @PostMapping(value = "/getMenuTree")
+    public Object getMenuList() {
+        String filter = "parentId=0";
+        List<Menu> menuList = menuService.getMenus(filter);
+        menuService.fillChildren(menuList);
+        return ok(menuList);
+    }
+
+    @PostMapping(value = "/getRoleMenu")
+    public Object getRoleMenu(@RequestBody Map<String, Object> id) {
+        String filter = "roleId=" + id.get("id");
+        List<RolePermission> rolePermissions = rolePermissionService.getRolePermission(filter);
+        List<Integer> ids = rolePermissions.stream().map(RolePermission::getMenuId).collect(Collectors.toList());
+        filter = "id=" + StringUtils.join(ids, Constants.SEPARATOR_COMMA);
+        List<Menu> menus = menuService.getMenus(filter);
+        return ok(menus);
+    }
+
     @PostMapping(value = "/addBaseMenu")
     public Object addBaseMenu(@RequestBody Map<String, Object> payload) {
         Menu menu = JSONUtils.convertValue(payload, Menu.class);
         menuService.save(menu);
         return ok();
+    }
+
+    @PostMapping(value = "/getBaseMenuById")
+    public Object getBaseMenuById(@RequestBody Map<String, Integer> payload) {
+        Integer id = payload.get("id");
+        Menu menu = menuService.findById(id);
+        return ok(menu);
+    }
+
+    @PostMapping(value = "/modifyMenu")
+    public Object modifyMenu(@RequestBody Menu menu) {
+        menuService.save(menu);
+        return ok(menu);
     }
 }
