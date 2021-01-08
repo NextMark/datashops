@@ -5,7 +5,9 @@ import lombok.Data;
 @Data
 public class DtoPageQuery {
     private int pageSize = 20;
-    private int pageNum = 0;
+    private int pageNum = 1;
 
     private String name;
+
+    private String owner;
 }

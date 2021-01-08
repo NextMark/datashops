@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bigdata.datashops.api.common.Pagination;
 import com.bigdata.datashops.api.controller.BasicController;
+import com.bigdata.datashops.api.response.Result;
 import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.common.utils.JSONUtils;
 import com.bigdata.datashops.dao.data.domain.PageRequest;
@@ -26,7 +27,7 @@ import com.bigdata.datashops.model.pojo.user.RolePermission;
 @RequestMapping("/v1/menu")
 public class MenuController extends BasicController {
     @PostMapping(value = "/asyncMenu")
-    public Object asyncMenu() {
+    public Result asyncMenu() {
         int uid = getUid();
         List<Permission> permissions = permissionService.getPermissionList(uid);
 
@@ -44,7 +45,7 @@ public class MenuController extends BasicController {
     }
 
     @PostMapping(value = "/getMenuList")
-    public Object getMenuList(@RequestBody DtoPageQuery query) {
+    public Result getMenuList(@RequestBody DtoPageQuery query) {
         PageRequest pageable =
                 new PageRequest(query.getPageNum() - 1, query.getPageSize(), "parentId=0", Sort.Direction.ASC, "sort");
         Page<Menu> menus = menuService.getByPage(pageable);
@@ -55,7 +56,7 @@ public class MenuController extends BasicController {
     }
 
     @PostMapping(value = "/getMenuTree")
-    public Object getMenuList() {
+    public Result getMenuList() {
         String filter = "parentId=0";
         List<Menu> menuList = menuService.getMenus(filter);
         menuService.fillChildren(menuList);
@@ -63,7 +64,7 @@ public class MenuController extends BasicController {
     }
 
     @PostMapping(value = "/getRoleMenu")
-    public Object getRoleMenu(@RequestBody Map<String, Object> id) {
+    public Result getRoleMenu(@RequestBody Map<String, Object> id) {
         String filter = "roleId=" + id.get("id");
         List<RolePermission> rolePermissions = rolePermissionService.getRolePermission(filter);
         List<Integer> ids = rolePermissions.stream().map(RolePermission::getMenuId).collect(Collectors.toList());
@@ -73,21 +74,21 @@ public class MenuController extends BasicController {
     }
 
     @PostMapping(value = "/addBaseMenu")
-    public Object addBaseMenu(@RequestBody Map<String, Object> payload) {
+    public Result addBaseMenu(@RequestBody Map<String, Object> payload) {
         Menu menu = JSONUtils.convertValue(payload, Menu.class);
         menuService.save(menu);
         return ok();
     }
 
     @PostMapping(value = "/getBaseMenuById")
-    public Object getBaseMenuById(@RequestBody Map<String, Integer> payload) {
+    public Result getBaseMenuById(@RequestBody Map<String, Integer> payload) {
         Integer id = payload.get("id");
         Menu menu = menuService.findById(id);
         return ok(menu);
     }
 
     @PostMapping(value = "/modifyMenu")
-    public Object modifyMenu(@RequestBody Menu menu) {
+    public Result modifyMenu(@RequestBody Menu menu) {
         menuService.save(menu);
         return ok(menu);
     }

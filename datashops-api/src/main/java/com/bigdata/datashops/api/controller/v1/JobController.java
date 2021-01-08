@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
@@ -69,8 +70,15 @@ public class JobController extends BasicController {
 
     @PostMapping(value = "/getJobGraphList")
     public Result getJobGraphList(@RequestBody DtoPageQuery query) {
+        StringBuilder filter = new StringBuilder("status=1");
+        if (StringUtils.isNoneBlank(query.getName())) {
+            filter.append(";name?").append(query.getName());
+        }
+        if (StringUtils.isNoneBlank(query.getOwner())) {
+            filter.append(";owner?").append(query.getOwner());
+        }
         PageRequest pageRequest =
-                new PageRequest(query.getPageNum() - 1, query.getPageSize(), "status=1", Sort.Direction.DESC,
+                new PageRequest(query.getPageNum() - 1, query.getPageSize(), filter.toString(), Sort.Direction.DESC,
                         "createTime");
         Page<JobGraph> jobGraphs = jobGraphService.getJobGraphList(pageRequest);
         Pagination pagination = new Pagination(jobGraphs);
@@ -98,9 +106,9 @@ public class JobController extends BasicController {
     }
 
     @PostMapping(value = "/modifySchedulerStatus")
-    public Result modifySchedulerStatus(@RequestBody Map<String, Integer> id) {
-        int status = id.get("status");
-        JobGraph jobGraph = jobGraphService.getJobGraph(id.get("id"));
+    public Result modifySchedulerStatus(@RequestBody Map<String, Object> params) {
+        int status = (int) params.get("status");
+        JobGraph jobGraph = jobGraphService.getJobGraph((Integer) params.get("id"));
         if (!Objects.isNull(jobGraph)) {
             jobGraph.setSchedulerStatus(status);
             jobGraphService.save(jobGraph);
