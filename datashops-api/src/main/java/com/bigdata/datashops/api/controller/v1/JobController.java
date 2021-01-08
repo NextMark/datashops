@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import javax.validation.constraints.NotNull;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
@@ -30,11 +32,10 @@ import com.google.common.collect.Lists;
 @RestController
 @RequestMapping("/v1/job")
 public class JobController extends BasicController {
-    @RequestMapping(value = "/startJobs")
-    public Result startJobs(Long id) {
-        Job job = new Job();
-        ValidatorUtil.validate(job);
-        return ok();
+    @RequestMapping(value = "/getJobGraphById")
+    public Result getJobGraphById(@NotNull Integer id) {
+        JobGraph jobGraph = jobGraphService.getJobGraph(id);
+        return ok(jobGraph);
     }
 
     @RequestMapping(value = "/test")
