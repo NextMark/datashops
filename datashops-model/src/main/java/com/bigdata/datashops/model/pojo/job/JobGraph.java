@@ -1,9 +1,12 @@
 package com.bigdata.datashops.model.pojo.job;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.bigdata.datashops.model.pojo.BaseModel;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -73,4 +76,10 @@ public class JobGraph extends BaseModel {
     private Integer retryInterval;
 
     private Integer workerSelector;
+
+    @Transient
+    private List<Job> jobList;
+
+    @Transient
+    private List<Map<String, Object>> dependencies;
 }

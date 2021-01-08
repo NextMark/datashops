@@ -35,6 +35,7 @@ public class JobController extends BasicController {
     @RequestMapping(value = "/getJobGraphById")
     public Result getJobGraphById(@NotNull Integer id) {
         JobGraph jobGraph = jobGraphService.getJobGraph(id);
+        jobGraphService.fillJobWithDependency(jobGraph);
         return ok(jobGraph);
     }
 
