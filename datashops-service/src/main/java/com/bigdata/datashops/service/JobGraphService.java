@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.bigdata.datashops.dao.data.domain.PageRequest;
 import com.bigdata.datashops.dao.data.service.AbstractMysqlPagingAndSortingQueryService;
 import com.bigdata.datashops.model.pojo.job.Job;
+import com.bigdata.datashops.model.pojo.job.JobDependency;
 import com.bigdata.datashops.model.pojo.job.JobGraph;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -18,6 +19,9 @@ import com.google.common.collect.Maps;
 public class JobGraphService extends AbstractMysqlPagingAndSortingQueryService<JobGraph, Integer> {
     @Autowired
     private JobService jobService;
+
+    @Autowired
+    private JobDependencyService jobDependencyService;
 
     public JobGraph getJobGraph(Integer id) {
         return findById(id);
@@ -30,13 +34,20 @@ public class JobGraphService extends AbstractMysqlPagingAndSortingQueryService<J
     public void fillJobWithDependency(JobGraph jobGraph) {
         String sb = "graphId=" + jobGraph.getId() + ";status=1";
         List<Job> jobs = jobService.findJobs(sb);
-        jobGraph.setJobList(jobs);
+        jobGraph.setNodeList(jobs);
 
         List<Map<String, Object>> dependencies = Lists.newArrayList();
         for (Job job : jobs) {
+            String filter = "sourceId=" + job.getId();
+            List<JobDependency> jobDependencies = jobDependencyService.getJobDependency(filter);
 
-            Map<String, Object> line = Maps.newHashMap();
-            line.put("from", job.getId());
+            for (JobDependency jobDependency : jobDependencies) {
+                Map<String, Object> line = Maps.newHashMap();
+                line.put("from", job.getId());
+                line.put("to", jobDependency.getTargetId());
+                dependencies.add(line);
+            }
         }
+        jobGraph.setLineList(dependencies);
     }
 }

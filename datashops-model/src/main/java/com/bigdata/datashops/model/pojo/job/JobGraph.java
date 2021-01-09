@@ -78,8 +78,8 @@ public class JobGraph extends BaseModel {
     private Integer workerSelector;
 
     @Transient
-    private List<Job> jobList;
+    private List<Job> nodeList;
 
     @Transient
-    private List<Map<String, Object>> dependencies;
+    private List<Map<String, Object>> lineList;
 }
