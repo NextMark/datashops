@@ -34,12 +34,25 @@ public class JobGraphService extends AbstractMysqlPagingAndSortingQueryService<J
     public void fillJobWithDependency(JobGraph jobGraph) {
         String sb = "graphId=" + jobGraph.getId() + ";status=1";
         List<Job> jobs = jobService.findJobs(sb);
-        jobGraph.setNodeList(jobs);
 
         List<Map<String, Object>> dependencies = Lists.newArrayList();
         for (Job job : jobs) {
-            String filter = "sourceId=" + job.getId();
+            String filter = "targetId=" + job.getId();
             List<JobDependency> jobDependencies = jobDependencyService.getJobDependency(filter);
+            if (jobDependencies.size() == 0) {
+                Map<String, Object> line = Maps.newHashMap();
+                line.put("from", -1);
+                line.put("to", job.getId());
+                dependencies.add(line);
+            }
+            filter = "sourceId=" + job.getId();
+            jobDependencies = jobDependencyService.getJobDependency(filter);
+            if (jobDependencies.size() == 0) {
+                Map<String, Object> line = Maps.newHashMap();
+                line.put("from", job.getId());
+                line.put("to", -2);
+                dependencies.add(line);
+            }
 
             for (JobDependency jobDependency : jobDependencies) {
                 Map<String, Object> line = Maps.newHashMap();
@@ -48,6 +61,25 @@ public class JobGraphService extends AbstractMysqlPagingAndSortingQueryService<J
                 dependencies.add(line);
             }
         }
+        Job root = new Job();
+        root.setId(-1);
+        root.setName("root");
+        root.setGraphId(jobGraph.getId());
+        root.setIco("el-icon-my-start");
+        root.setLeft("10px");
+        root.setTop("20px");
+        jobs.add(root);
+
+        Job end = new Job();
+        end.setId(-2);
+        end.setName("end");
+        end.setGraphId(jobGraph.getId());
+        end.setIco("el-icon-my-end");
+        end.setLeft("600px");
+        end.setTop("20px");
+        jobs.add(end);
+
+        jobGraph.setNodeList(jobs);
         jobGraph.setLineList(dependencies);
     }
 }
