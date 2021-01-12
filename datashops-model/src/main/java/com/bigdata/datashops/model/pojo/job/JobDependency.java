@@ -13,6 +13,7 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Table(name = "t_job_dependency")
 public class JobDependency extends BaseModel {
+    private Integer graphId;
     /**
      * default 1, 虚拟根节点
      */
@@ -30,4 +31,8 @@ public class JobDependency extends BaseModel {
      * 依赖作业的偏移，逗号分隔，0，-1，-5
      */
     private String offset;
+
+    private String left;
+
+    private String top;
 }

@@ -16,6 +16,7 @@ import com.bigdata.datashops.api.response.Result;
 import com.bigdata.datashops.api.response.ResultCode;
 import com.bigdata.datashops.api.response.ResultGenerator;
 import com.bigdata.datashops.common.Constants;
+import com.bigdata.datashops.service.JobDependencyService;
 import com.bigdata.datashops.service.JobGraphService;
 import com.bigdata.datashops.service.JobInstanceService;
 import com.bigdata.datashops.service.JobResultService;
@@ -47,6 +48,9 @@ public class BasicController {
 
     @Autowired
     protected JobInstanceService jobInstanceService;
+
+    @Autowired
+    protected JobDependencyService jobDependencyService;
 
     @Autowired
     protected JobResultService jobResultService;
@@ -123,7 +127,7 @@ public class BasicController {
         return ResultGenerator.genOkResult();
     }
 
-    protected Object fail(ResultCode resType) {
+    protected Result fail(ResultCode resType) {
         return ResultGenerator.genCustomResult(resType);
     }
 

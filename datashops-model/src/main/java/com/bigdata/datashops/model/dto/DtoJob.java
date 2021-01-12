@@ -29,8 +29,6 @@ public class DtoJob {
      */
     private Integer status;
 
-    private Integer graphId;
-
     @NotBlank(message = "must not be null")
     private String owner;
 

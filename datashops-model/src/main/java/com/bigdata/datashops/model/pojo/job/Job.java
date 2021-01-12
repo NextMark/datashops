@@ -34,8 +34,6 @@ public class Job extends BaseModel {
      */
     private Integer status;
 
-    private Integer graphId;
-
     private String owner;
 
     /**

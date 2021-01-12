@@ -55,6 +55,7 @@ public class Constants {
      * separator
      */
     public final static String SEPARATOR_COMMA = ",";
+    public final static String SEPARATOR_HYPHEN = "-";
     public final static String SEPARATOR_LINE = "\\|";
     public final static String SEPARATOR_SEMICOLON = ";";
     public final static String SEPARATOR_USER_TOKEN_SALT = "__datashops__";
