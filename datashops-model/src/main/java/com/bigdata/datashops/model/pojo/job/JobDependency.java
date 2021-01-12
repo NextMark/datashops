@@ -32,7 +32,4 @@ public class JobDependency extends BaseModel {
      */
     private String offset;
 
-    private String left;
-
-    private String top;
 }
