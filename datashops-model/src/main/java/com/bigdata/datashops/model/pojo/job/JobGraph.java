@@ -52,7 +52,7 @@ public class JobGraph extends BaseModel {
      */
     private int schedulerStatus;
 
-    private Integer groupId;
+    private Integer projectId;
 
     private String owner;
 
