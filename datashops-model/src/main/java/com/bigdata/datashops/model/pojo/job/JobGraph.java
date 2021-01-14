@@ -2,20 +2,14 @@ package com.bigdata.datashops.model.pojo.job;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.apache.commons.lang3.StringUtils;
-
-import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.model.pojo.BaseModel;
 import com.bigdata.datashops.model.vo.VoJobNode;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -25,30 +19,15 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Table(name = "t_job_graph")
 public class JobGraph extends BaseModel {
+    private String strId;
+
     private String name;
     /**
      * 作业描述
      */
     private String description;
 
-    /**
-     * 作业组
-     * {
-     * graphNodes: [
-     * {
-     * id: 1,
-     * top: 10px,
-     * left: 20px,
-     * ico: el
-     * }
-     * ]
-     * }
-     */
-    private String graphNodes;
-
     private String configJson;
-
-    private String jobIds;
 
     /**
      * 0已删除，1存在
@@ -101,25 +80,6 @@ public class JobGraph extends BaseModel {
     private List<VoJobNode> nodeList;
 
     @Transient
-    private List<Map<String, Object>> lineList;
+    private List<Edge> lineList;
 
-    public Map<String, List<Integer>> parseJobIds() {
-        Map<String, List<Integer>> result = Maps.newHashMap();
-        if (StringUtils.isBlank(jobIds)) {
-            return result;
-        }
-        String[] arrs = jobIds.split(Constants.SEPARATOR_COMMA);
-        for (String arr : arrs) {
-            String[] id = arr.split(Constants.SEPARATOR_HYPHEN);
-            List<Integer> data = result.get(id[0]);
-            if (data == null) {
-                data = Lists.newArrayList();
-                data.add(Integer.valueOf(id[1]));
-            } else {
-                data.add(Integer.valueOf(id[1]));
-            }
-            result.put(id[0], data);
-        }
-        return result;
-    }
 }

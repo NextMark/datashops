@@ -6,4 +6,8 @@ public class JobUtils {
     public static String genJobInstanceId() {
         return DateUtils.getCurrentTime("yyMMddHHmmss") + RandomStringUtils.randomNumeric(6);
     }
+
+    public static String genStrId(String prefix) {
+        return prefix + DateUtils.getCurrentTime("yyMMddHHmmss") + RandomStringUtils.randomNumeric(3);
+    }
 }

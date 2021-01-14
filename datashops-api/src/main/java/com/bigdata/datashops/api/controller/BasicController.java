@@ -19,6 +19,7 @@ import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.service.JobDependencyService;
 import com.bigdata.datashops.service.JobGraphService;
 import com.bigdata.datashops.service.JobInstanceService;
+import com.bigdata.datashops.service.JobRelationService;
 import com.bigdata.datashops.service.JobResultService;
 import com.bigdata.datashops.service.JobService;
 import com.bigdata.datashops.service.MenuService;
@@ -66,6 +67,9 @@ public class BasicController {
 
     @Autowired
     protected RoleService roleService;
+
+    @Autowired
+    protected JobRelationService jobRelationService;
 
     @Autowired
     protected RolePermissionService rolePermissionService;

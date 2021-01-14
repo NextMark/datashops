@@ -134,8 +134,9 @@ public class LocalDateUtils {
     }
 
     public static Date localDateTimeToDate(LocalDateTime ldt) {
-        return Date.from(ldt.atZone( ZoneId.systemDefault()).toInstant());
+        return Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
     }
+
     /**
      * 获取当前日期和时间字符串.
      *
@@ -143,6 +144,10 @@ public class LocalDateUtils {
      */
     public static String getLocalDateTimeStr() {
         return format(LocalDateTime.now(), DATETIME_PATTERN);
+    }
+
+    public static String getUnLocalDateTimeStr() {
+        return format(LocalDateTime.now(), UNSIGNED_DATETIME_PATTERN);
     }
 
     /**
@@ -325,7 +330,8 @@ public class LocalDateUtils {
      * @return String 格式：yyyy-MM-dd 23:59:59
      */
     public static String getLastDayOfYearStr(LocalDateTime localDateTime, String pattern) {
-        return format(localDateTime.with(TemporalAdjusters.lastDayOfYear()).withHour(23).withMinute(59).withSecond(59), pattern);
+        return format(localDateTime.with(TemporalAdjusters.lastDayOfYear()).withHour(23).withMinute(59).withSecond(59),
+                pattern);
     }
 
     /**
@@ -384,7 +390,8 @@ public class LocalDateUtils {
      * @return String 格式：yyyy-MM-dd 23:59:59
      */
     public static String getLastDayOfMonthStr(LocalDateTime localDateTime, String pattern) {
-        return format(localDateTime.with(TemporalAdjusters.lastDayOfMonth()).withHour(23).withMinute(59).withSecond(59), pattern);
+        return format(localDateTime.with(TemporalAdjusters.lastDayOfMonth()).withHour(23).withMinute(59).withSecond(59),
+                pattern);
     }
 
     /**

@@ -13,6 +13,8 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Table(name = "t_job")
 public class Job extends BaseModel {
+    private String strId;
+
     private String name;
     /**
      * 作业描述

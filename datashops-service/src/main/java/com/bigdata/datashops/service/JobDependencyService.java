@@ -12,4 +12,8 @@ public class JobDependencyService extends AbstractMysqlPagingAndSortingQueryServ
     public List<JobDependency> getJobDependency(String filter) {
         return findByQuery(filter);
     }
+
+    public JobDependency getOne(String filter) {
+        return findOneByQuery(filter);
+    }
 }

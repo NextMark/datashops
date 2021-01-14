@@ -4,9 +4,7 @@ import lombok.Data;
 
 @Data
 public class VoJobNode {
-    private Integer id;
-
-    private String nodeId;
+    private String id;
 
     private String name;
 

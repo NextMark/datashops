@@ -62,7 +62,9 @@ public class Checker {
             }
             if (jit == JobInstanceType.JOB) {
                 Job preJob = jobService.getJob(preJobId);
-                int schedulingPeriod = preJob.getSchedulingPeriod();
+                // TODO
+                //int schedulingPeriod = preJob.getSchedulingPeriod();
+                int schedulingPeriod = 2;
                 dependencyBizTime = getDependencyBizTime(bizTime, schedulingPeriod, offset);
                 sb.append("jobId=").append(preJobId).append(";");
                 sb.append("bizTime=").append(dependencyBizTime).append(";");

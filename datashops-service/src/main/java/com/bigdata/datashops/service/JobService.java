@@ -15,6 +15,10 @@ public class JobService extends AbstractMysqlPagingAndSortingQueryService<Job, I
         return findById(id);
     }
 
+    public Job getJobByStrId(String id) {
+        return findOneByQuery("strId=" + id);
+    }
+
     public List<Job> findJobs(String filters) {
         return findByQuery(filters);
     }

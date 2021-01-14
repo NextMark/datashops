@@ -150,7 +150,7 @@ CREATE TABLE IF NOT EXISTS `t_job_dependency`
 (
     `id`          BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT COMMENT 'ID',
     `source_id`   BIGINT             NULL COMMENT '作业的ID, 即 job 表的 id',
-    `target_id`   bigint             NULL COMMENT '实例启动时的镜像配置',
+    `target_id`   BIGINT             NULL COMMENT '实例启动时的镜像配置',
     `depend_type` TINYINT(4)         NOT NULL COMMENT '实例的状态',
     `offset`      bigint             NOT NULL DEFAULT 0 COMMENT '实例的集群任务id',
     `create_time` TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录的创建时间',
@@ -158,3 +158,17 @@ CREATE TABLE IF NOT EXISTS `t_job_dependency`
     UNIQUE KEY `ix_sid_tid` (`source_id`, `target_id`) USING BTREE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8 COMMENT ='作业依赖表';
+
+CREATE TABLE IF NOT EXISTS `t_job_relation`
+(
+    `id`          BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `graph_id`    BIGINT             NULL COMMENT '作业组id',
+    `job_id`      BIGINT             NULL COMMENT '作业 id',
+    `node_type`   TINYINT(4)         NOT NULL COMMENT '作业类型',
+    `top`         VARCHAR(10)        NOT NULL DEFAULT '' COMMENT 'top',
+    `left`        VARCHAR(10)        NOT NULL DEFAULT '' COMMENT 'left',
+    `create_time` TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录的创建时间',
+    `update_time` TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录的更新时间',
+    UNIQUE KEY `ix_gid_jid` (`graph_id`, `job_id`, `node_type`) USING BTREE
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8 COMMENT ='作业关系表';

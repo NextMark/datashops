@@ -1,11 +1,7 @@
 package com.bigdata.datashops.api.controller.v1;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
 
@@ -24,6 +20,7 @@ import com.bigdata.datashops.api.response.Result;
 import com.bigdata.datashops.api.response.ResultCode;
 import com.bigdata.datashops.api.utils.ValidatorUtil;
 import com.bigdata.datashops.common.Constants;
+import com.bigdata.datashops.common.utils.JobUtils;
 import com.bigdata.datashops.dao.data.domain.PageRequest;
 import com.bigdata.datashops.model.DtoJobGraph;
 import com.bigdata.datashops.model.dto.DtoJob;
@@ -31,14 +28,14 @@ import com.bigdata.datashops.model.dto.DtoPageQuery;
 import com.bigdata.datashops.model.pojo.job.Job;
 import com.bigdata.datashops.model.pojo.job.JobDependency;
 import com.bigdata.datashops.model.pojo.job.JobGraph;
-import com.google.common.collect.Sets;
+import com.bigdata.datashops.model.pojo.job.JobRelation;
 
 @RestController
 @RequestMapping("/v1/job")
 public class JobController extends BasicController {
     @RequestMapping(value = "/getJobGraphById")
-    public Result getJobGraphById(@NotNull Integer id) {
-        JobGraph jobGraph = jobGraphService.getJobGraph(id);
+    public Result getJobGraphById(@NotNull String id) {
+        JobGraph jobGraph = jobGraphService.getJobGraphByStrId(id);
         jobGraphService.fillJobWithDependency(jobGraph);
         return ok(jobGraph);
     }
@@ -134,35 +131,74 @@ public class JobController extends BasicController {
     }
 
     @PostMapping(value = "/addJobToGraph")
-    public Result addJobToGraph(@RequestBody Map<String, Integer> params) {
-        int graphId = params.get("graphId");
-        int jobId = params.get("jobId");
-        int type = params.get("type");
-        JobGraph jobGraph = jobGraphService.getJobGraph(graphId);
+    public Result addJobToGraph(@RequestBody Map<String, String> params) {
+        String graphId = params.get("graphStrId");
+        String jobId = params.get("jobStrId");
+        int type = Integer.parseInt(params.get("type"));
+        JobGraph jobGraph = jobGraphService.getJobGraphByStrId(graphId);
         if (Objects.isNull(jobGraph)) {
             return fail(ResultCode.FAILURE);
         }
-        List<Integer> ids =
-                Arrays.stream(jobGraph.getJobIds().split(Constants.SEPARATOR_COMMA)).mapToInt(Integer::parseInt).boxed()
-                        .collect(Collectors.toList());
-        Set<Integer> jobIds = Sets.newHashSet(ids);
-        if (!jobIds.contains(jobId)) {
-            jobIds.add(jobId);
-        } else {
-            return ok();
-        }
-        jobGraph.setJobIds(StringUtils.join(jobIds, Constants.SEPARATOR_COMMA));
-        jobGraphService.save(jobGraph);
+        JobRelation jobRelation = new JobRelation();
+        jobRelation.setTopPos("0px");
+        jobRelation.setLeftPos("0px");
+        jobRelation.setGraphStrId(graphId);
+        jobRelation.setJobStrId(jobId);
+        jobRelation.setNodeType(type);
+        jobRelationService.save(jobRelation);
         return ok();
     }
 
     @PostMapping(value = "/addNewJobToGraph")
-    public Result addNewJobToGraph(@RequestBody DtoJob dtoJob) {
-        ValidatorUtil.validate(dtoJob);
+    public Result addNewJobToGraph(@RequestBody Map<String, String> params) {
+        String graphId = params.get("graphId");
+        int type = Integer.parseInt(params.get("type"));
+        String owner = String.valueOf(params.get("name"));
+        String ico = params.get("ico");
         Job job = new Job();
-        BeanUtils.copyProperties(dtoJob, job);
+        // todo project id
+        job.setStrId(JobUtils.genStrId("1-" + "1-"));
+        job.setType(type);
+        job.setOwner(owner);
+        job.setIco(ico);
         job.setStatus(1);
-        jobService.save(job);
+        job = jobService.save(job);
+
+        JobRelation jobRelation = new JobRelation();
+        jobRelation.setGraphStrId(graphId);
+        jobRelation.setJobStrId(job.getStrId());
+        jobRelation.setNodeType(type);
+        jobRelationService.save(jobRelation);
+        return ok();
+    }
+
+    @PostMapping(value = "/modifyPosition")
+    public Result modifyPosition(@RequestBody Map<String, String> params) {
+        String graphId = params.get("graphStrId");
+        String jobStrId = params.get("jobStrId");
+        String[] jobIdStr = jobStrId.split(Constants.SEPARATOR_HYPHEN);
+        if (jobIdStr[1].contains("+")) {
+            return ok();
+        }
+        String filter = "graphStrId=" + graphId + ";jobStrId=" + jobStrId + ";nodeType=" + jobIdStr[1];
+        JobRelation jobRelation = jobRelationService.findOneByQuery(filter);
+        jobRelation.setTopPos(params.get("top"));
+        jobRelation.setLeftPos(params.get("left"));
+        jobRelationService.save(jobRelation);
+        return ok();
+    }
+
+    @PostMapping(value = "/modifyOffset")
+    public Result modifyOffset(@RequestBody Map<String, String> params) {
+        String graphStrId = params.get("graphStrId");
+        String sourceStrId = params.get("sourceStrId");
+        String targetStrId = params.get("targetStrId");
+        int offset = Integer.parseInt(params.get("offset"));
+        String filter =
+                String.format("graphStrId=%s;sourceStrId=%s;targetStrId=%s", graphStrId, sourceStrId, targetStrId);
+        JobDependency jobDependency = jobDependencyService.getOne(filter);
+        jobDependency.setOffset(offset);
+        jobDependencyService.save(jobDependency);
         return ok();
     }
 }
