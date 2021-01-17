@@ -45,10 +45,6 @@ public class Job extends BaseModel {
 
     private String jobContext;
 
-    private String left;
-
-    private String top;
-
     private String ico;
 
     private Integer state;

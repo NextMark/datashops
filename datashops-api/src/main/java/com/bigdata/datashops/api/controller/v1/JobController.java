@@ -25,10 +25,12 @@ import com.bigdata.datashops.dao.data.domain.PageRequest;
 import com.bigdata.datashops.model.DtoJobGraph;
 import com.bigdata.datashops.model.dto.DtoJob;
 import com.bigdata.datashops.model.dto.DtoPageQuery;
+import com.bigdata.datashops.model.enums.JobType;
 import com.bigdata.datashops.model.pojo.job.Job;
 import com.bigdata.datashops.model.pojo.job.JobDependency;
 import com.bigdata.datashops.model.pojo.job.JobGraph;
 import com.bigdata.datashops.model.pojo.job.JobRelation;
+import com.bigdata.datashops.service.JobRelationService;
 
 @RestController
 @RequestMapping("/v1/job")
@@ -94,12 +96,10 @@ public class JobController extends BasicController {
     }
 
     @PostMapping(value = "/deleteJob")
-    public Result deleteJob(@RequestBody Map<String, Integer> id) {
-        Job job = jobService.getJob(id.get("id"));
-        if (!Objects.isNull(job)) {
-            job.setStatus(0);
-            jobService.save(job);
-        }
+    public Result deleteJob(@RequestBody Map<String, String> params) {
+        String graphStrId = params.get("graphStrId");
+        String jobStrId = params.get("jobStrId");
+        jobRelationService.delete(graphStrId, jobStrId);
         return ok();
     }
 
@@ -151,15 +151,17 @@ public class JobController extends BasicController {
 
     @PostMapping(value = "/addNewJobToGraph")
     public Result addNewJobToGraph(@RequestBody Map<String, String> params) {
-        String graphId = params.get("graphId");
-        int type = Integer.parseInt(params.get("type"));
-        String owner = String.valueOf(params.get("name"));
+        String graphId = params.get("graphStrId");
+        JobType jobType = JobType.valueOf(JobType.class, params.get("type").toUpperCase());
+        String name = String.valueOf(params.get("name"));
+        String owner = String.valueOf(params.get("owner"));
         String ico = params.get("ico");
         Job job = new Job();
         // todo project id
         job.setStrId(JobUtils.genStrId("1-" + "1-"));
-        job.setType(type);
+        job.setType(jobType.getCode());
         job.setOwner(owner);
+        job.setName(name);
         job.setIco(ico);
         job.setStatus(1);
         job = jobService.save(job);
@@ -167,9 +169,11 @@ public class JobController extends BasicController {
         JobRelation jobRelation = new JobRelation();
         jobRelation.setGraphStrId(graphId);
         jobRelation.setJobStrId(job.getStrId());
-        jobRelation.setNodeType(type);
+        jobRelation.setNodeType(1);
+        jobRelation.setLeftPos(params.get("left"));
+        jobRelation.setTopPos(params.get("top"));
         jobRelationService.save(jobRelation);
-        return ok();
+        return ok(job);
     }
 
     @PostMapping(value = "/modifyPosition")
