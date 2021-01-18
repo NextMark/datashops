@@ -13,13 +13,13 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Table(name = "t_job_dependency")
 public class JobDependency extends BaseModel {
-    private String graphStrId;
+    private String graphMaskId;
     /**
      * default 1, 虚拟根节点
      */
-    private String sourceStrId;
+    private String sourceMaskId;
 
-    private String targetStrId;
+    private String targetMaskId;
 
     /**
      * 依赖作业的偏移，逗号分隔，0，-1，-5

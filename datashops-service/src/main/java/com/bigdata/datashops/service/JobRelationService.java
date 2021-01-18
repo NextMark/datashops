@@ -14,13 +14,13 @@ public class JobRelationService extends AbstractMysqlPagingAndSortingQueryServic
         return findByQuery(filter);
     }
 
-    public JobRelation getJobRelation(String graphStrId, String jobStrId) {
-        return findOneByQuery("graphStrId=" + graphStrId + ";jobStrId=" + jobStrId);
+    public JobRelation getJobRelation(String graphMaskId, String jobMaskId) {
+        return findOneByQuery("graphMaskId=" + graphMaskId + ";jobMaskId=" + jobMaskId);
     }
 
     @Transactional
-    public void delete(String graphStrId, String jobStrId) {
-        deleteByQuery("graphStrId=" + graphStrId + ";jobStrId=" + jobStrId);
+    public void delete(String graphMaskId, String jobMaskId) {
+        deleteByQuery("graphMaskId=" + graphMaskId + ";jobMaskId=" + jobMaskId);
     }
 
 }

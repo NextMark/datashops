@@ -30,14 +30,13 @@ import com.bigdata.datashops.model.pojo.job.Job;
 import com.bigdata.datashops.model.pojo.job.JobDependency;
 import com.bigdata.datashops.model.pojo.job.JobGraph;
 import com.bigdata.datashops.model.pojo.job.JobRelation;
-import com.bigdata.datashops.service.JobRelationService;
 
 @RestController
 @RequestMapping("/v1/job")
 public class JobController extends BasicController {
     @RequestMapping(value = "/getJobGraphById")
     public Result getJobGraphById(@NotNull String id) {
-        JobGraph jobGraph = jobGraphService.getJobGraphByStrId(id);
+        JobGraph jobGraph = jobGraphService.getJobGraphByMaskId(id);
         jobGraphService.fillJobWithDependency(jobGraph);
         return ok(jobGraph);
     }
@@ -132,18 +131,18 @@ public class JobController extends BasicController {
 
     @PostMapping(value = "/addJobToGraph")
     public Result addJobToGraph(@RequestBody Map<String, String> params) {
-        String graphId = params.get("graphStrId");
-        String jobId = params.get("jobStrId");
+        String graphId = params.get("graphMaskId");
+        String jobId = params.get("jobMaskId");
         int type = Integer.parseInt(params.get("type"));
-        JobGraph jobGraph = jobGraphService.getJobGraphByStrId(graphId);
+        JobGraph jobGraph = jobGraphService.getJobGraphByMaskId(graphId);
         if (Objects.isNull(jobGraph)) {
             return fail(ResultCode.FAILURE);
         }
         JobRelation jobRelation = new JobRelation();
         jobRelation.setTopPos("0px");
         jobRelation.setLeftPos("0px");
-        jobRelation.setGraphStrId(graphId);
-        jobRelation.setJobStrId(jobId);
+        jobRelation.setGraphMaskId(graphId);
+        jobRelation.setJobMaskId(jobId);
         jobRelation.setNodeType(type);
         jobRelationService.save(jobRelation);
         return ok();
@@ -158,7 +157,7 @@ public class JobController extends BasicController {
         String ico = params.get("ico");
         Job job = new Job();
         // todo project id
-        job.setStrId(JobUtils.genStrId("1-" + "1-"));
+        job.setMaskId(JobUtils.genStrId("1-" + "1-"));
         job.setType(jobType.getCode());
         job.setOwner(owner);
         job.setName(name);
@@ -167,8 +166,8 @@ public class JobController extends BasicController {
         job = jobService.save(job);
 
         JobRelation jobRelation = new JobRelation();
-        jobRelation.setGraphStrId(graphId);
-        jobRelation.setJobStrId(job.getStrId());
+        jobRelation.setGraphMaskId(graphId);
+        jobRelation.setJobMaskId(job.getMaskId());
         jobRelation.setNodeType(1);
         jobRelation.setLeftPos(params.get("left"));
         jobRelation.setTopPos(params.get("top"));

@@ -32,8 +32,8 @@ public class JobGraphService extends AbstractMysqlPagingAndSortingQueryService<J
         return findById(id);
     }
 
-    public JobGraph getJobGraphByStrId(String id) {
-        return findOneByQuery("strId=" + id);
+    public JobGraph getJobGraphByMaskId(String id) {
+        return findOneByQuery("maskId=" + id);
     }
 
     public Page<JobGraph> getJobGraphList(PageRequest pageRequest) {
@@ -42,22 +42,22 @@ public class JobGraphService extends AbstractMysqlPagingAndSortingQueryService<J
 
     public void fillJobWithDependency(JobGraph jobGraph) {
         List<VoJobNode> nodes = Lists.newArrayList();
-        List<JobRelation> relations = jobRelationService.getJobRelations("graphStrId=" + jobGraph.getStrId());
+        List<JobRelation> relations = jobRelationService.getJobRelations("graphMaskId=" + jobGraph.getMaskId());
         for (JobRelation relation : relations) {
             VoJobNode node = new VoJobNode();
             if (relation.getNodeType() == NodeType.GRAPH.getCode()) {
-                JobGraph graph = getJobGraphByStrId(relation.getJobStrId());
+                JobGraph graph = getJobGraphByMaskId(relation.getJobMaskId());
                 node.setName(graph.getName());
                 node.setIco("el-icon-my-graph");
                 node.setType(NodeType.GRAPH.getCode());
-                node.setId(relation.getJobStrId());
+                node.setId(relation.getJobMaskId());
             }
             if (relation.getNodeType() == NodeType.JOB.getCode()) {
-                Job job = jobService.getJobByStrId(relation.getJobStrId());
+                Job job = jobService.getJobByStrId(relation.getJobMaskId());
                 node.setName(job.getName());
                 node.setIco(job.getIco());
                 node.setType(NodeType.JOB.getCode());
-                node.setId(relation.getJobStrId());
+                node.setId(relation.getJobMaskId());
             }
             node.setTop(relation.getTopPos());
             node.setLeft(relation.getLeftPos());
@@ -66,7 +66,7 @@ public class JobGraphService extends AbstractMysqlPagingAndSortingQueryService<J
 
         List<Edge> edges = Lists.newArrayList();
         for (VoJobNode node : nodes) {
-            String filter = "targetStrId=" + node.getId() + ";graphStrId=" + jobGraph.getStrId();
+            String filter = "targetMaskId=" + node.getId() + ";graphMaskId=" + jobGraph.getMaskId();
             List<JobDependency> jobDependencies = jobDependencyService.getJobDependency(filter);
             if (jobDependencies.size() == 0) {
                 Edge edge = new Edge();
@@ -76,15 +76,15 @@ public class JobGraphService extends AbstractMysqlPagingAndSortingQueryService<J
             } else {
                 for (JobDependency jobDependency : jobDependencies) {
                     Edge edge = new Edge();
-                    edge.setFrom(jobDependency.getSourceStrId());
-                    edge.setTo(jobDependency.getTargetStrId());
+                    edge.setFrom(jobDependency.getSourceMaskId());
+                    edge.setTo(jobDependency.getTargetMaskId());
                     if (!edges.contains(edge)) {
                         edges.add(edge);
                     }
                 }
             }
 
-            filter = "sourceStrId=" + node.getId() + ";graphStrId=" + jobGraph.getStrId();
+            filter = "sourceMaskId=" + node.getId() + ";graphMaskId=" + jobGraph.getMaskId();
             jobDependencies = jobDependencyService.getJobDependency(filter);
             if (jobDependencies.size() == 0) {
                 Edge edge = new Edge();
@@ -94,8 +94,8 @@ public class JobGraphService extends AbstractMysqlPagingAndSortingQueryService<J
             } else {
                 for (JobDependency jobDependency : jobDependencies) {
                     Edge edge = new Edge();
-                    edge.setFrom(jobDependency.getSourceStrId());
-                    edge.setTo(jobDependency.getTargetStrId());
+                    edge.setFrom(jobDependency.getSourceMaskId());
+                    edge.setTo(jobDependency.getTargetMaskId());
                     if (!edges.contains(edge)) {
                         edges.add(edge);
                     }

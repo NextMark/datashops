@@ -1,5 +1,7 @@
 package com.bigdata.datashops.model.pojo.job;
 
+import java.util.Objects;
+
 import lombok.Data;
 
 @Data
@@ -20,6 +22,10 @@ public class Edge {
         }
         Edge edge = (Edge) o;
         return from.equals(edge.from) && to.equals(edge.to);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(getFrom(), getTo());
     }
 }

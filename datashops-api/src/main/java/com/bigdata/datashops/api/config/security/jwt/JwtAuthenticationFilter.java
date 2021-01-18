@@ -23,13 +23,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private JwtUtil jwtUtil;
 
     @Override
-    protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response,
+                                    final FilterChain filterChain) throws ServletException, IOException {
 
         // 解决跨域问题
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Credentials", "true");
-        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Content-Length, Authorization, Accept, X-Requested-With");
+        response.setHeader("Access-Control-Allow-Headers",
+                "Content-Type, Content-Length, Authorization, Accept, X-Requested-With");
         // 明确允许通过的方法，不建议使用*
         response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         response.setHeader("Access-Control-Max-Age", "3600");
@@ -44,16 +45,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String token = this.jwtUtil.getTokenFromRequest(request);
         if (token != null) {
             final String username = this.jwtUtil.getUsername(token);
-            LOG.info("JwtFilter => user<{}> request URL<{}> Method<{}>", username, request.getRequestURL(), request.getMethod());
+            LOG.info("user:{} url:{} method:{}", username, request.getRequestURL(), request.getMethod());
 
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                final UsernamePasswordAuthenticationToken
-                        authentication = this.jwtUtil.getAuthentication(username, token);
+                final UsernamePasswordAuthenticationToken authentication =
+                        this.jwtUtil.getAuthentication(username, token);
 
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-                // log.info("JwtFilter => user<{}> is authorized, set security context", username);
             }
         }
         filterChain.doFilter(request, response);

@@ -19,7 +19,7 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Table(name = "t_job_graph")
 public class JobGraph extends BaseModel {
-    private String strId;
+    private String maskId;
 
     private String name;
     /**
@@ -69,6 +69,8 @@ public class JobGraph extends BaseModel {
     private Integer offset;
 
     private Integer timeout;
+
+    private Integer retry;
 
     private Integer retryTimes;
 

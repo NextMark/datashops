@@ -6,6 +6,8 @@ import lombok.Data;
 
 @Data
 public class DtoJobGraph {
+    private String maskId;
+
     @NotBlank(message = "job name must not be empty")
     private String name;
     /**
@@ -67,6 +69,8 @@ public class DtoJobGraph {
     private String version;
 
     private Integer timeout;
+
+    private Integer retry;
 
     private Integer retryTimes;
 

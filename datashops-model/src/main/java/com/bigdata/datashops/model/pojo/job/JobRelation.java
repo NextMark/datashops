@@ -13,9 +13,9 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Table(name = "t_job_relation")
 public class JobRelation extends BaseModel {
-    private String graphStrId;
+    private String graphMaskId;
 
-    private String jobStrId;
+    private String jobMaskId;
 
     private String topPos;
 
