@@ -7,7 +7,7 @@ public class JobUtils {
         return DateUtils.getCurrentTime("yyMMddHHmmss") + RandomStringUtils.randomNumeric(6);
     }
 
-    public static String genStrId(String prefix) {
+    public static String genMaskId(String prefix) {
         return prefix + DateUtils.getCurrentTime("yyMMddHHmmss") + RandomStringUtils.randomNumeric(3);
     }
 }

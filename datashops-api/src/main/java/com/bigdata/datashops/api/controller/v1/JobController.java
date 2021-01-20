@@ -96,9 +96,9 @@ public class JobController extends BasicController {
 
     @PostMapping(value = "/deleteJob")
     public Result deleteJob(@RequestBody Map<String, String> params) {
-        String graphStrId = params.get("graphStrId");
-        String jobStrId = params.get("jobStrId");
-        jobRelationService.delete(graphStrId, jobStrId);
+        String graphMaskId = params.get("graphMaskId");
+        String jobMaskId = params.get("jobMaskId");
+        jobRelationService.delete(graphMaskId, jobMaskId);
         return ok();
     }
 
@@ -150,14 +150,14 @@ public class JobController extends BasicController {
 
     @PostMapping(value = "/addNewJobToGraph")
     public Result addNewJobToGraph(@RequestBody Map<String, String> params) {
-        String graphId = params.get("graphStrId");
+        String graphId = params.get("graphMaskId");
         JobType jobType = JobType.valueOf(JobType.class, params.get("type").toUpperCase());
         String name = String.valueOf(params.get("name"));
         String owner = String.valueOf(params.get("owner"));
         String ico = params.get("ico");
         Job job = new Job();
         // todo project id
-        job.setMaskId(JobUtils.genStrId("1-" + "1-"));
+        job.setMaskId(JobUtils.genMaskId("1-" + "1-"));
         job.setType(jobType.getCode());
         job.setOwner(owner);
         job.setName(name);
@@ -177,13 +177,13 @@ public class JobController extends BasicController {
 
     @PostMapping(value = "/modifyPosition")
     public Result modifyPosition(@RequestBody Map<String, String> params) {
-        String graphId = params.get("graphStrId");
-        String jobStrId = params.get("jobStrId");
-        String[] jobIdStr = jobStrId.split(Constants.SEPARATOR_HYPHEN);
+        String graphId = params.get("graphMaskId");
+        String jobMaskId = params.get("jobMaskId");
+        String[] jobIdStr = jobMaskId.split(Constants.SEPARATOR_HYPHEN);
         if (jobIdStr[1].contains("+")) {
             return ok();
         }
-        String filter = "graphStrId=" + graphId + ";jobStrId=" + jobStrId + ";nodeType=" + jobIdStr[1];
+        String filter = "graphMaskId=" + graphId + ";jobMaskId=" + jobMaskId + ";nodeType=" + jobIdStr[1];
         JobRelation jobRelation = jobRelationService.findOneByQuery(filter);
         jobRelation.setTopPos(params.get("top"));
         jobRelation.setLeftPos(params.get("left"));
@@ -193,12 +193,12 @@ public class JobController extends BasicController {
 
     @PostMapping(value = "/modifyOffset")
     public Result modifyOffset(@RequestBody Map<String, String> params) {
-        String graphStrId = params.get("graphStrId");
-        String sourceStrId = params.get("sourceStrId");
-        String targetStrId = params.get("targetStrId");
+        String graphMaskId = params.get("graphMaskId");
+        String sourceMaskId = params.get("sourceMaskId");
+        String targetMaskId = params.get("targetMaskId");
         int offset = Integer.parseInt(params.get("offset"));
-        String filter =
-                String.format("graphStrId=%s;sourceStrId=%s;targetStrId=%s", graphStrId, sourceStrId, targetStrId);
+        String filter = String.format("graphMaskId=%s;sourceMaskId=%s;targetMaskId=%s", graphMaskId, sourceMaskId,
+                targetMaskId);
         JobDependency jobDependency = jobDependencyService.getOne(filter);
         jobDependency.setOffset(offset);
         jobDependencyService.save(jobDependency);

@@ -53,7 +53,7 @@ public class JobGraphService extends AbstractMysqlPagingAndSortingQueryService<J
                 node.setId(relation.getJobMaskId());
             }
             if (relation.getNodeType() == NodeType.JOB.getCode()) {
-                Job job = jobService.getJobByStrId(relation.getJobMaskId());
+                Job job = jobService.getJobByMaskId(relation.getJobMaskId());
                 node.setName(job.getName());
                 node.setIco(job.getIco());
                 node.setType(NodeType.JOB.getCode());
