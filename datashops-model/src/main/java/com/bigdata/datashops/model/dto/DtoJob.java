@@ -1,41 +1,65 @@
 package com.bigdata.datashops.model.dto;
 
+import java.util.Date;
+
 import javax.validation.constraints.NotBlank;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Data;
 
 @Data
 public class DtoJob {
+    private Integer id;
+
     @NotBlank(message = "job name must not be empty")
     private String name;
-    /**
-     * 作业描述
-     */
+
     private String description;
-    /**
-     * 作业类型
-     * {@link com.bigdata.datashops.model.enums.JobType}
-     */
-    @NotBlank(message = "job type must not be null")
-    private Integer type;
-
-    /**
-     * 作业配置
-     */
-    private String configJson;
-
-    /**
-     * 0 delete 1 normal
-     */
-    private Integer status;
 
     @NotBlank(message = "must not be null")
     private String owner;
 
     /**
-     * 后续把历史版本写入其他表
+     * 调度周期
      */
-    private String version;
+    private Integer schedulingPeriod;
 
-    private String jobContext;
+    private String cronExpression;
+
+    /**
+     * 下次调度时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date nextTriggerTime;
+
+    /**
+     * 0 关闭调度，1 开启调度
+     */
+    private Integer schedulerStatus;
+
+    private Integer notifyType;
+
+    private Integer priority;
+
+    private String emails;
+
+    private String phones;
+
+    private Integer baseTimeType;
+
+    private Integer offset;
+
+    private Integer timeout;
+
+    private Integer retry;
+
+    private Integer retryTimes;
+
+    private Integer retryInterval;
+
+    private Integer workerSelector;
+
+    private Integer queueId;
+
 }

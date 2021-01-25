@@ -53,9 +53,33 @@ public class JobController extends BasicController {
 
     @PostMapping(value = "/modifyJob")
     public Result modifyJob(@RequestBody DtoJob dtoJob) {
-        Job job = new Job();
+        Job job = jobService.getJob(dtoJob.getId());
         BeanUtils.copyProperties(dtoJob, job);
-        job.setStatus(1);
+        jobService.save(job);
+        return ok();
+    }
+
+    @PostMapping(value = "/saveHiveSql")
+    public Result saveHiveSql(@RequestBody Map<String, String> params) {
+        String maskId = params.get("maskId");
+        Job job = jobService.getJobByMaskId(maskId);
+        if (Objects.isNull(job)) {
+            job = new Job();
+        }
+        job.setJobContext(params.get("sql"));
+        jobService.save(job);
+        return ok();
+    }
+
+    @PostMapping(value = "/addNewJob")
+    public Result addNewJob(@RequestBody Map<String, String> params) {
+        String name = params.get("name");
+        Job job = new Job();
+        job.setOwner(params.get("owner"));
+        job.setProjectId(Integer.valueOf(params.get("projectId")));
+        job.setMaskId(JobUtils.genMaskId("1-" + params.get("projectId") + "-"));
+        job.setName(name);
+        job.setType(Integer.valueOf(params.get("type")));
         jobService.save(job);
         return ok();
     }
@@ -94,6 +118,12 @@ public class JobController extends BasicController {
         return ok(pagination);
     }
 
+    @RequestMapping(value = "/getJobByMaskId")
+    public Result getJobByMaskId(@NotNull String maskId) {
+        Job job = jobService.getJobByMaskId(maskId);
+        return ok(job);
+    }
+
     @PostMapping(value = "/deleteJob")
     public Result deleteJob(@RequestBody Map<String, String> params) {
         String graphMaskId = params.get("graphMaskId");
@@ -115,10 +145,10 @@ public class JobController extends BasicController {
     @PostMapping(value = "/modifySchedulerStatus")
     public Result modifySchedulerStatus(@RequestBody Map<String, Object> params) {
         int status = (int) params.get("status");
-        JobGraph jobGraph = jobGraphService.getJobGraph((Integer) params.get("id"));
-        if (!Objects.isNull(jobGraph)) {
-            jobGraph.setSchedulerStatus(status);
-            jobGraphService.save(jobGraph);
+        Job job = jobService.getJobByMaskId(params.get("maskId").toString());
+        if (!Objects.isNull(job)) {
+            job.setSchedulerStatus(status);
+            jobService.save(job);
         }
         return ok();
     }
