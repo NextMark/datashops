@@ -81,7 +81,7 @@ public class JobController extends BasicController {
         job.setName(name);
         job.setType(Integer.valueOf(params.get("type")));
         jobService.save(job);
-        return ok();
+        return ok(job);
     }
 
     @PostMapping(value = "/getJobGraphList")

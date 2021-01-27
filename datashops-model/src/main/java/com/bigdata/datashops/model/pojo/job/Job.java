@@ -40,7 +40,7 @@ public class Job extends BaseModel {
     /**
      * 0 delete 1 normal
      */
-    private Integer status;
+    private Integer status = 1;
 
     private String owner;
 
@@ -71,7 +71,7 @@ public class Job extends BaseModel {
     /**
      * 0 关闭调度，1 开启调度
      */
-    private Integer schedulerStatus;
+    private Integer schedulerStatus = 0;
 
     private Integer projectId;
 
