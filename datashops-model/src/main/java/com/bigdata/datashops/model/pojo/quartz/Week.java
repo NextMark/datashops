@@ -13,13 +13,13 @@ import lombok.extern.jackson.Jacksonized;
 public class Week {
     // 可多个
     @NotNull(message = "must not be null")
-    private String week;
+    private String weeks;
 
     @NotNull(message = "must not be null")
-    @Pattern(regexp="^[0-9]{2}$", message="时间格式不正确")
+    @Pattern(regexp = "^[0-9]{2}$", message = "时间格式不正确")
     private String hour;
 
     @NotNull(message = "must not be null")
-    @Pattern(regexp="^[0-9]{2}$", message="时间格式不正确")
+    @Pattern(regexp = "^[0-9]{2}$", message = "时间格式不正确")
     private String minute;
 }

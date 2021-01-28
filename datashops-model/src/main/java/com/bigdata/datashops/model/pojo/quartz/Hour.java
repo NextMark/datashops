@@ -13,14 +13,14 @@ public class Hour {
     private int type;
 
     //type=1,指定时间，多选
-    private String hour;
+    private String hours;
 
     //type=2
-    @Pattern(regexp="^[0-9]{2}$", message="时间格式不正确")
-    private String beginHour;
-    @Pattern(regexp="^[0-9]{2}$", message="时间格式不正确")
-    private String beginMinute;
+    @Pattern(regexp = "^[0-9]{2}$", message = "时间格式不正确")
+    private String hourBegin;
+    @Pattern(regexp = "^[0-9]{2}$", message = "时间格式不正确")
+    private String hourMinute;
     private String period;
-    @Pattern(regexp="^[0-9]{2}$", message="时间格式不正确")
-    private String endHour;
+    @Pattern(regexp = "^[0-9]{2}$", message = "时间格式不正确")
+    private String hourEnd;
 }

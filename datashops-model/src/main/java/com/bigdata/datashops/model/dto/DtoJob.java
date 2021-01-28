@@ -62,4 +62,10 @@ public class DtoJob {
 
     private Integer queueId;
 
+    private String timeConfig;
+
+    private Date validStartDate;
+
+    private Date validEndDate;
+
 }

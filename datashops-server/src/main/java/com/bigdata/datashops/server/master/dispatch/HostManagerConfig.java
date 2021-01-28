@@ -7,6 +7,7 @@ import com.bigdata.datashops.model.enums.HostSelector;
 import com.bigdata.datashops.server.master.dispatch.selector.HostManager;
 import com.bigdata.datashops.server.master.dispatch.selector.RandomHostSelector;
 import com.bigdata.datashops.server.master.dispatch.selector.ScoreSelector;
+import com.google.common.collect.Lists;
 
 @Configuration
 public class HostManagerConfig {
@@ -16,7 +17,7 @@ public class HostManagerConfig {
         HostManager hostManager;
         switch (selector) {
             case RANDOM:
-                hostManager = new RandomHostSelector();
+                hostManager = new RandomHostSelector(Lists.newArrayList());
                 break;
             case SCORE:
                 hostManager = new ScoreSelector();

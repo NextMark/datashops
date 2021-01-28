@@ -104,4 +104,10 @@ public class Job extends BaseModel {
 
     @Transient
     private List<Edge> lineList;
+
+    private Date validStartDate;
+
+    private Date validEndDate;
+
+    private String timeConfig;
 }

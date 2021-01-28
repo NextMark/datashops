@@ -10,14 +10,14 @@ import lombok.extern.jackson.Jacksonized;
 @Jacksonized
 public class Minute {
     @NotNull(message = "must not be null")
-    @Pattern(regexp="^[0-9]{2}$", message="时间格式不正确")
-    private String beginHour;
+    @Pattern(regexp = "^[0-9]{2}$", message = "时间格式不正确")
+    private String minuteBegin;
 
     @NotNull(message = "must not be null")
     private int period;
 
     @NotNull(message = "must not be null")
-    @Pattern(regexp="^[0-9]{2}$", message="时间格式不正确")
-    private String endHour;
+    @Pattern(regexp = "^[0-9]{2}$", message = "时间格式不正确")
+    private String minuteEnd;
 
 }

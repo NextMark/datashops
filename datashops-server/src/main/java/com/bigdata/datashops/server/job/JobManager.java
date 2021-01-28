@@ -8,9 +8,9 @@ public class JobManager {
     public static AbstractJob createJob(JobContext jobContext, Logger logger) {
         JobType jobType = JobType.of(jobContext.getJobInstance().getType());
         switch (jobType) {
-            case SQL:
+            case HIVE:
                 return new SqlJob(jobContext, logger);
-            case SHELL:
+            case BASH:
             case SPARK:
             case FLINK:
             default:

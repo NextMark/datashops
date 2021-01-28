@@ -23,6 +23,7 @@ import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.common.utils.JobUtils;
 import com.bigdata.datashops.dao.data.domain.PageRequest;
 import com.bigdata.datashops.model.DtoJobGraph;
+import com.bigdata.datashops.model.dto.DtoCronExpression;
 import com.bigdata.datashops.model.dto.DtoJob;
 import com.bigdata.datashops.model.dto.DtoPageQuery;
 import com.bigdata.datashops.model.enums.JobType;
@@ -30,6 +31,7 @@ import com.bigdata.datashops.model.pojo.job.Job;
 import com.bigdata.datashops.model.pojo.job.JobDependency;
 import com.bigdata.datashops.model.pojo.job.JobGraph;
 import com.bigdata.datashops.model.pojo.job.JobRelation;
+import com.bigdata.datashops.service.utils.CronHelper;
 
 @RestController
 @RequestMapping("/v1/job")
@@ -55,8 +57,12 @@ public class JobController extends BasicController {
     public Result modifyJob(@RequestBody DtoJob dtoJob) {
         Job job = jobService.getJob(dtoJob.getId());
         BeanUtils.copyProperties(dtoJob, job);
+        DtoCronExpression cronExpression = DtoCronExpression.builder().schedulingPeriod(dtoJob.getSchedulingPeriod())
+                                                   .config(dtoJob.getTimeConfig()).build();
+        String cron = CronHelper.buildCronExpression(cronExpression);
+        job.setCronExpression(cron);
         jobService.save(job);
-        return ok();
+        return ok(job);
     }
 
     @PostMapping(value = "/saveHiveSql")
