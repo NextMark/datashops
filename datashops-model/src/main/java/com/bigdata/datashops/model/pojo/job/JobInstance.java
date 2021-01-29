@@ -20,9 +20,9 @@ import lombok.extern.jackson.Jacksonized;
 @Table(name = "t_job_instance")
 public class JobInstance extends BaseModel implements Comparable<JobInstance> {
     private static final long serialVersionUID = 4244682210083826200L;
-    private Integer graphId;
+    private Integer projectId;
 
-    private Integer jobId;
+    private String maskId;
 
     private String instanceId;
 
@@ -99,7 +99,7 @@ public class JobInstance extends BaseModel implements Comparable<JobInstance> {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(getId());
-        sb.append(", jobId=").append(jobId);
+        sb.append(", maskId=").append(maskId);
         sb.append(", status=").append(status);
         sb.append(", startTime=").append(startTime);
         sb.append(", stopTime=").append(endTime);
