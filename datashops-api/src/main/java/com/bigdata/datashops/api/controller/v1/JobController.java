@@ -159,12 +159,6 @@ public class JobController extends BasicController {
         return ok();
     }
 
-    @PostMapping(value = "/addDependency")
-    public Result addDependency(@RequestBody JobDependency jobDependency) {
-        jobDependencyService.save(jobDependency);
-        return ok();
-    }
-
     @PostMapping(value = "/addJobToGraph")
     public Result addJobToGraph(@RequestBody Map<String, String> params) {
         String graphId = params.get("graphMaskId");

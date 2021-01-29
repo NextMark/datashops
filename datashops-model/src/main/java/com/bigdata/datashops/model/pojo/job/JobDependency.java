@@ -13,7 +13,6 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Table(name = "t_job_dependency")
 public class JobDependency extends BaseModel {
-    private String graphMaskId;
     /**
      * default 1, 虚拟根节点
      */
