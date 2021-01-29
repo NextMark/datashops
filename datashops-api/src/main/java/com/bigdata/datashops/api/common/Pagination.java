@@ -6,9 +6,12 @@ import org.springframework.data.domain.Page;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
+import lombok.Data;
+
 /**
  * Created by qinshiwei on 2017/9/5.
  */
+@Data
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Pagination {
     private long total;

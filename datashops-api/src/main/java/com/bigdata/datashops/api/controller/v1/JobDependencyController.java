@@ -14,7 +14,7 @@ import com.bigdata.datashops.model.pojo.job.JobDependency;
 import com.bigdata.datashops.model.vo.VoJobDependency;
 
 @RestController
-@RequestMapping("/v1/jobDependency")
+@RequestMapping("/v1/job/dependency")
 public class JobDependencyController extends BasicController {
     @PostMapping(value = "/getJobDependency")
     public Result getJobDependency(@RequestBody Map<String, String> params) {

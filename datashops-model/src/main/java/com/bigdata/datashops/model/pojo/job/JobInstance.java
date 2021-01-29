@@ -4,12 +4,17 @@ import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.bigdata.datashops.model.pojo.BaseModel;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
 
 @EqualsAndHashCode(callSuper = true)
@@ -17,9 +22,10 @@ import lombok.extern.jackson.Jacksonized;
 @Entity
 @Builder
 @Jacksonized
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
 @Table(name = "t_job_instance")
 public class JobInstance extends BaseModel implements Comparable<JobInstance> {
-    private static final long serialVersionUID = 4244682210083826200L;
     private Integer projectId;
 
     private String maskId;
@@ -33,7 +39,7 @@ public class JobInstance extends BaseModel implements Comparable<JobInstance> {
     private int type;
 
     /**
-     * job instance type, graph、job
+     * job instance state
      * {@link com.bigdata.datashops.model.enums.RunState}
      */
     private int state;
@@ -47,10 +53,13 @@ public class JobInstance extends BaseModel implements Comparable<JobInstance> {
 
     private String operator;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date submitTime;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date startTime;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date endTime;
 
     private Integer retryTimes;
@@ -64,11 +73,13 @@ public class JobInstance extends BaseModel implements Comparable<JobInstance> {
     /**
      * 基准时间，依赖及指定数据时间用
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date bizTime;
 
     /**
      * 数据时间，执行SQL对应输出的数据时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date dataTime;
 
     /**
@@ -91,6 +102,9 @@ public class JobInstance extends BaseModel implements Comparable<JobInstance> {
     private String extendData;
 
     private int workerSelector;
+
+    @Transient
+    private Job job;
 
     @Override
     public String toString() {

@@ -16,14 +16,11 @@ import com.bigdata.datashops.model.enums.JobInstanceType;
 import com.bigdata.datashops.model.enums.RunState;
 import com.bigdata.datashops.model.pojo.job.JobInstance;
 import com.bigdata.datashops.server.utils.JobHelper;
-import com.bigdata.datashops.service.JobGraphService;
 import com.bigdata.datashops.service.JobInstanceService;
 import com.bigdata.datashops.service.JobService;
 
 @Service
 public class QuartzJob implements Job {
-    @Autowired
-    private JobGraphService jobGraphService;
 
     @Autowired
     private JobInstanceService jobInstanceService;
