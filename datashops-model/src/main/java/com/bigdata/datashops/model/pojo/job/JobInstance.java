@@ -28,6 +28,8 @@ import lombok.extern.jackson.Jacksonized;
 public class JobInstance extends BaseModel implements Comparable<JobInstance> {
     private Integer projectId;
 
+    private String name;
+
     private String maskId;
 
     private String instanceId;

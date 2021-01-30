@@ -27,7 +27,7 @@ public class JobInstanceController extends BasicController {
             filter.append(";name?").append(query.getName());
         }
         if (StringUtils.isNoneBlank(query.getOwner())) {
-            filter.append(";owner?").append(query.getOwner());
+            filter.append(";operator?").append(query.getOwner());
         }
         PageRequest pageRequest =
                 new PageRequest(query.getPageNum() - 1, query.getPageSize(), filter.toString(), Sort.Direction.DESC,
