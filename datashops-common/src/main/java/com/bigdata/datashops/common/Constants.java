@@ -38,7 +38,7 @@ public class Constants {
     /**
      * zk
      */
-    public final static String ZK_ROOT = "datashops/";
+    public final static String ZK_ROOT = "/datashops/";
     public final static String ZK_MASTER_NODE = "master/";
     public final static String ZK_WORKER_NODE = "worker/";
     public final static String ZK_WORKER_META = "meta/";

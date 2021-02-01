@@ -1,4 +1,4 @@
-package com.bigdata.datashops.rpc;
+package com.bigdata.datashops.server.rpc;
 
 import java.io.IOException;
 import java.util.List;

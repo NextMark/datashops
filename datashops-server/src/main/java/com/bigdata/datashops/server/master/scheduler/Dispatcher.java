@@ -48,6 +48,7 @@ public class Dispatcher {
     public void dispatch() {
         //List<String> ready = zookeeperOperator.getChildrenKeys(ZKUtils.getQueuePath());
 
+        LOG.info("Dispatch run.");
         List<String> hostsStr = zookeeperOperator.getChildrenKeys(ZKUtils.getWorkerRegistryPath());
         List<Host> hosts = Lists.newArrayList();
         for (String host : hostsStr) {

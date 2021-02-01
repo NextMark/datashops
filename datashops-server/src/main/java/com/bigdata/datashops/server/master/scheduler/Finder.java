@@ -7,8 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.model.enums.RunState;
@@ -17,15 +16,16 @@ import com.bigdata.datashops.server.queue.JobQueue;
 import com.bigdata.datashops.service.JobInstanceService;
 import com.google.common.collect.Lists;
 
-@Component
-public class Finder {
+@Service
+public class Finder extends Thread {
     private static final Logger LOG = LoggerFactory.getLogger(Finder.class);
 
     @Autowired
     private JobInstanceService jobInstanceService;
 
-    @Scheduled(cron = "*/10 * * * * ?")
-    public void findReadyJob() {
+    @Override
+    public void run() {
+        LOG.info("Finder run.");
         List<String> status = Lists.newArrayList();
         for (RunState runState : RunState.values()) {
             if (RunState.WAIT_FOR_RUN.compareTo(runState) < 0) {
@@ -36,7 +36,7 @@ public class Finder {
         String filters = "state=" + StringUtils.join(status, Constants.SEPARATOR_COMMA);
         List<JobInstance> statusList = jobInstanceService.findReadyJob(filters);
         if (statusList.size() > 0) {
-            LOG.info("[Finder] find {} jis, add to queue", statusList.size());
+            LOG.info("[Finder] find {} instances, add to queue", statusList.size());
         }
         for (JobInstance instance : statusList) {
             boolean in = JobQueue.getInstance().getQueue().offer(instance);
