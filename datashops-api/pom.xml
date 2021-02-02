@@ -51,6 +51,12 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.bigdata.datashops</groupId>
+            <artifactId>datashops-server</artifactId>
+            <version>0.0.1</version>
+            <scope>compile</scope>
+        </dependency>
 
     </dependencies>
 

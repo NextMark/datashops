@@ -49,6 +49,10 @@ public class Dispatcher {
         //List<String> ready = zookeeperOperator.getChildrenKeys(ZKUtils.getQueuePath());
 
         LOG.info("Dispatch run.");
+        boolean workerExist = zookeeperOperator.isExisted(ZKUtils.getWorkerRegistryPath());
+        if (!workerExist) {
+            return;
+        }
         List<String> hostsStr = zookeeperOperator.getChildrenKeys(ZKUtils.getWorkerRegistryPath());
         List<Host> hosts = Lists.newArrayList();
         for (String host : hostsStr) {

@@ -24,8 +24,7 @@ public class JobInstanceService extends AbstractMysqlPagingAndSortingQueryServic
         return findOneByQuery(filter);
     }
 
-    @Override
-    public JobInstance save(JobInstance jobInstance) {
+    public JobInstance saveEntity(JobInstance jobInstance) {
         return save(jobInstance);
     }
 

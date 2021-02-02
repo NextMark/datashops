@@ -5,17 +5,16 @@ import java.io.IOException;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.WebApplicationType;
-import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.stereotype.Component;
 
 import com.bigdata.datashops.server.master.registry.MasterRegistry;
 import com.bigdata.datashops.server.master.scheduler.Finder;
 import com.bigdata.datashops.server.master.scheduler.ScheduledExecutor;
 import com.bigdata.datashops.server.quartz.QuartzService;
 import com.bigdata.datashops.server.rpc.GrpcRemotingServer;
+import com.bigdata.datashops.service.JobInstanceService;
 
-@ComponentScan(value = {"com.bigdata.datashops.server"})
+@Component
 public class MasterServer {
     @Autowired
     private QuartzService quartzService;
@@ -29,17 +28,20 @@ public class MasterServer {
     @Autowired
     private ScheduledExecutor scheduledExecutor;
 
-    public static void main(String[] args) {
-        Thread.currentThread().setName("master startup");
-        new SpringApplicationBuilder(MasterServer.class).web(WebApplicationType.NONE).run(args);
-    }
+    @Autowired
+    private JobInstanceService jobInstanceService;
+
+    //    public static void main(String[] args) {
+    //        Thread.currentThread().setName("Master Server");
+    //        new SpringApplicationBuilder(MasterServer.class).web(WebApplicationType.NONE).run(args);
+    //    }
 
     @PostConstruct
-    public void run() throws IOException, InterruptedException {
+    public void init() throws IOException, InterruptedException {
         masterRegistry.registry();
 
         //quartzService.start();
-        scheduledExecutor.run(new Finder());
+        scheduledExecutor.run(new Finder(jobInstanceService));
 
         grpcRemotingServer.start();
         grpcRemotingServer.blockUntilShutdown();

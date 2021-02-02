@@ -2,8 +2,6 @@ package com.bigdata.datashops.server.worker;
 
 import java.io.IOException;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.bigdata.datashops.server.rpc.GrpcRemotingServer;
@@ -16,7 +14,7 @@ public class WorkerServer {
     @Autowired
     private WorkerRegistry workerRegistry;
 
-    @PostConstruct
+    //    @PostConstruct
     public void run() throws IOException, InterruptedException {
         workerRegistry.registry();
 

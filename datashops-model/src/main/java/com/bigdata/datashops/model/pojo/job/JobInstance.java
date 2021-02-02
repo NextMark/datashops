@@ -44,7 +44,7 @@ public class JobInstance extends BaseModel implements Comparable<JobInstance> {
      * job instance state
      * {@link com.bigdata.datashops.model.enums.RunState}
      */
-    private int state;
+    private Integer state;
 
     /**
      * 0 delete 1 normal
