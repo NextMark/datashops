@@ -1,0 +1,40 @@
+spring:
+  profiles:
+    active: test
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  jackson:
+    serialization:
+      indent_output: true
+  mail:
+    host: smtp.mxhichina.com
+    protocol: smtp
+    port: 465
+    username: xxx
+    password: xxx
+
+# jwt config  过期时间24*3600=1天
+jwt:
+  expiration-time: 86400
+  header: Authorization
+  token-prefix: Bearer
+  privateKey: rsa/private-key.pem
+  publicKey: rsa/public-key.pem
+  authorities-key: auth
+
+#热部署组件
+devtools:
+  livereload:
+    enabled: true #是否支持livereload
+    port: 8666
+  restart:
+    enabled: true #是否支持热部署
+
+flink:
+  restful:
+    ip: localhost
+    port: 8081
+
+

@@ -5,7 +5,14 @@ import java.io.IOException;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.boot.WebApplicationType;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.bigdata.datashops.server.master.registry.MasterRegistry;
 import com.bigdata.datashops.server.master.scheduler.Finder;
@@ -14,7 +21,12 @@ import com.bigdata.datashops.server.quartz.QuartzService;
 import com.bigdata.datashops.server.rpc.GrpcRemotingServer;
 import com.bigdata.datashops.service.JobInstanceService;
 
-@Component
+@Configuration
+@EnableTransactionManagement
+@ComponentScan(basePackages = "com.bigdata.datashops")
+@EnableJpaRepositories(basePackages = {"com.bigdata.datashops.dao"})
+@EntityScan("com.bigdata.datashops")
+@SpringBootApplication
 public class MasterServer {
     @Autowired
     private QuartzService quartzService;
@@ -31,10 +43,10 @@ public class MasterServer {
     @Autowired
     private JobInstanceService jobInstanceService;
 
-    //    public static void main(String[] args) {
-    //        Thread.currentThread().setName("Master Server");
-    //        new SpringApplicationBuilder(MasterServer.class).web(WebApplicationType.NONE).run(args);
-    //    }
+    public static void main(String[] args) {
+        Thread.currentThread().setName("Master Server");
+        new SpringApplicationBuilder(MasterServer.class).web(WebApplicationType.NONE).run(args);
+    }
 
     @PostConstruct
     public void init() throws IOException, InterruptedException {

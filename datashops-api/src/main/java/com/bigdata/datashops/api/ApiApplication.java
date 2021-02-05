@@ -5,16 +5,18 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@EnableScheduling
 @EnableTransactionManagement
 @EnableConfigurationProperties
 @EntityScan("com.bigdata.datashops.model")
 @EnableJpaRepositories(basePackages = {"com.bigdata.datashops.dao"})
-@SpringBootApplication(scanBasePackages = {"com.bigdata.datashops"}, exclude = {SecurityAutoConfiguration.class})
+@ComponentScan(basePackages = {
+        "com.bigdata.datashops"}, excludeFilters = @ComponentScan.Filter(type = FilterType.REGEX, pattern = "com.bigdata.datashops.server.*"))
+@SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
 public class ApiApplication {
 
     public static void main(String[] args) {

@@ -2,11 +2,22 @@ package com.bigdata.datashops.server.worker;
 
 import java.io.IOException;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.PostConstruct;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.WebApplicationType;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.FilterType;
+
+import com.bigdata.datashops.server.master.MasterServer;
 import com.bigdata.datashops.server.rpc.GrpcRemotingServer;
 import com.bigdata.datashops.server.worker.registry.WorkerRegistry;
 
+@ComponentScan(basePackages = "com.bigdata.datashops", excludeFilters = {
+        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {MasterServer.class})})
+@Configuration
 public class WorkerServer {
     @Autowired
     private GrpcRemotingServer grpcRemotingServer;
@@ -14,8 +25,13 @@ public class WorkerServer {
     @Autowired
     private WorkerRegistry workerRegistry;
 
-    //    @PostConstruct
-    public void run() throws IOException, InterruptedException {
+    public static void main(String[] args) {
+        Thread.currentThread().setName("Worker Server");
+        new SpringApplicationBuilder(WorkerServer.class).web(WebApplicationType.NONE).run(args);
+    }
+
+    @PostConstruct
+    public void init() throws IOException, InterruptedException {
         workerRegistry.registry();
 
         grpcRemotingServer.start();
