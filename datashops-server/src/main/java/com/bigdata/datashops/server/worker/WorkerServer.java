@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
 
 import com.bigdata.datashops.server.master.MasterServer;
@@ -17,7 +16,6 @@ import com.bigdata.datashops.server.worker.registry.WorkerRegistry;
 
 @ComponentScan(basePackages = "com.bigdata.datashops", excludeFilters = {
         @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {MasterServer.class})})
-@Configuration
 public class WorkerServer {
     @Autowired
     private GrpcRemotingServer grpcRemotingServer;

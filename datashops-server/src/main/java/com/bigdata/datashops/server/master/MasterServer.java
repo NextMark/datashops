@@ -10,7 +10,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -21,7 +20,6 @@ import com.bigdata.datashops.server.quartz.QuartzService;
 import com.bigdata.datashops.server.rpc.GrpcRemotingServer;
 import com.bigdata.datashops.service.JobInstanceService;
 
-@Configuration
 @EnableTransactionManagement
 @ComponentScan(basePackages = "com.bigdata.datashops")
 @EnableJpaRepositories(basePackages = {"com.bigdata.datashops.dao"})
