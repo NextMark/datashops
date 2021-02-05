@@ -50,7 +50,7 @@ public class MasterServer {
     public void init() throws IOException, InterruptedException {
         masterRegistry.registry();
 
-        //quartzService.start();
+        quartzService.start();
         scheduledExecutor.run(new Finder(jobInstanceService));
 
         grpcRemotingServer.start();

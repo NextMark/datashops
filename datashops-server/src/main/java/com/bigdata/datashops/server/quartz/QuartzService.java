@@ -25,14 +25,12 @@ public class QuartzService {
     private Scheduler scheduler;
 
     private Properties setQuartzProperties() {
-        log.info("start init quartz properties");
         Properties prop = new Properties();
         prop.put("org.quartz.scheduler.instanceName", "quartzSchedulerPool");
         prop.put("org.quartz.scheduler.rmi.export", "false");
         prop.put("org.quartz.scheduler.rmi.proxy", "false");
         prop.put("org.quartz.scheduler.wrapJobExecutionInUserTransaction", "false");
-        prop.put("org.quartz.threadPool.class", "org.quartz.simpl.SimpleThreadPool");
-        prop.put("org.quartz.threadPool.threadCount", 8);
+        prop.put("org.quartz.threadPool.threadCount", "8");
         prop.put("org.quartz.threadPool.threadPriority", "5");
         prop.put("org.quartz.threadPool.threadsInheritContextClassLoaderOfInitializingThread", "true");
         prop.put("org.quartz.jobStore.misfireThreshold", "60000");
@@ -41,23 +39,21 @@ public class QuartzService {
     }
 
     public void start() {
-        log.info("start init quartz schedule");
+        log.info("Start init quartz schedule");
         try {
             SchedulerFactory schedulerFactory = new StdSchedulerFactory(setQuartzProperties());
             scheduler = schedulerFactory.getScheduler();
             scheduler.start();
-            log.info("start init quartz scheduler");
         } catch (SchedulerException e) {
-            log.error("failed init quartz scheduler", e);
+            log.error("Failed init quartz scheduler", e);
         }
     }
-
 
     public void shutdown() {
         if (scheduler != null) {
             try {
                 scheduler.shutdown();
-                log.info("worker shutdown quartz service");
+                log.info("master shutdown quartz service");
             } catch (SchedulerException e) {
                 log.error("failed shutdown quartz scheduler", e);
             }
@@ -75,7 +71,8 @@ public class QuartzService {
         }
     }
 
-    public void scheduleCornJob(Class<? extends Job> jobClass, String name, String group, String cronExpression, JobDataMap jobDataMap, Date startDate, Date endDate) throws SchedulerException {
+    public void scheduleCornJob(Class<? extends Job> jobClass, String name, String group, String cronExpression,
+                                JobDataMap jobDataMap, Date startDate, Date endDate) throws SchedulerException {
         JobKey jobKey = new JobKey(name, group);
         if (!scheduler.checkExists(jobKey)) {
             JobBuilder jobBuilder = JobBuilder.newJob(jobClass);
@@ -84,7 +81,8 @@ public class QuartzService {
                 jobBuilder.setJobData(jobDataMap);
             }
             JobDetail jobDetail = jobBuilder.build();
-            CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(cronExpression).withMisfireHandlingInstructionDoNothing();
+            CronScheduleBuilder cronScheduleBuilder =
+                    CronScheduleBuilder.cronSchedule(cronExpression).withMisfireHandlingInstructionDoNothing();
             TriggerBuilder<CronTrigger> triggerBuilder = TriggerBuilder.newTrigger().withSchedule(cronScheduleBuilder);
             if (startDate != null) {
                 triggerBuilder.startAt(startDate);
