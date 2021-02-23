@@ -1,4 +1,4 @@
-package com.bigdata.datashops.server.utils;
+package com.bigdata.datashops.service.utils;
 
 import java.util.Date;
 

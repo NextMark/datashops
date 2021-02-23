@@ -6,6 +6,7 @@ import java.util.Objects;
 import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.StringUtils;
+import org.quartz.SchedulerException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
@@ -54,14 +55,14 @@ public class JobController extends BasicController {
     }
 
     @PostMapping(value = "/modifyJob")
-    public Result modifyJob(@RequestBody DtoJob dtoJob) {
+    public Result modifyJob(@RequestBody DtoJob dtoJob) throws SchedulerException {
         Job job = jobService.getJob(dtoJob.getId());
         BeanUtils.copyProperties(dtoJob, job);
         DtoCronExpression cronExpression = DtoCronExpression.builder().schedulingPeriod(dtoJob.getSchedulingPeriod())
                                                    .config(dtoJob.getTimeConfig()).build();
         String cron = CronHelper.buildCronExpression(cronExpression);
         job.setCronExpression(cron);
-        jobService.save(job);
+        jobService.modifyJob(job);
         return ok(job);
     }
 
@@ -149,12 +150,11 @@ public class JobController extends BasicController {
     }
 
     @PostMapping(value = "/modifySchedulerStatus")
-    public Result modifySchedulerStatus(@RequestBody Map<String, Object> params) {
+    public Result modifySchedulerStatus(@RequestBody Map<String, Object> params) throws SchedulerException {
         int status = (int) params.get("status");
         Job job = jobService.getJobByMaskId(params.get("maskId").toString());
         if (!Objects.isNull(job)) {
-            job.setSchedulerStatus(status);
-            jobService.save(job);
+            jobService.modifySchedulerStatus(job, status);
         }
         return ok();
     }

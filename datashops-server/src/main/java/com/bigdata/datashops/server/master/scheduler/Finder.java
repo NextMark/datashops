@@ -34,9 +34,7 @@ public class Finder extends Thread {
             status.add(runState.getCode());
         }
         String filters = "state=" + StringUtils.join(status, Constants.SEPARATOR_COMMA);
-        LOG.info("filters {}", filters);
         List<JobInstance> statusList = jobInstanceService.findReadyJob(filters);
-        LOG.info("size {}", statusList.size());
         if (statusList.size() > 0) {
             LOG.info("[Finder] find {} instances, add to queue", statusList.size());
         }
