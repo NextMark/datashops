@@ -24,6 +24,10 @@ public class JobInstanceService extends AbstractMysqlPagingAndSortingQueryServic
         return findOneByQuery(filter);
     }
 
+    public void print() {
+        System.out.println("aaa");
+    }
+
     public JobInstance saveEntity(JobInstance jobInstance) {
         return save(jobInstance);
     }

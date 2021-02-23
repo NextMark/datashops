@@ -43,6 +43,7 @@ public class QuartzJob implements Job {
 
         JobInstance instance =
                 JobInstance.builder().maskId(job.getMaskId()).instanceId(instanceId).submitTime(now).status(1)
+                        .name(job.getName()).priority(job.getPriority()).projectId(projectId)
                         .retryTimes(job.getRetryTimes()).retryInterval(job.getRetryInterval())
                         .state(RunState.CREATED.getCode()).operator(JOB_DEFAULT_OPERATOR)
                         .type(JobInstanceType.GRAPH.getCode()).bizTime(bizDate).priority(job.getPriority()).build();

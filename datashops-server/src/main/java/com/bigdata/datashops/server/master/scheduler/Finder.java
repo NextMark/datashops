@@ -46,7 +46,8 @@ public class Finder extends Thread {
                 instance.setState(RunState.WAIT_FOR_RUN.getCode());
             }
             instance.setUpdateTime(new Date());
-            jobInstanceService.save(instance);
+            jobInstanceService.saveEntity(instance);
+            jobInstanceService.print();
         }
     }
 }
