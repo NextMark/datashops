@@ -1,11 +1,12 @@
 package com.bigdata.datashops.server.master.scheduler;
 
-import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.model.enums.RunState;
@@ -14,14 +15,12 @@ import com.bigdata.datashops.server.queue.JobQueue;
 import com.bigdata.datashops.service.JobInstanceService;
 import com.google.common.collect.Lists;
 
-public class Finder extends Thread {
+@Component
+public class Finder implements Runnable {
     private static final Logger LOG = LoggerFactory.getLogger(Finder.class);
 
+    @Autowired
     private JobInstanceService jobInstanceService;
-
-    public Finder(JobInstanceService jobInstanceService) {
-        this.jobInstanceService = jobInstanceService;
-    }
 
     @Override
     public void run() {
@@ -34,20 +33,18 @@ public class Finder extends Thread {
             status.add(runState.getCode());
         }
         String filters = "state=" + StringUtils.join(status, Constants.SEPARATOR_COMMA);
-        List<JobInstance> statusList = jobInstanceService.findReadyJob(filters);
-        if (statusList.size() > 0) {
-            LOG.info("[Finder] find {} instances, add to queue", statusList.size());
+        List<JobInstance> jobInstanceList = jobInstanceService.findReadyJob(filters);
+        if (jobInstanceList.size() > 0) {
+            LOG.info("[Finder] find {} instances, add to queue", jobInstanceList.size());
         }
-        for (JobInstance instance : statusList) {
+        for (JobInstance instance : jobInstanceList) {
             boolean in = JobQueue.getInstance().getQueue().offer(instance);
             if (in) {
                 instance.setState(RunState.RUNNING.getCode());
             } else {
                 instance.setState(RunState.WAIT_FOR_RUN.getCode());
             }
-            instance.setUpdateTime(new Date());
             jobInstanceService.saveEntity(instance);
-            jobInstanceService.print();
         }
     }
 }

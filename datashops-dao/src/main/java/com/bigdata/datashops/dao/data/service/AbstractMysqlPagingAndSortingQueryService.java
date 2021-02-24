@@ -17,6 +17,8 @@ import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Sort;
@@ -25,7 +27,9 @@ import org.springframework.util.StringUtils;
 
 import com.bigdata.datashops.dao.data.domain.Pageable;
 
-public abstract class AbstractMysqlPagingAndSortingQueryService<T, ID extends Serializable> extends AbstractPagingAndSortingService<T, ID> implements PagingAndSortingQueryService<T, ID> {
+public abstract class AbstractMysqlPagingAndSortingQueryService<T, ID extends Serializable> extends
+        AbstractPagingAndSortingService<T, ID> implements PagingAndSortingQueryService<T, ID> {
+    protected static final Logger LOG = LoggerFactory.getLogger(AbstractMysqlPagingAndSortingQueryService.class);
 
     @PersistenceContext
     protected EntityManager entityManager;
@@ -155,7 +159,7 @@ public abstract class AbstractMysqlPagingAndSortingQueryService<T, ID extends Se
                     if (!value.contains(",")) {
                         predicate.getExpressions().add(builder.notEqual(root.get(field), suitValue(field, value)));
                     } else {
-                        String [] values = value.split(",");
+                        String[] values = value.split(",");
                         for (String s : values) {
                             predicate.getExpressions().add(builder.notEqual(root.get(field), suitValue(field, s)));
                         }
@@ -167,9 +171,9 @@ public abstract class AbstractMysqlPagingAndSortingQueryService<T, ID extends Se
                     if (!value.contains(",")) {
                         predicate.getExpressions().add(builder.equal(root.get(field), suitValue(field, value)));
                     } else {
-                        String [] values = value.split(",");
-                        Object [] suitValues = new Object[values.length];
-                        for (int i = 0; i < values.length; i ++) {
+                        String[] values = value.split(",");
+                        Object[] suitValues = new Object[values.length];
+                        for (int i = 0; i < values.length; i++) {
                             suitValues[i] = suitValue(field, values[i]);
                         }
                         predicate.getExpressions().add(root.get(field).in(suitValues));
