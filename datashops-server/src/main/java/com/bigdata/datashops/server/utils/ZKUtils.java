@@ -30,4 +30,8 @@ public class ZKUtils {
     public static String getWorkerMetaPath() {
         return getWorkerPath() + Constants.ZK_WORKER_META;
     }
+
+    public static String getFinderLockPath() {
+        return getRootPath() + Constants.ZK_FINDER_LOCK;
+    }
 }

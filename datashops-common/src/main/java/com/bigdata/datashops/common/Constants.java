@@ -44,6 +44,7 @@ public class Constants {
     public final static String ZK_WORKER_META = "/meta";
     public final static String ZK_REGISTRY = "/registry";
     public final static String ZK_JOB_QUEUE = "/queue";
+    public final static String ZK_FINDER_LOCK = "/lock/finder";
     public final static String ZK_JOB_QUEUE_PREFIX = "qn-";
 
     /**

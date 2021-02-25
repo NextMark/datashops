@@ -5,6 +5,10 @@ import java.util.List;
 
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.api.transaction.CuratorOp;
+import org.apache.curator.framework.recipes.locks.InterProcessMutex;
+import org.apache.curator.framework.recipes.queue.QueueConsumer;
+import org.apache.curator.framework.recipes.queue.QueueSerializer;
+import org.apache.curator.framework.state.ConnectionState;
 import org.apache.curator.utils.CloseableUtils;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
@@ -89,6 +93,20 @@ public class ZookeeperOperator implements InitializingBean {
         }
     }
 
+    public void persistPersistentSequential(final String key, final String value) {
+        try {
+            if (!isExisted(key)) {
+                zookeeperClient.getZkClient().create().creatingParentsIfNeeded()
+                        .withMode(CreateMode.PERSISTENT_SEQUENTIAL)
+                        .forPath(key, value.getBytes(StandardCharsets.UTF_8));
+            } else {
+                update(key, value);
+            }
+        } catch (Exception ex) {
+            LOG.error("persist key : {} , value : {}", key, value, ex);
+        }
+    }
+
     public void update(final String key, final String value) {
         try {
 
@@ -154,6 +172,21 @@ public class ZookeeperOperator implements InitializingBean {
         }
     }
 
+    public void releaseMutex(InterProcessMutex mutex) {
+        if (mutex != null) {
+            try {
+                mutex.release();
+            } catch (Exception e) {
+                if ("instance must be started before calling this method".equals(e.getMessage())) {
+                    LOG.warn("lock release");
+                } else {
+                    LOG.error("lock release failed", e);
+                }
+
+            }
+        }
+    }
+
     public CuratorFramework getZkClient() {
         return zookeeperClient.getZkClient();
     }
@@ -164,5 +197,35 @@ public class ZookeeperOperator implements InitializingBean {
 
     public void close() {
         CloseableUtils.closeQuietly(zookeeperClient.getZkClient());
+    }
+
+    public QueueSerializer<String> createQueueSerializer() {
+        return new QueueSerializer<String>() {
+            @Override
+            public byte[] serialize(String item) {
+                return item.getBytes();
+            }
+
+            @Override
+            public String deserialize(byte[] bytes) {
+                return new String(bytes);
+            }
+
+        };
+    }
+
+    public QueueConsumer<String> createQueueConsumer() {
+        return new QueueConsumer<String>() {
+            @Override
+            public void stateChanged(CuratorFramework client, ConnectionState newState) {
+                System.out.println("connection new state: " + newState.name());
+            }
+
+            @Override
+            public void consumeMessage(String message) throws Exception {
+                System.out.println("consume one message: " + message);
+            }
+
+        };
     }
 }

@@ -20,8 +20,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.bigdata.datashops.server.master.registry.MasterRegistry;
+import com.bigdata.datashops.server.master.scheduler.Dispatcher;
 import com.bigdata.datashops.server.master.scheduler.Finder;
 import com.bigdata.datashops.server.master.scheduler.ScheduledExecutor;
+import com.bigdata.datashops.server.redis.RedissonDistributeLocker;
 import com.bigdata.datashops.server.rpc.GrpcRemotingServer;
 import com.bigdata.datashops.service.JobInstanceService;
 
@@ -53,6 +55,12 @@ public class MasterServer {
     @Autowired
     private Finder finder;
 
+    @Autowired
+    private Dispatcher dispatcher;
+
+    @Autowired
+    RedissonDistributeLocker redissonDistributeLocker;
+
     public static void main(String[] args) {
         Thread.currentThread().setName("Master Server");
         new SpringApplicationBuilder(MasterServer.class).web(WebApplicationType.NONE).run(args);
@@ -67,6 +75,8 @@ public class MasterServer {
         jobInstanceService.findById(0);
 
         scheduledExecutor.run(finder);
+
+        //scheduledExecutor.run(dispatcher);
 
         grpcRemotingServer.start();
         grpcRemotingServer.blockUntilShutdown();

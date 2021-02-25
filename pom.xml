@@ -47,6 +47,7 @@
         <jackson.version>2.11.0</jackson.version>
         <lombok.version>1.18.16</lombok.version>
         <oshi.version>5.3.7</oshi.version>
+        <redisson.version>3.15.0</redisson.version>
 
         <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
         <maven-assembly-plugin.version>3.1.0</maven-assembly-plugin.version>

@@ -35,6 +35,14 @@ public class Checker {
     @Autowired
     private JobInstanceService jobInstanceService;
 
+    public RunState checkJob(JobInstance jobInstance) {
+        if (jobInstance != null) {
+            return RunState.WAIT_FOR_DEPENDENCY;
+        } else {
+            return RunState.CREATED;
+        }
+    }
+
     public boolean check(JobInstance jobInstance) {
         String preDependency = jobInstance.getPreDependency();
         if (StringUtils.isBlank(preDependency)) {
