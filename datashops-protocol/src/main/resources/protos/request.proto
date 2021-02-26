@@ -2,7 +2,6 @@ syntax = "proto3";
 
 option java_package = "com.bigdata.datashops.protocol";
 
-// only for message
 option java_outer_classname = "GrpcRequest";
 
 enum RequestType {

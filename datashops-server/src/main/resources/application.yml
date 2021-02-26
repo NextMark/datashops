@@ -9,11 +9,6 @@ spring:
       hibernate:
         format_sql: true
         show_sql: false
-  redis:
-    host: 47.95.229.64
-    password: "%123@redis-"
-    redisson:
-      file: classpath:redisson.yml
 
   jackson:
     serialization:

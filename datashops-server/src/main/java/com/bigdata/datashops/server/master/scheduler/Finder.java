@@ -13,7 +13,6 @@ import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.model.enums.RunState;
 import com.bigdata.datashops.model.pojo.job.JobInstance;
 import com.bigdata.datashops.server.queue.JobQueue;
-import com.bigdata.datashops.server.redis.RedissonDistributeLocker;
 import com.bigdata.datashops.server.utils.ZKUtils;
 import com.bigdata.datashops.server.zookeeper.ZookeeperOperator;
 import com.bigdata.datashops.service.JobInstanceService;
@@ -25,9 +24,6 @@ public class Finder implements Runnable {
 
     @Autowired
     private JobInstanceService jobInstanceService;
-
-    @Autowired
-    RedissonDistributeLocker redissonDistributeLocker;
 
     @Autowired
     private ZookeeperOperator zookeeperOperator;

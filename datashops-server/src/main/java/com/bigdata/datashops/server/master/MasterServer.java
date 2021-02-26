@@ -24,7 +24,6 @@ import com.bigdata.datashops.server.master.registry.MasterRegistry;
 import com.bigdata.datashops.server.master.scheduler.Finder;
 import com.bigdata.datashops.server.master.scheduler.ScheduledExecutor;
 import com.bigdata.datashops.server.queue.JobQueue;
-import com.bigdata.datashops.server.redis.RedissonDistributeLocker;
 import com.bigdata.datashops.server.rpc.GrpcRemotingServer;
 import com.bigdata.datashops.service.JobInstanceService;
 
@@ -58,9 +57,6 @@ public class MasterServer {
 
     @Autowired
     private JobQueue jobQueue;
-
-    @Autowired
-    RedissonDistributeLocker redissonDistributeLocker;
 
     @Autowired
     private BaseConfig baseConfig;
