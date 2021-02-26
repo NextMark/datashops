@@ -9,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.bigdata.datashops.protocol.GrpcRequest;
 import com.bigdata.datashops.protocol.RequestServiceGrpc;
-import com.bigdata.datashops.server.rpc.GrpcRemotingServer;
 import com.google.common.collect.Lists;
 
 import io.grpc.ManagedChannel;
@@ -22,7 +21,7 @@ public class GrpcServerTest {
 
     @Test
     public void main() throws IOException, InterruptedException {
-        grpcRemotingServer.start();
+        grpcRemotingServer.start(6000);
 
         Thread.sleep(10000);
 

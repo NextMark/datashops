@@ -4,10 +4,6 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.curator.framework.recipes.locks.InterProcessMutex;
-import org.apache.curator.framework.recipes.queue.DistributedQueue;
-import org.apache.curator.framework.recipes.queue.QueueBuilder;
-import org.apache.curator.framework.recipes.queue.QueueConsumer;
-import org.apache.curator.utils.CloseableUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +12,7 @@ import org.springframework.stereotype.Component;
 import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.model.enums.RunState;
 import com.bigdata.datashops.model.pojo.job.JobInstance;
+import com.bigdata.datashops.server.queue.JobQueue;
 import com.bigdata.datashops.server.redis.RedissonDistributeLocker;
 import com.bigdata.datashops.server.utils.ZKUtils;
 import com.bigdata.datashops.server.zookeeper.ZookeeperOperator;
@@ -38,25 +35,11 @@ public class Finder implements Runnable {
     @Autowired
     private Checker checker;
 
+    @Autowired
+    private JobQueue jobQueue;
+
     @Override
     public void run() {
-        LOG.info("Finder run.");
-        DistributedQueue<String> queue = null;
-        try {
-            QueueConsumer<String> consumer = zookeeperOperator.createQueueConsumer();
-            QueueBuilder<String> builder = QueueBuilder.builder(zookeeperOperator.getZkClient(), consumer,
-                    zookeeperOperator.createQueueSerializer(), ZKUtils.getQueuePath());
-            queue = builder.buildQueue();
-            queue.start();
-            for (int i = 0; i < 10; i++) {
-                int priority = (int) (Math.random() * 100);
-                queue.put("test-");
-            }
-        } catch (Exception e) {
-
-        } finally {
-            CloseableUtils.closeQuietly(queue);
-        }
         InterProcessMutex mutex = null;
         try {
             mutex = new InterProcessMutex(zookeeperOperator.getZkClient(), ZKUtils.getFinderLockPath());
@@ -76,11 +59,10 @@ public class Finder implements Runnable {
             }
             for (JobInstance instance : jobInstanceList) {
                 RunState state = checker.checkJob(instance);
-                //                if (state == RunState.WAIT_FOR_RUN) {
-                //                    zookeeperOperator
-                //                            .persistPersistentSequential(ZKUtils.getQueuePath() + "/ttt-", instance
-                //                            .getMaskId());
-                //                }
+                jobQueue.getQueue().put(instance.getInstanceId());
+                if (state == RunState.WAIT_FOR_RUN) {
+                    jobQueue.getQueue().put(instance.getInstanceId());
+                }
             }
         } catch (Exception e) {
             LOG.error("master start up exception", e);

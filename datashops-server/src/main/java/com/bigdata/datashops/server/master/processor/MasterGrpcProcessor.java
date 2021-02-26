@@ -7,20 +7,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.bigdata.datashops.protocol.GrpcRequest;
+import com.bigdata.datashops.server.config.BaseConfig;
 import com.bigdata.datashops.server.executor.ThreadUtil;
-import com.bigdata.datashops.server.master.config.MasterConfig;
 import com.bigdata.datashops.server.worker.executor.JobExecutor;
 
 @Component
 public class MasterGrpcProcessor implements InitializingBean {
     @Autowired
-    private MasterConfig masterConfig;
+    private BaseConfig baseConfig;
 
     private ExecutorService executorService;
 
     @Override
     public void afterPropertiesSet() {
-        this.executorService = ThreadUtil.newDaemonFixedThreadExecutor("", masterConfig.getMasterJobThreads());
+        this.executorService = ThreadUtil.newDaemonFixedThreadExecutor("", baseConfig.getMasterJobThreads());
     }
 
     public void process(GrpcRequest.Request request) {

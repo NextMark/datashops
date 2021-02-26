@@ -10,6 +10,9 @@ import com.bigdata.datashops.server.job.JobContext;
 import com.bigdata.datashops.server.job.JobManager;
 import com.google.protobuf.ByteString;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class JobExecutor implements Runnable {
     private AbstractJob job;
 
@@ -21,6 +24,7 @@ public class JobExecutor implements Runnable {
 
     @Override
     public void run() {
+        log.info("Run job from {}, id: {}", request.getHost(), request.getRequestId());
         ByteString body = request.getBody();
         String bodyStr = body.toStringUtf8();
         JobContext context = JSONUtils.parseObject(bodyStr, JobContext.class);

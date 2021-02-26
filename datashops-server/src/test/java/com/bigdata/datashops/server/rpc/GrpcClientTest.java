@@ -9,8 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.bigdata.datashops.protocol.GrpcRequest;
 import com.bigdata.datashops.protocol.RequestServiceGrpc;
-import com.bigdata.datashops.server.rpc.GrpcRemotingServer;
-import com.bigdata.datashops.server.rpc.GrpcServerConfig;
 import com.google.common.collect.Lists;
 
 import io.grpc.ManagedChannel;
@@ -21,13 +19,10 @@ public class GrpcClientTest {
     @Autowired
     GrpcRemotingServer grpcRemotingServer;
 
-    @Autowired
-    GrpcServerConfig grpcServerConfig;
-
     @Test
     public void test() throws IOException, InterruptedException {
-        grpcServerConfig.setPort(60001);
-        grpcRemotingServer.start();
+        //        grpcServerConfig.setPort(60001);
+        //        grpcRemotingServer.start(60001);
 
         Thread.sleep(10000);
 

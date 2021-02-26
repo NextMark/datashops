@@ -19,10 +19,11 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import com.bigdata.datashops.server.config.BaseConfig;
 import com.bigdata.datashops.server.master.registry.MasterRegistry;
-import com.bigdata.datashops.server.master.scheduler.Dispatcher;
 import com.bigdata.datashops.server.master.scheduler.Finder;
 import com.bigdata.datashops.server.master.scheduler.ScheduledExecutor;
+import com.bigdata.datashops.server.queue.JobQueue;
 import com.bigdata.datashops.server.redis.RedissonDistributeLocker;
 import com.bigdata.datashops.server.rpc.GrpcRemotingServer;
 import com.bigdata.datashops.service.JobInstanceService;
@@ -56,10 +57,13 @@ public class MasterServer {
     private Finder finder;
 
     @Autowired
-    private Dispatcher dispatcher;
+    private JobQueue jobQueue;
 
     @Autowired
     RedissonDistributeLocker redissonDistributeLocker;
+
+    @Autowired
+    private BaseConfig baseConfig;
 
     public static void main(String[] args) {
         Thread.currentThread().setName("Master Server");
@@ -69,16 +73,19 @@ public class MasterServer {
     @PostConstruct
     public void init() throws IOException, InterruptedException, SchedulerException {
         masterRegistry.registry();
+        // 启动quartz任务
         scheduler.start();
 
         // TODO 不知道原因，需要先调用一下，负责线程中无法save
         jobInstanceService.findById(0);
 
+        // 初始化zk队列
+        jobQueue.initQueue();
+
+        // 扫描作业实例
         scheduledExecutor.run(finder);
 
-        //scheduledExecutor.run(dispatcher);
-
-        grpcRemotingServer.start();
+        grpcRemotingServer.start(baseConfig.getMasterPort());
         grpcRemotingServer.blockUntilShutdown();
 
         Runtime.getRuntime().addShutdownHook(new Thread(this::close));

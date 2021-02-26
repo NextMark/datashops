@@ -6,9 +6,6 @@ import java.util.List;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.api.transaction.CuratorOp;
 import org.apache.curator.framework.recipes.locks.InterProcessMutex;
-import org.apache.curator.framework.recipes.queue.QueueConsumer;
-import org.apache.curator.framework.recipes.queue.QueueSerializer;
-import org.apache.curator.framework.state.ConnectionState;
 import org.apache.curator.utils.CloseableUtils;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
@@ -199,33 +196,4 @@ public class ZookeeperOperator implements InitializingBean {
         CloseableUtils.closeQuietly(zookeeperClient.getZkClient());
     }
 
-    public QueueSerializer<String> createQueueSerializer() {
-        return new QueueSerializer<String>() {
-            @Override
-            public byte[] serialize(String item) {
-                return item.getBytes();
-            }
-
-            @Override
-            public String deserialize(byte[] bytes) {
-                return new String(bytes);
-            }
-
-        };
-    }
-
-    public QueueConsumer<String> createQueueConsumer() {
-        return new QueueConsumer<String>() {
-            @Override
-            public void stateChanged(CuratorFramework client, ConnectionState newState) {
-                System.out.println("connection new state: " + newState.name());
-            }
-
-            @Override
-            public void consumeMessage(String message) throws Exception {
-                System.out.println("consume one message: " + message);
-            }
-
-        };
-    }
 }

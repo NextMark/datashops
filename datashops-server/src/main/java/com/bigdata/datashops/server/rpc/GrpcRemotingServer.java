@@ -25,19 +25,16 @@ public class GrpcRemotingServer {
     private Server server;
 
     @Autowired
-    private GrpcServerConfig grpcServerConfig;
-
-    @Autowired
     private MasterGrpcProcessor masterGrpcProcessor;
 
     @Autowired
     private WorkerGrpcProcessor workerGrpcProcessor;
 
-    public void start() throws IOException {
+    public void start(int port) throws IOException {
         LOG.info("Grpc server starting...");
         RequestServiceGrpcImpl requestServiceGrpc = new RequestServiceGrpcImpl();
-        server = ServerBuilder.forPort(grpcServerConfig.getPort()).addService(requestServiceGrpc).build().start();
-        LOG.info("Grpc server started, listening on {}", grpcServerConfig.getPort());
+        server = ServerBuilder.forPort(port).addService(requestServiceGrpc).build().start();
+        LOG.info("Grpc server started, listening on {}", port);
         Runtime.getRuntime().addShutdownHook(new Thread(GrpcRemotingServer.this::stop));
     }
 
@@ -56,7 +53,7 @@ public class GrpcRemotingServer {
     public class RequestServiceGrpcImpl extends RequestServiceGrpc.RequestServiceImplBase {
         @Override
         public void send(GrpcRequest.Request request, StreamObserver<GrpcRequest.Response> responseObserver) {
-            LOG.info("[Grpc] receive request, rid {}, host {}, type {}", request.getRequestId(), request.getHost(),
+            LOG.info("[Grpc] receive request {}, from: {}, type: {}", request.getRequestId(), request.getHost(),
                     request.getRequestType());
             // TODO
             GrpcRequest.RequestType type = request.getRequestType();
