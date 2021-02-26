@@ -4,8 +4,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bigdata.datashops.api.common.Pagination;
-import com.bigdata.datashops.api.config.security.jwt.JwtSetting;
 import com.bigdata.datashops.api.controller.BasicController;
 import com.bigdata.datashops.api.response.ResultCode;
 import com.bigdata.datashops.common.Constants;
@@ -31,8 +28,6 @@ import com.google.common.collect.Maps;
 @RestController
 @RequestMapping("/v1/user")
 public class UserController extends BasicController {
-    @Resource
-    private JwtSetting jwtSetting;
 
     @PostMapping("/register")
     public Object register(@RequestBody DtoRegister params) {
@@ -86,7 +81,7 @@ public class UserController extends BasicController {
                 String.format("%s%s%s%s%s", user.getId(), Constants.SEPARATOR_USER_TOKEN_SALT, user.getEmail(),
                         Constants.SEPARATOR_USER_TOKEN_SALT, user.getPhone()));
         map.put("user", user);
-        map.put(jwtSetting.getHeader(), token);
+        map.put(Constants.JWT_HEADER, token);
         return ok(map);
     }
 

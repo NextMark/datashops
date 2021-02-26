@@ -7,7 +7,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
@@ -21,6 +20,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import com.bigdata.datashops.api.config.RSAUtil;
+import com.bigdata.datashops.common.Constants;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.CompressionCodecs;
@@ -35,15 +35,12 @@ import io.jsonwebtoken.UnsupportedJwtException;
 /**
  * Json web token 工具
  * 验证、生成token
- *
  */
 @Component
 public class JwtUtil {
     private final static Logger LOG = LoggerFactory.getLogger(JwtUtil.class);
     @Autowired
     private RSAUtil rsaUtil;
-    @Resource
-    private JwtSetting jwtSetting;
 
     private Claims getClaims(final String token) {
         final Jws<Claims> jws = parseToken(token);
@@ -58,14 +55,13 @@ public class JwtUtil {
         return claims == null ? null : claims.getSubject();
     }
 
-
     /**
      * 从请求头或请求参数中获取token
      */
     public String getTokenFromRequest(final HttpServletRequest httpRequest) {
-        String token = httpRequest.getHeader(jwtSetting.getHeader());
+        String token = httpRequest.getHeader(Constants.JWT_HEADER);
         if (StringUtils.isEmpty(token)) {
-            token = httpRequest.getParameter(jwtSetting.getHeader());
+            token = httpRequest.getParameter(Constants.JWT_HEADER);
         }
         return token;
     }
@@ -78,47 +74,29 @@ public class JwtUtil {
      * @return UsernamePasswordAuthenticationToken
      */
     public UsernamePasswordAuthenticationToken getAuthentication(final String username, final String token) {
-        // 解析 token 的 payload
         final Claims claims = getClaims(token);
-
-        // 获取用户角色字符串
-        // 将元素转换为 GrantedAuthority 接口集合
-        //noinspection ConstantConditions
         final Collection<? extends GrantedAuthority> authorities =
-                // 因为 JwtAuthenticationFilter 拦截器已经检查过 token 有效，所以可以忽略 get 空指针提示
-                Arrays.stream(claims.get(jwtSetting.getAuthoritiesKey()).toString().split(","))
-                        .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toList());
-        return new UsernamePasswordAuthenticationToken(
-                new User(username, "", authorities),
-                null,
-                authorities);
+                Arrays.stream(claims.get(Constants.JWT_AUTHORITIES_KEY).toString().split(","))
+                        .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+        return new UsernamePasswordAuthenticationToken(new User(username, "", authorities), null, authorities);
     }
 
     /**
      * 签发token
      *
-     * @param username           用户名
+     * @param username 用户名
      * @return token
      */
     public String sign(final String username) {
-        final Date date = new Date(System.currentTimeMillis() + jwtSetting.getExpirationTime() * 1000);
+        final Date date = new Date(System.currentTimeMillis() + Constants.JWT_EXPIRATION_TIME * 1000);
         // 加载私钥
-        final PrivateKey privateKey = rsaUtil.loadPemPrivateKey(jwtSetting.getPrivateKey());
+        final PrivateKey privateKey = rsaUtil.loadPemPrivateKey(Constants.JWT_PRIVATE_KEY);
         // 创建 token
-        return jwtSetting.getTokenPrefix() + " " +
-                Jwts.builder()
-                        // 设置用户名
-                        .setSubject(username)
-                        // 添加权限属性
-                        .claim(jwtSetting.getAuthoritiesKey(), "ROLE_USER")
-                        // 设置失效时间
-                        .setExpiration(date)
-                        // 512位的私钥加密生成签名
-                        .signWith(SignatureAlgorithm.RS256, privateKey)
-                        // 哈夫曼压缩
-                        .compressWith(CompressionCodecs.DEFLATE)
-                        .compact();
+        return Constants.JWT_TOKEN_PREFIX + " " + Jwts.builder().setSubject(username)
+                                                          .claim(Constants.JWT_AUTHORITIES_KEY, "ROLE_USER")
+                                                          .setExpiration(date)
+                                                          .signWith(SignatureAlgorithm.RS256, privateKey)
+                                                          .compressWith(CompressionCodecs.DEFLATE).compact();
     }
 
     /**
@@ -126,13 +104,8 @@ public class JwtUtil {
      */
     private Jws<Claims> parseToken(final String token) {
         try {
-            // 加载公钥
-            final PublicKey publicKey = rsaUtil.loadPemPublicKey(jwtSetting.getPublicKey());
-            return Jwts
-                    .parser()
-                    // 公钥解密
-                    .setSigningKey(publicKey)
-                    .parseClaimsJws(token.replace(jwtSetting.getTokenPrefix(), ""));
+            final PublicKey publicKey = rsaUtil.loadPemPublicKey(Constants.JWT_PUBLIC_LEY);
+            return Jwts.parser().setSigningKey(publicKey).parseClaimsJws(token.replace(Constants.JWT_TOKEN_PREFIX, ""));
         } catch (final SignatureException e) {
             // 签名异常
             LOG.error("Invalid JWT signature");

@@ -15,15 +15,6 @@ spring:
     username: xxx
     password: xxx
 
-# jwt config  过期时间24*3600=1天
-jwt:
-  expiration-time: 86400
-  header: Authorization
-  token-prefix: Bearer
-  privateKey: rsa/private-key.pem
-  publicKey: rsa/public-key.pem
-  authorities-key: auth
-
 #热部署组件
 devtools:
   livereload:
@@ -31,10 +22,3 @@ devtools:
     port: 8666
   restart:
     enabled: true #是否支持热部署
-
-flink:
-  restful:
-    ip: localhost
-    port: 8081
-
-

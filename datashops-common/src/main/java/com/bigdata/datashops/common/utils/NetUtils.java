@@ -1,6 +1,6 @@
 package com.bigdata.datashops.common.utils;
 
-import static com.bigdata.datashops.common.Constants.ANYHOST_VALUE;
+import static com.bigdata.datashops.common.Constants.ANY_HOST_VALUE;
 import static com.bigdata.datashops.common.Constants.LOCALHOST_VALUE;
 
 import java.io.IOException;
@@ -96,10 +96,9 @@ public class NetUtils {
             return false;
         }
         String name = address.getHostAddress();
-        boolean result = (name != null
-                                  && IP_PATTERN.matcher(name).matches()
-                                  && !ANYHOST_VALUE.equals(name)
-                                  && !LOCALHOST_VALUE.equals(name));
+        boolean result =
+                (name != null && IP_PATTERN.matcher(name).matches() && !ANY_HOST_VALUE.equals(name) && !LOCALHOST_VALUE
+                                                                                                                .equals(name));
         return result;
     }
 

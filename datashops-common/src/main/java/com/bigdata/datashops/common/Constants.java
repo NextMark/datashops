@@ -32,7 +32,7 @@ public class Constants {
     /**
      * network
      */
-    public final static String ANYHOST_VALUE = "0.0.0.0";
+    public final static String ANY_HOST_VALUE = "0.0.0.0";
     public final static String LOCALHOST_VALUE = "127.0.0.1";
 
     /**
@@ -67,4 +67,13 @@ public class Constants {
      */
     public final static Integer RPC_SUCCESS = 200;
 
+    /**
+     * jwt
+     */
+    public final static String JWT_HEADER = "Authorization";
+    public final static int JWT_EXPIRATION_TIME = 86400;
+    public final static String JWT_TOKEN_PREFIX = "Bearer";
+    public final static String JWT_AUTHORITIES_KEY = "auth";
+    public final static String JWT_PRIVATE_KEY = "rsa/private-key.pem";
+    public final static String JWT_PUBLIC_LEY = "rsa/public-key.pem";
 }
