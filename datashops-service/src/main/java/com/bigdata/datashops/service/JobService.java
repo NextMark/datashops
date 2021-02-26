@@ -54,7 +54,6 @@ public class JobService extends AbstractMysqlPagingAndSortingQueryService<Job, I
         save(job);
         quartzSchedulerService.addJobScheduler(job);
         quartzSchedulerService.rescheduleJob(job);
-        //quartzSchedulerService.pauseJob(job.getProjectId(), job.getId());
     }
 
 }

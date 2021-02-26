@@ -343,7 +343,6 @@
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <tagNameFormat>@{project.version}</tagNameFormat>
                     <tagBase>${project.version}</tagBase>
-                    <!--<goals>-f pom.xml deploy</goals>-->
                 </configuration>
                 <dependencies>
                     <dependency>
