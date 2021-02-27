@@ -1,5 +1,6 @@
 package com.bigdata.datashops.server.master.scheduler;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.RandomUtils;
@@ -56,6 +57,7 @@ public class Dispatcher {
             hosts.add(h);
         }
         JobInstance instance = jobInstanceService.findOneByQuery("instanceId=" + instanceId);
+        jobInstanceService.fillDataAndJob(Collections.singletonList(instance));
         RandomHostSelector randomHostSelector = new RandomHostSelector(hosts);
         Host host = randomHostSelector.select();
         GrpcRequest.Request request =

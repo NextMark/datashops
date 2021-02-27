@@ -49,7 +49,7 @@ public class Job extends BaseModel {
      */
     //private String version;
 
-    private String jobContext;
+    private String data;
 
     private String ico;
 

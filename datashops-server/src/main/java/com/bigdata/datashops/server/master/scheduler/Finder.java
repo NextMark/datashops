@@ -51,7 +51,7 @@ public class Finder implements Runnable {
 
             List<JobInstance> jobInstanceList = jobInstanceService.findReadyJob(filters);
             if (jobInstanceList.size() > 0) {
-                LOG.info("[Finder] find {} instances, add to queue", jobInstanceList.size());
+                LOG.info("Find {} instances, add to queue", jobInstanceList.size());
             }
             for (JobInstance instance : jobInstanceList) {
                 RunState state = checker.checkJob(instance);

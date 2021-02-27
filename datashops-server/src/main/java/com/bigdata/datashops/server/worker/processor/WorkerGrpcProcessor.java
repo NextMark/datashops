@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import com.bigdata.datashops.protocol.GrpcRequest;
 import com.bigdata.datashops.server.config.BaseConfig;
 import com.bigdata.datashops.server.executor.ThreadUtil;
+import com.bigdata.datashops.server.job.JobManager;
 import com.bigdata.datashops.server.worker.executor.JobExecutor;
 
 @Component
@@ -18,13 +19,16 @@ public class WorkerGrpcProcessor implements InitializingBean {
 
     private ExecutorService executorService;
 
+    @Autowired
+    JobManager jobManager;
+
     @Override
     public void afterPropertiesSet() {
         this.executorService = ThreadUtil.newDaemonFixedThreadExecutor("", baseConfig.getWorkerJobThreads());
     }
 
     public void processJobExec(GrpcRequest.Request request) {
-        Runnable thread = new JobExecutor(request);
+        Runnable thread = new JobExecutor(request, jobManager);
         executorService.submit(thread);
     }
 

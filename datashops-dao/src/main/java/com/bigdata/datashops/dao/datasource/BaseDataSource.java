@@ -1,5 +1,6 @@
 package com.bigdata.datashops.dao.datasource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,14 +22,42 @@ public abstract class BaseDataSource {
 
     private String params;
 
-    protected String fillParams(String params){
+    private String data;
+
+    protected String fillParams(String params) {
         return params;
     }
 
+    public abstract DbType dbType();
+
     public String getJdbcUrl() {
-        return "";
+        StringBuilder jdbcUrl = new StringBuilder(getAddress());
+        appendDatabase(jdbcUrl);
+        appendOther(jdbcUrl);
+        return jdbcUrl.toString();
     }
 
-    public abstract DbType dbType();
+    protected void appendDatabase(StringBuilder jdbcUrl) {
+        if (getAddress().lastIndexOf('/') != (jdbcUrl.length() - 1)) {
+            jdbcUrl.append("/");
+        }
+        jdbcUrl.append(getDatabase());
+    }
+
+    private void appendOther(StringBuilder jdbcUrl) {
+        if (StringUtils.isNotEmpty(params)) {
+            String separator = "";
+            switch (dbType()) {
+                case CLICK_HOUSE:
+                case MYSQL:
+                    separator = "?";
+                    break;
+                case HIVE:
+                default:
+                    LOG.error("Db type {} mismatch!", dbType());
+            }
+            jdbcUrl.append(separator).append(params);
+        }
+    }
 
 }

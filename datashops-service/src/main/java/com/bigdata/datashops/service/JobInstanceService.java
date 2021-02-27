@@ -39,4 +39,12 @@ public class JobInstanceService extends AbstractMysqlPagingAndSortingQueryServic
         }
     }
 
+    public void fillDataAndJob(List<JobInstance> jobInstances) {
+        for (JobInstance jobInstance : jobInstances) {
+            Job job = jobService.getJobByMaskId(jobInstance.getMaskId());
+            jobInstance.setData(job.getData());
+            jobInstance.setJob(job);
+        }
+    }
+
 }

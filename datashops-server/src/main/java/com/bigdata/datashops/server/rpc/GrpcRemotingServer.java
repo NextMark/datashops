@@ -53,7 +53,7 @@ public class GrpcRemotingServer {
     public class RequestServiceGrpcImpl extends RequestServiceGrpc.RequestServiceImplBase {
         @Override
         public void send(GrpcRequest.Request request, StreamObserver<GrpcRequest.Response> responseObserver) {
-            LOG.info("[Grpc] receive request {}, from: {}, type: {}", request.getRequestId(), request.getHost(),
+            LOG.info("Grpc Receive request {}, from: {}, type: {}", request.getRequestId(), request.getHost(),
                     request.getRequestType());
             // TODO
             GrpcRequest.RequestType type = request.getRequestType();

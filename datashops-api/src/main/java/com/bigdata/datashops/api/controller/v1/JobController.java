@@ -73,7 +73,7 @@ public class JobController extends BasicController {
         if (Objects.isNull(job)) {
             job = new Job();
         }
-        job.setJobContext(params.get("sql"));
+        job.setData(params.get("sql"));
         jobService.save(job);
         return ok();
     }

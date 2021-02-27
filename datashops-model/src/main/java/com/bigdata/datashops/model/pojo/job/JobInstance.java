@@ -101,7 +101,7 @@ public class JobInstance extends BaseModel implements Comparable<JobInstance> {
      */
     private String postDependency;
 
-    private String extendData;
+    private String data;
 
     private int workerSelector;
 

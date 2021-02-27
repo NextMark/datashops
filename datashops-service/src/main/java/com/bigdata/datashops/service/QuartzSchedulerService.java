@@ -62,7 +62,7 @@ public class QuartzSchedulerService {
     }
 
     @Transactional
-    public void pauseJob(Integer jobId, Integer projectId) throws SchedulerException {
+    public void pauseJob(Integer projectId, Integer jobId) throws SchedulerException {
         JobKey jobKey = new JobKey(jobId.toString(), projectId.toString());
         if (scheduler.checkExists(jobKey)) {
             scheduler.pauseJob(jobKey);
@@ -70,7 +70,7 @@ public class QuartzSchedulerService {
     }
 
     @Transactional
-    public void resumeJob(Integer jobId, Integer projectId) throws SchedulerException {
+    public void resumeJob(Integer projectId, Integer jobId) throws SchedulerException {
         JobKey jobKey = new JobKey(jobId.toString(), projectId.toString());
         if (scheduler.checkExists(jobKey)) {
             scheduler.resumeJob(jobKey);

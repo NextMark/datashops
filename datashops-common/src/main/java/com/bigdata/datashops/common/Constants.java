@@ -19,7 +19,7 @@ public class Constants {
     /**
      * driver
      */
-    public static final String COM_MYSQL_JDBC_DRIVER = "com.mysql.jdbc.Driver";
+    public static final String COM_MYSQL_JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     public static final String ORG_APACHE_HIVE_JDBC_HIVE_DRIVER = "org.apache.hive.jdbc.HiveDriver";
     public static final String CLICK_HOUSE_JDBC = "ru.yandex.clickhouse.ClickHouseDriver";
 
