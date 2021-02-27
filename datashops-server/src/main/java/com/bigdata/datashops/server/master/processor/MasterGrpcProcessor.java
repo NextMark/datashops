@@ -1,5 +1,6 @@
 package com.bigdata.datashops.server.master.processor;
 
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 
 import org.slf4j.Logger;
@@ -8,11 +9,17 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.bigdata.datashops.common.Constants;
+import com.bigdata.datashops.common.utils.JSONUtils;
+import com.bigdata.datashops.model.enums.RunState;
+import com.bigdata.datashops.model.pojo.job.JobInstance;
 import com.bigdata.datashops.protocol.GrpcRequest;
 import com.bigdata.datashops.server.config.BaseConfig;
 import com.bigdata.datashops.server.executor.ThreadUtil;
 import com.bigdata.datashops.server.job.JobManager;
+import com.bigdata.datashops.server.job.JobResult;
 import com.bigdata.datashops.server.worker.executor.JobExecutor;
+import com.bigdata.datashops.service.JobInstanceService;
 
 @Component
 public class MasterGrpcProcessor implements InitializingBean {
@@ -24,6 +31,9 @@ public class MasterGrpcProcessor implements InitializingBean {
 
     @Autowired
     private JobManager jobManager;
+
+    @Autowired
+    private JobInstanceService jobInstanceService;
 
     @Override
     public void afterPropertiesSet() {
@@ -46,6 +56,19 @@ public class MasterGrpcProcessor implements InitializingBean {
 
     public void processJobResponse(GrpcRequest.Request request) {
         LOG.info("Receive worker result {}", request.getBody().toStringUtf8());
+        String body = request.getBody().toStringUtf8();
+        int code = request.getCode();
+        JobResult result = JSONUtils.parseObject(body, JobResult.class);
+        JobInstance instance = jobInstanceService.findJobInstance("instanceId=" + result.getInstanceId());
+        if (code == Constants.RPC_JOB_SUCCESS) {
+            instance.setState(RunState.SUCCESS.getCode());
+        }
+        if (code == Constants.RPC_JOB_FAIL) {
+            instance.setState(RunState.FAILURE.getCode());
+        }
+        if (!Objects.isNull(instance)) {
+            jobInstanceService.saveEntity(instance);
+        }
     }
 
     public void processHeartBeat(GrpcRequest.Request request) {

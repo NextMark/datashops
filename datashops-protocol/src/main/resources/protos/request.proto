@@ -35,6 +35,8 @@ message Request {
     RequestType requestType = 3;
 
     bytes body = 4;
+
+    int32 code = 5;
 }
 
 message Response {

@@ -71,7 +71,7 @@ public class GrpcRemotingServer {
                     break;
             }
             GrpcRequest.Response response = GrpcRequest.Response.newBuilder().setRequestId(request.getRequestId())
-                                                    .setStatus(Constants.RPC_SUCCESS)
+                                                    .setStatus(Constants.RPC_JOB_SUCCESS)
                                                     .setHost(NetUtils.getLocalAddress()).build();
             responseObserver.onNext(response);
             responseObserver.onCompleted();

@@ -14,6 +14,7 @@ import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.dao.datasource.BaseDataSource;
 import com.bigdata.datashops.model.pojo.job.JobInstance;
 import com.bigdata.datashops.model.pojo.rpc.Host;
+import com.bigdata.datashops.protocol.GrpcRequest;
 import com.bigdata.datashops.server.master.dispatch.selector.RandomHostSelector;
 import com.bigdata.datashops.server.rpc.GrpcRemotingClient;
 import com.bigdata.datashops.server.utils.ZKUtils;
@@ -30,6 +31,10 @@ public abstract class AbstractJob {
     protected GrpcRemotingClient grpcRemotingClient;
 
     protected ZookeeperOperator zookeeperOperator;
+
+    protected GrpcRequest.Request request;
+
+    protected JobResult result = new JobResult();
 
     public AbstractJob() {
     }
@@ -49,6 +54,7 @@ public abstract class AbstractJob {
     }
 
     protected void before() {
+        result.setInstanceId(instance.getInstanceId());
     }
 
     protected abstract void handle() throws Exception;
@@ -74,12 +80,13 @@ public abstract class AbstractJob {
     protected Host selectHost() {
         boolean masterExist = zookeeperOperator.isExisted(ZKUtils.getMasterRegistryPath());
         if (!masterExist) {
-            throw new RuntimeException("master not exist");
+            LOG.warn("ZK folder not exist {}", ZKUtils.getMasterRegistryPath());
+            throw new RuntimeException("Master not exist");
         }
         List<String> hostsStr = zookeeperOperator.getChildrenKeys(ZKUtils.getMasterRegistryPath());
         if (hostsStr.size() == 0) {
-            LOG.warn("No active master node");
-            throw new RuntimeException("master not exist");
+            LOG.warn("No active master in {}", ZKUtils.getMasterRegistryPath());
+            throw new RuntimeException("Master not exist");
         }
         List<Host> hosts = Lists.newArrayList();
         for (String host : hostsStr) {

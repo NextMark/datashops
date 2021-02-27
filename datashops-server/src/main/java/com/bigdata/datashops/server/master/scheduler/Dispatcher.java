@@ -47,7 +47,7 @@ public class Dispatcher {
         }
         List<String> hostsStr = zookeeperOperator.getChildrenKeys(ZKUtils.getWorkerRegistryPath());
         if (hostsStr.size() == 0) {
-            LOG.warn("No active worker node");
+            LOG.warn("No active worker in {}", ZKUtils.getWorkerRegistryPath());
             return;
         }
         List<Host> hosts = Lists.newArrayList();
@@ -65,7 +65,7 @@ public class Dispatcher {
                         .setRequestType(GrpcRequest.RequestType.JOB_EXECUTE_REQUEST)
                         .setBody(ByteString.copyFrom(JSONUtils.toJsonString(instance).getBytes())).build();
         GrpcRequest.Response response = grpcRemotingClient.send(request, host);
-        if (response.getStatus() != Constants.RPC_SUCCESS) {
+        if (response.getStatus() != Constants.RPC_JOB_SUCCESS) {
 
         }
     }

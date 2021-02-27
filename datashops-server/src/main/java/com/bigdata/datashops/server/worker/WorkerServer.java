@@ -14,13 +14,15 @@ import org.springframework.context.annotation.FilterType;
 
 import com.bigdata.datashops.server.config.BaseConfig;
 import com.bigdata.datashops.server.master.MasterServer;
+import com.bigdata.datashops.server.master.processor.MasterGrpcProcessor;
 import com.bigdata.datashops.server.master.scheduler.ScheduledExecutor;
 import com.bigdata.datashops.server.rpc.GrpcRemotingServer;
 import com.bigdata.datashops.server.worker.processor.HeartBeat;
 import com.bigdata.datashops.server.worker.registry.WorkerRegistry;
 
 @ComponentScan(basePackages = "com.bigdata.datashops", excludeFilters = {
-        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {MasterServer.class})})
+        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {MasterServer.class,
+                MasterGrpcProcessor.class})})
 public class WorkerServer {
     private static final Logger LOG = LoggerFactory.getLogger(WorkerServer.class);
 

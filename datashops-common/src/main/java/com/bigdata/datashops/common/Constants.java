@@ -65,7 +65,8 @@ public class Constants {
     /**
      * rpc
      */
-    public final static Integer RPC_SUCCESS = 200;
+    public final static Integer RPC_JOB_SUCCESS = 200;
+    public final static Integer RPC_JOB_FAIL = 201;
 
     /**
      * jwt

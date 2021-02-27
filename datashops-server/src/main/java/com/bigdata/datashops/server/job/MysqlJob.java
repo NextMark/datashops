@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
 
+import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.common.utils.JSONUtils;
 import com.bigdata.datashops.common.utils.NetUtils;
 import com.bigdata.datashops.dao.datasource.DataSourceFactory;
@@ -23,8 +24,6 @@ import com.google.protobuf.ByteString;
 
 public class MysqlJob extends AbstractJob {
     private static final int LIMIT = 10000;
-
-    private String result;
 
     public MysqlJob(JobInstance instance, Logger logger, GrpcRemotingClient grpcRemotingClient,
                     ZookeeperOperator zookeeperOperator) {
@@ -44,6 +43,11 @@ public class MysqlJob extends AbstractJob {
             ResultSet rs = ps.executeQuery();
             resultProcess(rs);
         } catch (SQLException e) {
+            request = GrpcRequest.Request.newBuilder().setHost(NetUtils.getLocalAddress())
+                              .setRequestId(RandomUtils.nextInt())
+                              .setRequestType(GrpcRequest.RequestType.JOB_EXECUTE_RESPONSE)
+                              .setCode(Constants.RPC_JOB_FAIL)
+                              .setBody(ByteString.copyFrom(JSONUtils.toJsonString(e.getMessage()).getBytes())).build();
             e.printStackTrace();
         }
     }
@@ -51,11 +55,11 @@ public class MysqlJob extends AbstractJob {
     @Override
     public void after() {
         LOG.info("Job end");
-        GrpcRequest.Request request =
+        request =
                 GrpcRequest.Request.newBuilder().setHost(NetUtils.getLocalAddress()).setRequestId(RandomUtils.nextInt())
-                        .setRequestType(GrpcRequest.RequestType.JOB_EXECUTE_RESPONSE)
+                        .setRequestType(GrpcRequest.RequestType.JOB_EXECUTE_RESPONSE).setCode(Constants.RPC_JOB_SUCCESS)
                         .setBody(ByteString.copyFrom(JSONUtils.toJsonString(result).getBytes())).build();
-        GrpcRequest.Response response = grpcRemotingClient.send(request, selectHost());
+        grpcRemotingClient.send(request, selectHost());
     }
 
     private void resultProcess(ResultSet resultSet) throws SQLException {
@@ -73,7 +77,7 @@ public class MysqlJob extends AbstractJob {
             resultJSONArray.add(mapOfColValues);
             rowCount++;
         }
-        result = JSONUtils.toJsonString(resultJSONArray);
+        result.setData(JSONUtils.toJsonString(resultJSONArray));
         LOG.info("execute sql : {}", result);
     }
 }

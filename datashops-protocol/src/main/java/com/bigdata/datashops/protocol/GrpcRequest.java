@@ -223,6 +223,12 @@ public final class GrpcRequest {
      * @return The body.
      */
     com.google.protobuf.ByteString getBody();
+
+    /**
+     * <code>int32 code = 5;</code>
+     * @return The code.
+     */
+    int getCode();
   }
   /**
    * Protobuf type {@code Request}
@@ -292,6 +298,11 @@ public final class GrpcRequest {
             case 34: {
 
               body_ = input.readBytes();
+              break;
+            }
+            case 40: {
+
+              code_ = input.readInt32();
               break;
             }
             default: {
@@ -405,6 +416,17 @@ public final class GrpcRequest {
       return body_;
     }
 
+    public static final int CODE_FIELD_NUMBER = 5;
+    private int code_;
+    /**
+     * <code>int32 code = 5;</code>
+     * @return The code.
+     */
+    @java.lang.Override
+    public int getCode() {
+      return code_;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -431,6 +453,9 @@ public final class GrpcRequest {
       if (!body_.isEmpty()) {
         output.writeBytes(4, body_);
       }
+      if (code_ != 0) {
+        output.writeInt32(5, code_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -455,6 +480,10 @@ public final class GrpcRequest {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(4, body_);
       }
+      if (code_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(5, code_);
+      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -477,6 +506,8 @@ public final class GrpcRequest {
       if (requestType_ != other.requestType_) return false;
       if (!getBody()
           .equals(other.getBody())) return false;
+      if (getCode()
+          != other.getCode()) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -496,6 +527,8 @@ public final class GrpcRequest {
       hash = (53 * hash) + requestType_;
       hash = (37 * hash) + BODY_FIELD_NUMBER;
       hash = (53 * hash) + getBody().hashCode();
+      hash = (37 * hash) + CODE_FIELD_NUMBER;
+      hash = (53 * hash) + getCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -637,6 +670,8 @@ public final class GrpcRequest {
 
         body_ = com.google.protobuf.ByteString.EMPTY;
 
+        code_ = 0;
+
         return this;
       }
 
@@ -667,6 +702,7 @@ public final class GrpcRequest {
         result.host_ = host_;
         result.requestType_ = requestType_;
         result.body_ = body_;
+        result.code_ = code_;
         onBuilt();
         return result;
       }
@@ -727,6 +763,9 @@ public final class GrpcRequest {
         }
         if (other.getBody() != com.google.protobuf.ByteString.EMPTY) {
           setBody(other.getBody());
+        }
+        if (other.getCode() != 0) {
+          setCode(other.getCode());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -948,6 +987,37 @@ public final class GrpcRequest {
       public Builder clearBody() {
         
         body_ = getDefaultInstance().getBody();
+        onChanged();
+        return this;
+      }
+
+      private int code_ ;
+      /**
+       * <code>int32 code = 5;</code>
+       * @return The code.
+       */
+      @java.lang.Override
+      public int getCode() {
+        return code_;
+      }
+      /**
+       * <code>int32 code = 5;</code>
+       * @param value The code to set.
+       * @return This builder for chaining.
+       */
+      public Builder setCode(int value) {
+        
+        code_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int32 code = 5;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearCode() {
+        
+        code_ = 0;
         onChanged();
         return this;
       }
@@ -2062,21 +2132,21 @@ public final class GrpcRequest {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\rrequest.proto\"[\n\007Request\022\021\n\trequestId\030" +
+      "\n\rrequest.proto\"i\n\007Request\022\021\n\trequestId\030" +
       "\001 \001(\005\022\014\n\004host\030\002 \001(\t\022!\n\013requestType\030\003 \001(\016" +
-      "2\014.RequestType\022\014\n\004body\030\004 \001(\014\"~\n\010Response" +
-      "\022\021\n\trequestId\030\001 \001(\005\022\014\n\004host\030\002 \001(\t\022!\n\013req" +
-      "uestType\030\003 \001(\0162\014.RequestType\022\014\n\004body\030\004 \001" +
-      "(\014\022\016\n\006status\030\005 \001(\005\022\020\n\010errorMsg\030\006 \001(\t*\345\001\n" +
-      "\013RequestType\022\027\n\023JOB_EXECUTE_REQUEST\020\000\022\030\n" +
-      "\024JOB_EXECUTE_RESPONSE\020\001\022\024\n\020JOB_KILL_REQU" +
-      "EST\020\002\022\025\n\021JOB_KILL_RESPONSE\020\003\022\031\n\025ROLL_REA" +
-      "D_LOG_REQUEST\020\004\022\032\n\026ROLL_READ_LOG_RESPONS" +
-      "E\020\005\022\026\n\022DELETE_LOG_REQUEST\020\006\022\027\n\023DELETE_LO" +
-      "G_RESPONSE\020\007\022\016\n\nHEART_BEAT\020\0102/\n\016RequestS" +
-      "ervice\022\035\n\004send\022\010.Request\032\t.Response\"\000B-\n" +
-      "\036com.bigdata.datashops.protocolB\013GrpcReq" +
-      "uestb\006proto3"
+      "2\014.RequestType\022\014\n\004body\030\004 \001(\014\022\014\n\004code\030\005 \001" +
+      "(\005\"~\n\010Response\022\021\n\trequestId\030\001 \001(\005\022\014\n\004hos" +
+      "t\030\002 \001(\t\022!\n\013requestType\030\003 \001(\0162\014.RequestTy" +
+      "pe\022\014\n\004body\030\004 \001(\014\022\016\n\006status\030\005 \001(\005\022\020\n\010erro" +
+      "rMsg\030\006 \001(\t*\345\001\n\013RequestType\022\027\n\023JOB_EXECUT" +
+      "E_REQUEST\020\000\022\030\n\024JOB_EXECUTE_RESPONSE\020\001\022\024\n" +
+      "\020JOB_KILL_REQUEST\020\002\022\025\n\021JOB_KILL_RESPONSE" +
+      "\020\003\022\031\n\025ROLL_READ_LOG_REQUEST\020\004\022\032\n\026ROLL_RE" +
+      "AD_LOG_RESPONSE\020\005\022\026\n\022DELETE_LOG_REQUEST\020" +
+      "\006\022\027\n\023DELETE_LOG_RESPONSE\020\007\022\016\n\nHEART_BEAT" +
+      "\020\0102/\n\016RequestService\022\035\n\004send\022\010.Request\032\t" +
+      ".Response\"\000B-\n\036com.bigdata.datashops.pro" +
+      "tocolB\013GrpcRequestb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -2087,7 +2157,7 @@ public final class GrpcRequest {
     internal_static_Request_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Request_descriptor,
-        new java.lang.String[] { "RequestId", "Host", "RequestType", "Body", });
+        new java.lang.String[] { "RequestId", "Host", "RequestType", "Body", "Code", });
     internal_static_Response_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_Response_fieldAccessorTable = new
