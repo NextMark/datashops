@@ -17,6 +17,7 @@ import com.bigdata.datashops.server.master.MasterServer;
 import com.bigdata.datashops.server.master.processor.MasterGrpcProcessor;
 import com.bigdata.datashops.server.master.scheduler.ScheduledExecutor;
 import com.bigdata.datashops.server.rpc.GrpcRemotingServer;
+import com.bigdata.datashops.server.rpc.WorkerRequestServiceGrpcImpl;
 import com.bigdata.datashops.server.worker.processor.HeartBeat;
 import com.bigdata.datashops.server.worker.registry.WorkerRegistry;
 
@@ -41,6 +42,9 @@ public class WorkerServer {
     @Autowired
     private BaseConfig baseConfig;
 
+    @Autowired
+    WorkerRequestServiceGrpcImpl requestServiceGrpc;
+
     public static void main(String[] args) {
         Thread.currentThread().setName("Worker Server");
         new SpringApplicationBuilder(WorkerServer.class).web(WebApplicationType.NONE).run(args);
@@ -50,7 +54,7 @@ public class WorkerServer {
     public void init() throws IOException, InterruptedException {
         workerRegistry.registry();
         scheduledExecutor.run(heartBeat);
-        grpcRemotingServer.start(baseConfig.getWorkerPort());
+        grpcRemotingServer.start(baseConfig.getWorkerPort(), requestServiceGrpc);
         grpcRemotingServer.blockUntilShutdown();
 
         Runtime.getRuntime().addShutdownHook(new Thread(this::close));

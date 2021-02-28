@@ -24,16 +24,16 @@ public class GrpcRemotingServer {
 
     private Server server;
 
-    @Autowired
-    private MasterGrpcProcessor masterGrpcProcessor;
+//    @Autowired
+//    private MasterGrpcProcessor masterGrpcProcessor;
+//
+//    @Autowired
+//    private WorkerGrpcProcessor workerGrpcProcessor;
 
-    @Autowired
-    private WorkerGrpcProcessor workerGrpcProcessor;
-
-    public void start(int port) throws IOException {
+    public void start(int port, RequestServiceGrpc.RequestServiceImplBase requestServiceImplBase) throws IOException {
         LOG.info("Grpc server starting...");
-        RequestServiceGrpcImpl requestServiceGrpc = new RequestServiceGrpcImpl();
-        server = ServerBuilder.forPort(port).addService(requestServiceGrpc).build().start();
+        //RequestServiceGrpcImpl requestServiceGrpc = new RequestServiceGrpcImpl();
+        server = ServerBuilder.forPort(port).addService(requestServiceImplBase).build().start();
         LOG.info("Grpc server started, listening on {}", port);
         Runtime.getRuntime().addShutdownHook(new Thread(GrpcRemotingServer.this::stop));
     }
@@ -50,32 +50,32 @@ public class GrpcRemotingServer {
         }
     }
 
-    public class RequestServiceGrpcImpl extends RequestServiceGrpc.RequestServiceImplBase {
-        @Override
-        public void send(GrpcRequest.Request request, StreamObserver<GrpcRequest.Response> responseObserver) {
-            LOG.info("Grpc Receive request {}, from: {}, type: {}", request.getRequestId(), request.getHost(),
-                    request.getRequestType());
-            // TODO
-            GrpcRequest.RequestType type = request.getRequestType();
-            switch (type) {
-                case JOB_EXECUTE_REQUEST:
-                    workerGrpcProcessor.processJobExec(request);
-                    break;
-                case JOB_EXECUTE_RESPONSE:
-                    masterGrpcProcessor.processJobResponse(request);
-                    break;
-                case HEART_BEAT:
-                    masterGrpcProcessor.processHeartBeat(request);
-                    break;
-                default:
-                    break;
-            }
-            GrpcRequest.Response response = GrpcRequest.Response.newBuilder().setRequestId(request.getRequestId())
-                                                    .setStatus(Constants.RPC_JOB_SUCCESS)
-                                                    .setHost(NetUtils.getLocalAddress()).build();
-            responseObserver.onNext(response);
-            responseObserver.onCompleted();
-        }
-    }
+//    public class RequestServiceGrpcImpl extends RequestServiceGrpc.RequestServiceImplBase {
+//        @Override
+//        public void send(GrpcRequest.Request request, StreamObserver<GrpcRequest.Response> responseObserver) {
+//            LOG.info("Grpc Receive request {}, from: {}, type: {}", request.getRequestId(), request.getHost(),
+//                    request.getRequestType());
+//            // TODO
+//            GrpcRequest.RequestType type = request.getRequestType();
+//            switch (type) {
+//                case JOB_EXECUTE_REQUEST:
+//                    workerGrpcProcessor.processJobExec(request);
+//                    break;
+//                case JOB_EXECUTE_RESPONSE:
+//                    masterGrpcProcessor.processJobResponse(request);
+//                    break;
+//                case HEART_BEAT:
+//                    masterGrpcProcessor.processHeartBeat(request);
+//                    break;
+//                default:
+//                    break;
+//            }
+//            GrpcRequest.Response response = GrpcRequest.Response.newBuilder().setRequestId(request.getRequestId())
+//                                                    .setStatus(Constants.RPC_JOB_SUCCESS)
+//                                                    .setHost(NetUtils.getLocalAddress()).build();
+//            responseObserver.onNext(response);
+//            responseObserver.onCompleted();
+//        }
+//    }
 
 }

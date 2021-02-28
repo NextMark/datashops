@@ -25,6 +25,7 @@ import com.bigdata.datashops.server.master.scheduler.Finder;
 import com.bigdata.datashops.server.master.scheduler.ScheduledExecutor;
 import com.bigdata.datashops.server.queue.JobQueue;
 import com.bigdata.datashops.server.rpc.GrpcRemotingServer;
+import com.bigdata.datashops.server.rpc.MasterRequestServiceGrpcImpl;
 import com.bigdata.datashops.service.JobInstanceService;
 
 @ComponentScan(basePackages = {"com.bigdata.datashops"})
@@ -61,6 +62,9 @@ public class MasterServer {
     @Autowired
     private BaseConfig baseConfig;
 
+    @Autowired
+    MasterRequestServiceGrpcImpl requestServiceGrpc;
+
     public static void main(String[] args) {
         Thread.currentThread().setName("Master Server");
         new SpringApplicationBuilder(MasterServer.class).web(WebApplicationType.NONE).run(args);
@@ -81,7 +85,7 @@ public class MasterServer {
         // 扫描作业实例
         scheduledExecutor.run(finder);
 
-        grpcRemotingServer.start(baseConfig.getMasterPort());
+        grpcRemotingServer.start(baseConfig.getMasterPort(), requestServiceGrpc);
         grpcRemotingServer.blockUntilShutdown();
 
         Runtime.getRuntime().addShutdownHook(new Thread(this::close));

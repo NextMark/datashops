@@ -19,9 +19,12 @@ public class GrpcServerTest {
     @Autowired
     GrpcRemotingServer grpcRemotingServer;
 
+    @Autowired
+    WorkerRequestServiceGrpcImpl requestServiceGrpc;
+
     @Test
     public void main() throws IOException, InterruptedException {
-        grpcRemotingServer.start(6000);
+        grpcRemotingServer.start(6000, requestServiceGrpc);
 
         Thread.sleep(10000);
 
