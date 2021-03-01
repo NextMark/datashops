@@ -3,7 +3,7 @@ package com.bigdata.datashops.model.enums;
 import java.util.HashMap;
 
 public enum JobType {
-    HIVE(0, "hive"), BASH(1, "bash"), SPARK(2, "spark"), FLINK(3, "flink"), CLICK_HOUSE(4, "clickhouse"),
+    HIVE(0, "hive"), SHELL(1, "bash"), SPARK(2, "spark"), FLINK(3, "flink"), CLICK_HOUSE(4, "clickhouse"),
     FSQL(5, "fsql"), MYSQL(6, "mysql"),
 
     KAFKA_2_HIVE(7, "kafka2hive"), KAFKA_2_HDFS(8, "kafka2hdfs"), HIVE_2_MYSQL(9, "kafka2mysql"),

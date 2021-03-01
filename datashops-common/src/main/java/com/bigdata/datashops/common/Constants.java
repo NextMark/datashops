@@ -17,6 +17,15 @@ public class Constants {
     public static final String YYYYMMDDHHMMSS = "yyyyMMddHHmmss";
 
     /**
+     * common properties path
+     */
+    public static final String COMMON_PROPERTIES_PATH = "/common.properties";
+    public static final String DATA_BASEDIR_PATH = "data.basedir.path";
+    public static final String PID = "pid";
+    public static final int EXIT_SUCCESS_CODE = 0;
+    public static final int EXIT_FAIL_CODE = -1;
+
+    /**
      * driver
      */
     public static final String COM_MYSQL_JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";

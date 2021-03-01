@@ -1,23 +1,19 @@
 package com.bigdata.datashops.server.job;
 
-import org.apache.commons.lang3.RandomUtils;
-import org.slf4j.Logger;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.common.utils.JSONUtils;
-import com.bigdata.datashops.common.utils.NetUtils;
+import com.bigdata.datashops.dao.datasource.DataSourceFactory;
 import com.bigdata.datashops.dao.datasource.HiveDataSource;
-import com.bigdata.datashops.model.pojo.job.JobInstance;
-import com.bigdata.datashops.protocol.GrpcRequest;
-import com.bigdata.datashops.server.rpc.GrpcRemotingClient;
-import com.bigdata.datashops.server.zookeeper.ZookeeperOperator;
-import com.google.protobuf.ByteString;
 
 public class HiveJob extends AbstractJob {
 
-    public HiveJob(JobInstance instance, Logger logger, GrpcRemotingClient grpcRemotingClient,
-                   ZookeeperOperator zookeeperOperator) {
-        super(instance, logger, grpcRemotingClient, zookeeperOperator);
+    public HiveJob(JobContext jobContext) {
+        super(jobContext);
     }
 
     @Override
@@ -26,9 +22,20 @@ public class HiveJob extends AbstractJob {
     }
 
     @Override
-    public void handle() {
+    public void process() throws Exception {
         String data = instance.getData();
         baseDataSource = JSONUtils.parseObject(data, HiveDataSource.class);
+        DataSourceFactory.loadClass(baseDataSource.dbType());
+        try {
+            Connection connection = creatConnection();
+            PreparedStatement ps = connection.prepareStatement(baseDataSource.getData());
+            ResultSet rs = ps.executeQuery();
+            resultProcess(rs);
+            buildGrpcRequest(Constants.RPC_JOB_SUCCESS);
+        } catch (SQLException e) {
+            buildGrpcRequest(Constants.RPC_JOB_FAIL);
+            e.printStackTrace();
+        }
         executeSQL();
     }
 
@@ -39,10 +46,6 @@ public class HiveJob extends AbstractJob {
     @Override
     public void after() {
         LOG.info("Job end");
-        request =
-                GrpcRequest.Request.newBuilder().setHost(NetUtils.getLocalAddress()).setRequestId(RandomUtils.nextInt())
-                        .setRequestType(GrpcRequest.RequestType.JOB_EXECUTE_RESPONSE).setCode(Constants.RPC_JOB_SUCCESS)
-                        .setBody(ByteString.copyFrom(JSONUtils.toJsonString(result).getBytes())).build();
         grpcRemotingClient.send(request, selectHost());
     }
 }

@@ -55,7 +55,7 @@ public class MasterGrpcProcessor implements InitializingBean {
     }
 
     public void processJobResponse(GrpcRequest.Request request) {
-        LOG.info("Receive worker result {}", request.getBody().toStringUtf8());
+        //LOG.info("Receive worker result {}", request.getBody().toStringUtf8());
         String body = request.getBody().toStringUtf8();
         int code = request.getCode();
         JobResult result = JSONUtils.parseObject(body, JobResult.class);
