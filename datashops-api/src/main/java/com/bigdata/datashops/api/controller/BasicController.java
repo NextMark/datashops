@@ -16,6 +16,7 @@ import com.bigdata.datashops.api.response.Result;
 import com.bigdata.datashops.api.response.ResultCode;
 import com.bigdata.datashops.api.response.ResultGenerator;
 import com.bigdata.datashops.common.Constants;
+import com.bigdata.datashops.service.DataSourceService;
 import com.bigdata.datashops.service.JobDependencyService;
 import com.bigdata.datashops.service.JobGraphService;
 import com.bigdata.datashops.service.JobInstanceService;
@@ -24,9 +25,11 @@ import com.bigdata.datashops.service.JobResultService;
 import com.bigdata.datashops.service.JobService;
 import com.bigdata.datashops.service.MenuService;
 import com.bigdata.datashops.service.PermissionService;
+import com.bigdata.datashops.service.ProjectService;
 import com.bigdata.datashops.service.RolePermissionService;
 import com.bigdata.datashops.service.RoleService;
 import com.bigdata.datashops.service.UserService;
+import com.bigdata.datashops.service.YarnQueueService;
 
 /**
  * Created by qinshiwei on 2018/1/30.
@@ -73,6 +76,15 @@ public class BasicController {
 
     @Autowired
     protected RolePermissionService rolePermissionService;
+
+    @Autowired
+    protected ProjectService projectService;
+
+    @Autowired
+    protected YarnQueueService yarnQueueService;
+
+    @Autowired
+    protected DataSourceService dataSourceService;
 
     private static final Map<String, Boolean> HAS_FACADE_METHOD = new ConcurrentHashMap<>();
     private static final Map<String, Method> FACADE_METHOD_CACHE = new ConcurrentHashMap<>();

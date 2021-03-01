@@ -3,9 +3,7 @@ package com.bigdata.datashops.model.enums;
 import java.util.HashMap;
 
 public enum DbType {
-    HIVE(0, "hive"),
-    MYSQL(1, "mysql"),
-    CLICK_HOUSE(2, "clickhouse");
+    HIVE(0, "hive"), MYSQL(1, "mysql"), CLICK_HOUSE(2, "clickhouse"), POSTGRE(3, "postgre");
 
     DbType(int code, String name) {
         this.code = code;
