@@ -6,9 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.bigdata.datashops.common.Constants;
-import com.bigdata.datashops.common.utils.JSONUtils;
 import com.bigdata.datashops.dao.datasource.DataSourceFactory;
-import com.bigdata.datashops.dao.datasource.MySQLDataSource;
+import com.bigdata.datashops.model.enums.DbType;
 
 public class MysqlJob extends AbstractJob {
 
@@ -19,13 +18,13 @@ public class MysqlJob extends AbstractJob {
     @Override
     protected void process() throws Exception {
         String data = instance.getData();
-
-        baseDataSource = JSONUtils.parseObject(data, MySQLDataSource.class);
+        baseDataSource = DataSourceFactory.getDatasource(DbType.MYSQL, data);
         DataSourceFactory.loadClass(baseDataSource.dbType());
 
         try {
             Connection connection = creatConnection();
             PreparedStatement ps = connection.prepareStatement(baseDataSource.getData());
+            LOG.info("Execute mysql: {}", baseDataSource.getData());
             ResultSet rs = ps.executeQuery();
             resultProcess(rs);
             buildGrpcRequest(Constants.RPC_JOB_SUCCESS);

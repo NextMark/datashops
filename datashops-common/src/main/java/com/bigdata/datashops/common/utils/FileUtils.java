@@ -23,6 +23,16 @@ public class FileUtils {
         return fileName;
     }
 
+    public static String getJobExecLogDir() {
+        String fileName = String.format("%s/log/", DATA_BASEDIR);
+        File file = new File(fileName);
+        if (!file.getParentFile().exists()) {
+            file.getParentFile().mkdirs();
+        }
+
+        return fileName;
+    }
+
     public static void writeStringToFile(File file, String data, Charset encoding, boolean append) throws IOException {
         OutputStream out = null;
         try {

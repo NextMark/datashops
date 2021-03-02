@@ -38,6 +38,8 @@ public class JobManager {
                 return new SparkJob(jobContext);
             case FLINK:
                 return new FlinkJob(jobContext);
+            case CLICK_HOUSE:
+                return new ClickHouseJob(jobContext);
             default:
                 throw new IllegalArgumentException();
         }

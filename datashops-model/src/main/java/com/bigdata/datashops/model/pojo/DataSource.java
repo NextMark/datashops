@@ -13,6 +13,8 @@ import lombok.EqualsAndHashCode;
 public class DataSource extends BaseModel {
     private int type;
 
+    private String name;
+
     private String host;
 
     private int port;

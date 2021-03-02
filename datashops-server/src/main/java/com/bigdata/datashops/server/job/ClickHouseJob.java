@@ -9,26 +9,19 @@ import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.dao.datasource.DataSourceFactory;
 import com.bigdata.datashops.model.enums.DbType;
 
-public class HiveJob extends AbstractJob {
-
-    public HiveJob(JobContext jobContext) {
+public class ClickHouseJob extends AbstractJob {
+    public ClickHouseJob(JobContext jobContext) {
         super(jobContext);
     }
 
     @Override
-    public void before() {
-        LOG.info("Job before");
-    }
-
-    @Override
-    public void process() throws Exception {
+    protected void process() throws Exception {
         String data = instance.getData();
-        baseDataSource = DataSourceFactory.getDatasource(DbType.HIVE, data);
+        baseDataSource = DataSourceFactory.getDatasource(DbType.CLICK_HOUSE, data);
         DataSourceFactory.loadClass(baseDataSource.dbType());
         try {
             Connection connection = creatConnection();
             PreparedStatement ps = connection.prepareStatement(baseDataSource.getData());
-            LOG.info("Execute hive: {}", baseDataSource.getData());
             ResultSet rs = ps.executeQuery();
             resultProcess(rs);
             buildGrpcRequest(Constants.RPC_JOB_SUCCESS);

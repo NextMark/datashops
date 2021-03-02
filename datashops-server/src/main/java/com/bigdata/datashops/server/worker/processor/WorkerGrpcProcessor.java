@@ -24,7 +24,8 @@ public class WorkerGrpcProcessor implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() {
-        this.executorService = ThreadUtil.newDaemonFixedThreadExecutor("", baseConfig.getWorkerJobThreads());
+        this.executorService =
+                ThreadUtil.newDaemonFixedThreadExecutor("Job Executor", baseConfig.getWorkerJobThreads());
     }
 
     public void processJobExec(GrpcRequest.Request request) {

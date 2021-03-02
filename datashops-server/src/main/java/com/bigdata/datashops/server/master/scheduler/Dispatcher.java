@@ -12,10 +12,12 @@ import org.springframework.stereotype.Component;
 import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.common.utils.JSONUtils;
 import com.bigdata.datashops.common.utils.NetUtils;
+import com.bigdata.datashops.model.enums.JobType;
 import com.bigdata.datashops.model.pojo.job.JobInstance;
 import com.bigdata.datashops.model.pojo.rpc.Host;
 import com.bigdata.datashops.protocol.GrpcRequest;
 import com.bigdata.datashops.server.master.dispatch.selector.RandomHostSelector;
+import com.bigdata.datashops.server.master.parser.SQLParser;
 import com.bigdata.datashops.server.rpc.GrpcRemotingClient;
 import com.bigdata.datashops.server.utils.ZKUtils;
 import com.bigdata.datashops.server.zookeeper.ZookeeperOperator;
@@ -35,6 +37,9 @@ public class Dispatcher {
 
     //    @Autowired
     //    private HostManager hostManager;
+
+    @Autowired
+    private SQLParser sqlParser;
 
     @Autowired
     private GrpcRemotingClient grpcRemotingClient;
@@ -57,7 +62,13 @@ public class Dispatcher {
             hosts.add(h);
         }
         JobInstance instance = jobInstanceService.findOneByQuery("instanceId=" + instanceId);
-        jobInstanceService.fillDataAndJob(Collections.singletonList(instance));
+        jobInstanceService.fillJob(Collections.singletonList(instance));
+
+        JobType jobType = JobType.of(instance.getType());
+        if (jobType == JobType.HIVE || jobType == JobType.MYSQL || jobType == JobType.CLICK_HOUSE) {
+            instance.setData(sqlParser.parseSQL(instance.getData()));
+        }
+
         RandomHostSelector randomHostSelector = new RandomHostSelector(hosts);
         Host host = randomHostSelector.select();
         GrpcRequest.Request request =
