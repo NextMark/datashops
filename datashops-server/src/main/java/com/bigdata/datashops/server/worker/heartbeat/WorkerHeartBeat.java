@@ -1,4 +1,4 @@
-package com.bigdata.datashops.server.worker.processor;
+package com.bigdata.datashops.server.worker.heartbeat;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
-public class HeartBeat implements Runnable {
+public class WorkerHeartBeat implements Runnable {
     @Autowired
     private ZookeeperOperator zookeeperOperator;
 

@@ -19,6 +19,9 @@ public class BaseConfig {
     @Value("${worker.job.exec.threads:100}")
     private int workerJobThreads;
 
+    @Value("${master.heartbeat.interval:3}")
+    private int masterHeartbeatInterval;
+
     @Value("${worker.heartbeat.interval:3}")
     private int workerHeartbeatInterval;
 

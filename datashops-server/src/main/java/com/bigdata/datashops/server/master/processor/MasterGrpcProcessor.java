@@ -15,9 +15,9 @@ import com.bigdata.datashops.model.enums.RunState;
 import com.bigdata.datashops.model.pojo.job.JobInstance;
 import com.bigdata.datashops.protocol.GrpcRequest;
 import com.bigdata.datashops.server.config.BaseConfig;
-import com.bigdata.datashops.server.executor.ThreadUtil;
 import com.bigdata.datashops.server.job.JobManager;
 import com.bigdata.datashops.server.job.JobResult;
+import com.bigdata.datashops.server.thread.ThreadUtil;
 import com.bigdata.datashops.server.worker.executor.JobExecutor;
 import com.bigdata.datashops.service.JobInstanceService;
 

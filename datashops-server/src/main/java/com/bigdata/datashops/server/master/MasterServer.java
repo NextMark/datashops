@@ -20,12 +20,13 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.bigdata.datashops.server.config.BaseConfig;
+import com.bigdata.datashops.server.master.heartbeat.MasterHeartBeat;
 import com.bigdata.datashops.server.master.registry.MasterRegistry;
 import com.bigdata.datashops.server.master.scheduler.Finder;
-import com.bigdata.datashops.server.master.scheduler.ScheduledExecutor;
 import com.bigdata.datashops.server.queue.JobQueue;
 import com.bigdata.datashops.server.rpc.GrpcRemotingServer;
 import com.bigdata.datashops.server.rpc.MasterRequestServiceGrpcImpl;
+import com.bigdata.datashops.server.thread.ThreadUtil;
 import com.bigdata.datashops.service.JobInstanceService;
 
 @ComponentScan(basePackages = {"com.bigdata.datashops"})
@@ -44,9 +45,6 @@ public class MasterServer {
     private GrpcRemotingServer grpcRemotingServer;
 
     @Autowired
-    private ScheduledExecutor scheduledExecutor;
-
-    @Autowired
     private JobInstanceService jobInstanceService;
 
     @Qualifier("schedulerFactoryBean")
@@ -63,6 +61,9 @@ public class MasterServer {
     private BaseConfig baseConfig;
 
     @Autowired
+    private MasterHeartBeat heartBeat;
+
+    @Autowired
     MasterRequestServiceGrpcImpl requestServiceGrpc;
 
     public static void main(String[] args) {
@@ -73,6 +74,8 @@ public class MasterServer {
     @PostConstruct
     public void init() throws IOException, InterruptedException, SchedulerException {
         masterRegistry.registry();
+        ThreadUtil.scheduleAtFixedRate(heartBeat, baseConfig.getMasterHeartbeatInterval());
+
         // 启动quartz任务
         scheduler.start();
 
@@ -83,7 +86,7 @@ public class MasterServer {
         jobQueue.initQueue();
 
         // 扫描作业实例
-        scheduledExecutor.run(finder, baseConfig.getMasterFinderInterval());
+        ThreadUtil.scheduleAtFixedRate(finder, baseConfig.getMasterFinderInterval());
 
         grpcRemotingServer.start(baseConfig.getMasterPort(), requestServiceGrpc);
         grpcRemotingServer.blockUntilShutdown();

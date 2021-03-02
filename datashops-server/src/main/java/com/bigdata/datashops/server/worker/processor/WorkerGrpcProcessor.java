@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 
 import com.bigdata.datashops.protocol.GrpcRequest;
 import com.bigdata.datashops.server.config.BaseConfig;
-import com.bigdata.datashops.server.executor.ThreadUtil;
 import com.bigdata.datashops.server.job.JobManager;
+import com.bigdata.datashops.server.thread.ThreadUtil;
 import com.bigdata.datashops.server.worker.executor.JobExecutor;
 
 @Component

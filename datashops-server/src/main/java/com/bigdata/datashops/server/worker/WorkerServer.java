@@ -15,10 +15,10 @@ import org.springframework.context.annotation.FilterType;
 import com.bigdata.datashops.server.config.BaseConfig;
 import com.bigdata.datashops.server.master.MasterServer;
 import com.bigdata.datashops.server.master.processor.MasterGrpcProcessor;
-import com.bigdata.datashops.server.master.scheduler.ScheduledExecutor;
 import com.bigdata.datashops.server.rpc.GrpcRemotingServer;
 import com.bigdata.datashops.server.rpc.WorkerRequestServiceGrpcImpl;
-import com.bigdata.datashops.server.worker.processor.HeartBeat;
+import com.bigdata.datashops.server.thread.ThreadUtil;
+import com.bigdata.datashops.server.worker.heartbeat.WorkerHeartBeat;
 import com.bigdata.datashops.server.worker.registry.WorkerRegistry;
 
 @ComponentScan(basePackages = "com.bigdata.datashops", excludeFilters = {
@@ -34,10 +34,7 @@ public class WorkerServer {
     private WorkerRegistry workerRegistry;
 
     @Autowired
-    private ScheduledExecutor scheduledExecutor;
-
-    @Autowired
-    private HeartBeat heartBeat;
+    private WorkerHeartBeat heartBeat;
 
     @Autowired
     private BaseConfig baseConfig;
@@ -53,7 +50,9 @@ public class WorkerServer {
     @PostConstruct
     public void init() throws IOException, InterruptedException {
         workerRegistry.registry();
-        scheduledExecutor.run(heartBeat, baseConfig.getWorkerHeartbeatInterval());
+
+        ThreadUtil.scheduleAtFixedRate(heartBeat, baseConfig.getWorkerHeartbeatInterval());
+
         grpcRemotingServer.start(baseConfig.getWorkerPort(), requestServiceGrpc);
         grpcRemotingServer.blockUntilShutdown();
 
