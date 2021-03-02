@@ -83,7 +83,7 @@ public class MasterServer {
         jobQueue.initQueue();
 
         // 扫描作业实例
-        scheduledExecutor.run(finder);
+        scheduledExecutor.run(finder, baseConfig.getMasterFinderInterval());
 
         grpcRemotingServer.start(baseConfig.getMasterPort(), requestServiceGrpc);
         grpcRemotingServer.blockUntilShutdown();

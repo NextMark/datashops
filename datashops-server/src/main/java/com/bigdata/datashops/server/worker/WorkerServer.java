@@ -53,7 +53,7 @@ public class WorkerServer {
     @PostConstruct
     public void init() throws IOException, InterruptedException {
         workerRegistry.registry();
-        scheduledExecutor.run(heartBeat);
+        scheduledExecutor.run(heartBeat, baseConfig.getWorkerHeartbeatInterval());
         grpcRemotingServer.start(baseConfig.getWorkerPort(), requestServiceGrpc);
         grpcRemotingServer.blockUntilShutdown();
 

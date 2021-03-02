@@ -37,7 +37,8 @@ public class MasterGrpcProcessor implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() {
-        this.executorService = ThreadUtil.newDaemonFixedThreadExecutor("", baseConfig.getMasterJobThreads());
+        this.executorService =
+                ThreadUtil.newDaemonFixedThreadExecutor("master-rpc-process", baseConfig.getMasterJobThreads());
     }
 
     public void process(GrpcRequest.Request request) {

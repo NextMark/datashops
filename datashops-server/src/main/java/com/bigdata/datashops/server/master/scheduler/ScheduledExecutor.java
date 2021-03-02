@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ScheduledExecutor {
-    public void run(Runnable runnable) {
+    public void run(Runnable runnable, int period) {
         ScheduledExecutorService timer = Executors.newSingleThreadScheduledExecutor();
-        timer.scheduleAtFixedRate(runnable, 1, 3, TimeUnit.SECONDS);
+        timer.scheduleAtFixedRate(runnable, 1, period, TimeUnit.SECONDS);
     }
 }

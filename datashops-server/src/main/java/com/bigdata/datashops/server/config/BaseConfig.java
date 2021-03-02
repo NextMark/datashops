@@ -10,13 +10,16 @@ import lombok.Data;
 @Data
 @PropertySource("classpath:datashops.properties")
 public class BaseConfig {
-    @Value("${master.exec.threads:100}")
+    @Value("${master.rpc.process.threads:20}")
     private int masterJobThreads;
 
-    @Value("${worker.exec.threads:100}")
+    @Value("${master.finder.interval:3}")
+    private int masterFinderInterval;
+
+    @Value("${worker.job.exec.threads:100}")
     private int workerJobThreads;
 
-    @Value("${worker.heartbeat.interval:10}")
+    @Value("${worker.heartbeat.interval:3}")
     private int workerHeartbeatInterval;
 
     @Value("${master.grpc.server.port:60000}")
