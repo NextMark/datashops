@@ -71,6 +71,8 @@ public class Dispatcher {
 
         RandomHostSelector randomHostSelector = new RandomHostSelector(hosts);
         Host host = randomHostSelector.select();
+        instance.setHost(host.getIp());
+        jobInstanceService.saveEntity(instance);
         GrpcRequest.Request request =
                 GrpcRequest.Request.newBuilder().setHost(NetUtils.getLocalAddress()).setRequestId(RandomUtils.nextInt())
                         .setRequestType(GrpcRequest.RequestType.JOB_EXECUTE_REQUEST)
