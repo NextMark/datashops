@@ -11,6 +11,8 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Table(name = "t_queue")
 public class YarnQueue extends BaseModel {
+    private Integer projectId;
+
     private String name;
 
     private String value;

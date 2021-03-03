@@ -86,6 +86,9 @@ public class BasicController {
     @Autowired
     protected DataSourceService dataSourceService;
 
+    //    @Autowired
+    //    protected ZookeeperOperator zookeeperOperator;
+
     private static final Map<String, Boolean> HAS_FACADE_METHOD = new ConcurrentHashMap<>();
     private static final Map<String, Method> FACADE_METHOD_CACHE = new ConcurrentHashMap<>();
 

@@ -99,4 +99,40 @@ public class ResourceController extends BasicController {
         Pagination pagination = new Pagination(projectList);
         return ok(pagination);
     }
+
+    //    @PostMapping(value = "/getMasterList")
+    //    public Result getMasterList() {
+    //        boolean workerExist = zookeeperOperator.isExisted(ZKUtils.getMasterRegistryPath());
+    //        if (!workerExist) {
+    //            return ok();
+    //        }
+    //        List<String> hostsStr = zookeeperOperator.getChildrenKeys(ZKUtils.getMasterRegistryPath());
+    //        List<Host> hosts = Lists.newArrayList();
+    //        for (String host : hostsStr) {
+    //            String[] hostInfo = host.split(Constants.SEPARATOR_UNDERLINE);
+    //            Host h = new Host();
+    //            h.setIp(hostInfo[0]);
+    //            h.setPort(Integer.parseInt(hostInfo[1]));
+    //            hosts.add(h);
+    //        }
+    //        return ok(hosts);
+    //    }
+    //
+    //    @PostMapping(value = "/getWorkerList")
+    //    public Result getWorkerList() {
+    //        boolean workerExist = zookeeperOperator.isExisted(ZKUtils.getWorkerRegistryPath());
+    //        if (!workerExist) {
+    //            return ok();
+    //        }
+    //        List<String> hostsStr = zookeeperOperator.getChildrenKeys(ZKUtils.getWorkerRegistryPath());
+    //        List<Host> hosts = Lists.newArrayList();
+    //        for (String host : hostsStr) {
+    //            String[] hostInfo = host.split(Constants.SEPARATOR_UNDERLINE);
+    //            Host h = new Host();
+    //            h.setIp(hostInfo[0]);
+    //            h.setPort(Integer.parseInt(hostInfo[1]));
+    //            hosts.add(h);
+    //        }
+    //        return ok(hosts);
+    //    }
 }

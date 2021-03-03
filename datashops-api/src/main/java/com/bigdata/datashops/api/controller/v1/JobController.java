@@ -85,6 +85,7 @@ public class JobController extends BasicController {
         job.setOwner(params.get("owner"));
         job.setProjectId(Integer.valueOf(params.get("projectId")));
         job.setMaskId(JobUtils.genMaskId("1-" + params.get("projectId") + "-"));
+        job.setHostSelector(Integer.valueOf(params.get("hostSelector")));
         job.setName(name);
         job.setType(Integer.valueOf(params.get("type")));
         jobService.save(job);
