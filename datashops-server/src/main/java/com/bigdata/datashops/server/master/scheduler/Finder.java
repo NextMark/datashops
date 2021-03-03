@@ -55,9 +55,10 @@ public class Finder implements Runnable {
                 LOG.info("Find {} instances, add to queue", jobInstanceList.size());
             }
             for (JobInstance instance : jobInstanceList) {
-                RunState state = checker.checkJob(instance);
-                jobQueue.getQueue().put(instance.getInstanceId());
-                if (state == RunState.WAIT_FOR_RUN) {
+                RunState state = checker.check(instance);
+                instance.setState(state.getCode());
+                jobInstanceService.saveEntity(instance);
+                if (state == RunState.SUCCESS) {
                     jobQueue.getQueue().put(instance.getInstanceId());
                 }
             }

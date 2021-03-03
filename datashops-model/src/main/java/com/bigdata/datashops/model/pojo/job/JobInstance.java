@@ -30,6 +30,8 @@ public class JobInstance extends BaseModel implements Comparable<JobInstance> {
 
     private String name;
 
+    private Integer jobId;
+
     private String maskId;
 
     private String instanceId;
@@ -92,7 +94,7 @@ public class JobInstance extends BaseModel implements Comparable<JobInstance> {
 
     /**
      * 依赖的图或节点，数组，逗号分隔
-     * example: type|id|offset，1|12|0，1|12|-3，1|13|1
+     * example: id|offset，12|0，12|-3，13|1
      */
     private String preDependency;
 
@@ -103,7 +105,7 @@ public class JobInstance extends BaseModel implements Comparable<JobInstance> {
 
     private String data;
 
-    private int workerSelector;
+    private int hostSelector;
 
     @Transient
     private Job job;

@@ -76,7 +76,7 @@ public class JobGraph extends BaseModel {
 
     private Integer retryInterval;
 
-    private Integer workerSelector;
+    private Integer hostSelector;
 
     @Transient
     private List<VoJobNode> nodeList;

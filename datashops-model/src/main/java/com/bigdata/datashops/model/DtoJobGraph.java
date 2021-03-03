@@ -76,5 +76,5 @@ public class DtoJobGraph {
 
     private Integer retryInterval;
 
-    private Integer workerSelector;
+    private Integer hostSelector;
 }

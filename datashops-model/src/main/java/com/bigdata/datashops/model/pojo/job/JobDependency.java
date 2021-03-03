@@ -16,9 +16,9 @@ public class JobDependency extends BaseModel {
     /**
      * default 1, 虚拟根节点
      */
-    private String sourceMaskId;
+    private Integer sourceId;
 
-    private String targetMaskId;
+    private Integer targetId;
 
     /**
      * 依赖作业的偏移，逗号分隔，0，-1，-5

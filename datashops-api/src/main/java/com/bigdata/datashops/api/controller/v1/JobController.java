@@ -224,11 +224,10 @@ public class JobController extends BasicController {
     @PostMapping(value = "/modifyOffset")
     public Result modifyOffset(@RequestBody Map<String, String> params) {
         String graphMaskId = params.get("graphMaskId");
-        String sourceMaskId = params.get("sourceMaskId");
-        String targetMaskId = params.get("targetMaskId");
+        String sourceId = params.get("sourceId");
+        String targetId = params.get("targetId");
         int offset = Integer.parseInt(params.get("offset"));
-        String filter = String.format("graphMaskId=%s;sourceMaskId=%s;targetMaskId=%s", graphMaskId, sourceMaskId,
-                targetMaskId);
+        String filter = String.format("graphMaskId=%s;sourceId=%s;targetId=%s", graphMaskId, sourceId, targetId);
         JobDependency jobDependency = jobDependencyService.getOne(filter);
         jobDependency.setOffset(offset);
         jobDependencyService.save(jobDependency);

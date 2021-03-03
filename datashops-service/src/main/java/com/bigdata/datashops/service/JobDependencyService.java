@@ -27,10 +27,10 @@ public class JobDependencyService extends AbstractMysqlPagingAndSortingQueryServ
     public List<VoJobDependency> fillJobInfo(List<JobDependency> dependencies) {
         List<VoJobDependency> vo = Lists.newArrayList();
         for (JobDependency dependency : dependencies) {
-            Job job = jobService.getJobByMaskId(dependency.getSourceMaskId());
+            Job job = jobService.getJob(dependency.getSourceId());
             VoJobDependency v =
                     VoJobDependency.builder().name(job.getName()).offset(dependency.getOffset()).owner(job.getOwner())
-                            .type(job.getType()).sourceMaskId(dependency.getSourceMaskId()).build();
+                            .type(job.getType()).sourceId(dependency.getSourceId()).build();
             vo.add(v);
         }
         return vo;

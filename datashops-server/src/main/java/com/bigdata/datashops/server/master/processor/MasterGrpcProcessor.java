@@ -1,5 +1,6 @@
 package com.bigdata.datashops.server.master.processor;
 
+import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 
@@ -56,18 +57,20 @@ public class MasterGrpcProcessor implements InitializingBean {
     }
 
     public void processJobResponse(GrpcRequest.Request request) {
-        //LOG.info("Receive worker result {}", request.getBody().toStringUtf8());
         String body = request.getBody().toStringUtf8();
         int code = request.getCode();
         JobResult result = JSONUtils.parseObject(body, JobResult.class);
         JobInstance instance = jobInstanceService.findJobInstance("instanceId=" + result.getInstanceId());
+        LOG.info("Receive worker finish rpc [{}]", result.getInstanceId());
         if (code == Constants.RPC_JOB_SUCCESS) {
+            instance.setEndTime(new Date());
             instance.setState(RunState.SUCCESS.getCode());
         }
         if (code == Constants.RPC_JOB_FAIL) {
             instance.setState(RunState.FAILURE.getCode());
         }
         if (!Objects.isNull(instance)) {
+            LOG.info("Job [{}] finish, save it", instance.getInstanceId());
             jobInstanceService.saveEntity(instance);
         }
     }

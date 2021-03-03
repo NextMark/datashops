@@ -19,7 +19,7 @@ public class JobDependencyController extends BasicController {
     @PostMapping(value = "/getJobDependency")
     public Result getJobDependency(@RequestBody Map<String, String> params) {
         String maskId = params.get("maskId");
-        List<JobDependency> jobDependencies = jobDependencyService.getJobDependency("targetMaskId=" + maskId);
+        List<JobDependency> jobDependencies = jobDependencyService.getJobDependency("targetId=" + maskId);
         List<VoJobDependency> vos = jobDependencyService.fillJobInfo(jobDependencies);
         return ok(vos);
     }

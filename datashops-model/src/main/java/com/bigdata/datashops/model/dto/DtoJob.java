@@ -58,7 +58,7 @@ public class DtoJob {
 
     private Integer retryInterval;
 
-    private Integer workerSelector;
+    private Integer hostSelector;
 
     private Integer queueId;
 

@@ -8,7 +8,7 @@ import lombok.Data;
 public class VoJobDependency {
     private String name;
 
-    private String sourceMaskId;
+    private Integer sourceId;
 
     private int offset;
 

@@ -7,6 +7,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
@@ -17,10 +18,14 @@ import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.common.utils.JSONUtils;
 import com.bigdata.datashops.common.utils.NetUtils;
 import com.bigdata.datashops.dao.datasource.BaseDataSource;
+import com.bigdata.datashops.model.enums.HostSelector;
 import com.bigdata.datashops.model.pojo.job.JobInstance;
 import com.bigdata.datashops.model.pojo.rpc.Host;
 import com.bigdata.datashops.protocol.GrpcRequest;
-import com.bigdata.datashops.server.master.dispatch.selector.RandomHostSelector;
+import com.bigdata.datashops.server.config.BaseConfig;
+import com.bigdata.datashops.server.master.selector.AssignSelector;
+import com.bigdata.datashops.server.master.selector.RandomHostSelector;
+import com.bigdata.datashops.server.master.selector.ScoreSelector;
 import com.bigdata.datashops.server.rpc.GrpcRemotingClient;
 import com.bigdata.datashops.server.utils.ZKUtils;
 import com.bigdata.datashops.server.zookeeper.ZookeeperOperator;
@@ -40,6 +45,8 @@ public abstract class AbstractJob {
 
     protected ZookeeperOperator zookeeperOperator;
 
+    protected BaseConfig baseConfig;
+
     protected GrpcRequest.Request request;
 
     protected JobResult result = new JobResult();
@@ -52,6 +59,7 @@ public abstract class AbstractJob {
         this.LOG = jobContext.getLogger();
         this.grpcRemotingClient = jobContext.getGrpcRemotingClient();
         this.zookeeperOperator = jobContext.getZookeeperOperator();
+        this.baseConfig = jobContext.getBaseConfig();
         result.setInstanceId(instance.getInstanceId());
     }
 
@@ -98,11 +106,26 @@ public abstract class AbstractJob {
         List<Host> hosts = Lists.newArrayList();
         for (String host : hostsStr) {
             String[] hostInfo = host.split(Constants.SEPARATOR_UNDERLINE);
-            Host h = Host.builder().ip(hostInfo[0]).port(Integer.parseInt(hostInfo[1])).build();
+            Host h = new Host();
+            h.setIp(hostInfo[0]);
+            h.setPort(Integer.parseInt(hostInfo[1]));
             hosts.add(h);
         }
-        RandomHostSelector randomHostSelector = new RandomHostSelector(hosts);
-        return randomHostSelector.select();
+        Host host = new Host();
+        HostSelector selector = HostSelector.of(instance.getHostSelector());
+        switch (selector) {
+            case ASSIGN:
+                host.setIp(instance.getHost());
+                host.setPort(baseConfig.getWorkerPort());
+                host = new AssignSelector().select(Collections.singleton(host));
+                break;
+            case SCORE:
+                host = new ScoreSelector().select(hosts);
+                break;
+            default:
+                host = new RandomHostSelector().select(hosts);
+        }
+        return host;
     }
 
     protected void buildGrpcRequest(CommandResult commandResult) {

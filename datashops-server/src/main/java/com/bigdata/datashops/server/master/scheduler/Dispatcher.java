@@ -1,6 +1,7 @@
 package com.bigdata.datashops.server.master.scheduler;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.RandomUtils;
@@ -12,12 +13,17 @@ import org.springframework.stereotype.Component;
 import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.common.utils.JSONUtils;
 import com.bigdata.datashops.common.utils.NetUtils;
+import com.bigdata.datashops.model.enums.HostSelector;
 import com.bigdata.datashops.model.enums.JobType;
+import com.bigdata.datashops.model.enums.RunState;
 import com.bigdata.datashops.model.pojo.job.JobInstance;
 import com.bigdata.datashops.model.pojo.rpc.Host;
 import com.bigdata.datashops.protocol.GrpcRequest;
-import com.bigdata.datashops.server.master.dispatch.selector.RandomHostSelector;
+import com.bigdata.datashops.server.config.BaseConfig;
 import com.bigdata.datashops.server.master.parser.SQLParser;
+import com.bigdata.datashops.server.master.selector.AssignSelector;
+import com.bigdata.datashops.server.master.selector.RandomHostSelector;
+import com.bigdata.datashops.server.master.selector.ScoreSelector;
 import com.bigdata.datashops.server.rpc.GrpcRemotingClient;
 import com.bigdata.datashops.server.utils.ZKUtils;
 import com.bigdata.datashops.server.zookeeper.ZookeeperOperator;
@@ -35,14 +41,14 @@ public class Dispatcher {
     @Autowired
     private ZookeeperOperator zookeeperOperator;
 
-    //    @Autowired
-    //    private HostManager hostManager;
-
     @Autowired
     private SQLParser sqlParser;
 
     @Autowired
     private GrpcRemotingClient grpcRemotingClient;
+
+    @Autowired
+    private BaseConfig baseConfig;
 
     public void dispatch(String instanceId) {
         LOG.info("Dispatch instance {}", instanceId);
@@ -58,7 +64,9 @@ public class Dispatcher {
         List<Host> hosts = Lists.newArrayList();
         for (String host : hostsStr) {
             String[] hostInfo = host.split(Constants.SEPARATOR_UNDERLINE);
-            Host h = Host.builder().ip(hostInfo[0]).port(Integer.parseInt(hostInfo[1])).build();
+            Host h = new Host();
+            h.setIp(hostInfo[0]);
+            h.setPort(Integer.parseInt(hostInfo[1]));
             hosts.add(h);
         }
         JobInstance instance = jobInstanceService.findOneByQuery("instanceId=" + instanceId);
@@ -69,18 +77,30 @@ public class Dispatcher {
             instance.setData(sqlParser.parseSQL(instance.getData()));
         }
 
-        RandomHostSelector randomHostSelector = new RandomHostSelector(hosts);
-        Host host = randomHostSelector.select();
+        // select host
+        Host host = new Host();
+        HostSelector selector = HostSelector.of(instance.getHostSelector());
+        switch (selector) {
+            case ASSIGN:
+                host.setIp(instance.getHost());
+                host.setPort(baseConfig.getWorkerPort());
+                host = new AssignSelector().select(Collections.singleton(host));
+                break;
+            case SCORE:
+                host = new ScoreSelector().select(hosts);
+                break;
+            default:
+                host = new RandomHostSelector().select(hosts);
+        }
         instance.setHost(host.getIp());
+        instance.setState(RunState.RUNNING.getCode());
+        instance.setStartTime(new Date());
         jobInstanceService.saveEntity(instance);
         GrpcRequest.Request request =
                 GrpcRequest.Request.newBuilder().setHost(NetUtils.getLocalAddress()).setRequestId(RandomUtils.nextInt())
                         .setRequestType(GrpcRequest.RequestType.JOB_EXECUTE_REQUEST)
                         .setBody(ByteString.copyFrom(JSONUtils.toJsonString(instance).getBytes())).build();
         GrpcRequest.Response response = grpcRemotingClient.send(request, host);
-        if (response.getStatus() != Constants.RPC_JOB_SUCCESS) {
-
-        }
     }
 
 }
