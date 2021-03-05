@@ -20,8 +20,8 @@ import com.bigdata.datashops.model.pojo.Project;
 import com.bigdata.datashops.model.pojo.YarnQueue;
 
 @RestController
-@RequestMapping("/v1/resource")
-public class ResourceController extends BasicController {
+@RequestMapping("/v1/project")
+public class ProjectController extends BasicController {
     @PostMapping(value = "/addProject")
     public Result addDependency(@RequestBody Project project) {
         projectService.save(project);

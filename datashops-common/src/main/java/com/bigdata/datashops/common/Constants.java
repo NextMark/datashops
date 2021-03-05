@@ -70,6 +70,7 @@ public class Constants {
     public final static String SEPARATOR_LINE = "\\|";
     public final static String SEPARATOR_SEMICOLON = ";";
     public final static String SEPARATOR_USER_TOKEN_SALT = "__datashops__";
+    public static final String DOUBLE_SLASH = "//";
 
     /**
      * rpc
@@ -86,4 +87,118 @@ public class Constants {
     public final static String JWT_AUTHORITIES_KEY = "auth";
     public final static String JWT_PRIVATE_KEY = "rsa/private-key.pem";
     public final static String JWT_PUBLIC_LEY = "rsa/public-key.pem";
+
+    /**
+     * fs.defaultFS
+     */
+    public static final String FS_DEFAULTFS = "fs.defaultFS";
+
+    /**
+     * yarn.resourcemanager.ha.rm.ids
+     */
+    public static final String YARN_RESOURCEMANAGER_HA_RM_IDS = "yarn.resourcemanager.ha.rm.ids";
+    public static final String YARN_RESOURCEMANAGER_HA_XX = "xx";
+
+    public static final String RESOURCE_UPLOAD_PATH = "resource.upload.path";
+    public static final String KERBEROS_EXPIRE_TIME = "kerberos.expire.time";
+    public static final String RESOURCE_STORAGE_TYPE = "resource.storage.type";
+
+    /**
+     * yarn.application.status.address
+     */
+    public static final String YARN_APPLICATION_STATUS_ADDRESS = "yarn.application.status.address";
+
+    /**
+     * yarn.job.history.status.address
+     */
+    public static final String YARN_JOB_HISTORY_STATUS_ADDRESS = "yarn.job.history.status.address";
+
+    public static final String HDFS_ROOT_USER = "hdfs.root.user";
+    public static final String KERBEROS = "kerberos";
+
+    public static final String JAVA_SECURITY_KRB5_CONF = "java.security.krb5.conf";
+
+    public static final String JAVA_SECURITY_KRB5_CONF_PATH = "java.security.krb5.conf.path";
+
+    public static final String HADOOP_SECURITY_AUTHENTICATION = "hadoop.security.authentication";
+
+    public static final String HADOOP_SECURITY_AUTHENTICATION_STARTUP_STATE =
+            "hadoop.security.authentication.startup.state";
+
+    public static final String AWS_S3_V4 = "com.amazonaws.services.s3.enableV4";
+
+    public static final String LOGIN_USER_KEY_TAB_USERNAME = "login.user.keytab.username";
+
+    public static final int DEFAULT_WORKER_ID = -1;
+
+    public static final String LOGIN_USER_KEY_TAB_PATH = "login.user.keytab.path";
+
+    public static final String TASK_LOG_INFO_FORMAT = "TaskLogInfo-%s";
+
+    public static final String HIVE_CONF = "hiveconf:";
+    public static final String HADOOP_RM_STATE_ACTIVE = "ACTIVE";
+
+    public static final String HADOOP_RM_STATE_STANDBY = "STANDBY";
+
+    public static final String HADOOP_RESOURCE_MANAGER_HTTPADDRESS_PORT = "resource.manager.httpaddress.port";
+
+    public static final int HTTP_CONNECT_TIMEOUT = 60 * 1000;
+
+    /**
+     * http connect request time out
+     */
+    public static final int HTTP_CONNECTION_REQUEST_TIMEOUT = 60 * 1000;
+
+    /**
+     * httpclient soceket time out
+     */
+    public static final int SOCKET_TIMEOUT = 60 * 1000;
+
+    /**
+     * http header
+     */
+    public static final String HTTP_HEADER_UNKNOWN = "unKnown";
+
+    /**
+     * http X-Forwarded-For
+     */
+    public static final String HTTP_X_FORWARDED_FOR = "X-Forwarded-For";
+
+    /**
+     * http X-Real-IP
+     */
+    public static final String HTTP_X_REAL_IP = "X-Real-IP";
+    public static final String UTF_8 = "UTF-8";
+
+    public static final String ACCEPTED = "ACCEPTED";
+
+    /**
+     * SUCCEEDED
+     */
+    public static final String SUCCEEDED = "SUCCEEDED";
+    /**
+     * NEW
+     */
+    public static final String NEW = "NEW";
+    /**
+     * NEW_SAVING
+     */
+    public static final String NEW_SAVING = "NEW_SAVING";
+    /**
+     * SUBMITTED
+     */
+    public static final String SUBMITTED = "SUBMITTED";
+    /**
+     * FAILED
+     */
+    public static final String FAILED = "FAILED";
+    /**
+     * KILLED
+     */
+    public static final String KILLED = "KILLED";
+    /**
+     * RUNNING
+     */
+    public static final String RUNNING = "RUNNING";
+
 }
