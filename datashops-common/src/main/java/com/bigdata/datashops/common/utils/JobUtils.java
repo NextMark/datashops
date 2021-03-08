@@ -1,6 +1,10 @@
 package com.bigdata.datashops.common.utils;
 
+import java.util.Map;
+
 import org.apache.commons.lang3.RandomStringUtils;
+
+import com.google.common.collect.Maps;
 
 public class JobUtils {
     public static String genJobInstanceId() {
@@ -9,5 +13,44 @@ public class JobUtils {
 
     public static String genMaskId(String prefix) {
         return prefix + DateUtils.getCurrentTime("yyMMddHHmmss") + RandomStringUtils.randomNumeric(3);
+    }
+
+    public static Map buildJobData(int type, String value) {
+        Map<String, Object> result = Maps.newHashMap();
+        switch (type) {
+            case 0:
+                result.put("dbType", 0);
+                result.put("user", "develop");
+                result.put("password", "3NOPvVw9HLt0akfh");
+                result.put("address", "jdbc:hive2://192.168.1.124:10000/default");
+                result.put("database", "default");
+                result.put("data", value);
+                break;
+            case 1:
+                result.put("data", value);
+                break;
+            case 4:
+                result.put("dbType", 4);
+                result.put("user", "develop");
+                result.put("password", "3NOPvVw9HLt0akfh");
+                result.put("address", "jdbc:hive2://192.168.1.124:10000/default");
+                result.put("database", "default");
+                result.put("data", value);
+                break;
+            case 6:
+                result.put("dbType", 6);
+                result.put("user", "develop");
+                result.put("password", "3NOPvVw9HLt0akfh");
+                result.put("address", "jdbc:hive2://192.168.1.124:10000/default");
+                result.put("database", "default");
+                result.put("data", value);
+                break;
+            case 11:
+                result.put("version", "python2");
+                result.put("data", value);
+                break;
+        }
+
+        return result;
     }
 }

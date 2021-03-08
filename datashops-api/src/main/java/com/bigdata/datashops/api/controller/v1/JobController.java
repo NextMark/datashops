@@ -21,6 +21,7 @@ import com.bigdata.datashops.api.response.Result;
 import com.bigdata.datashops.api.response.ResultCode;
 import com.bigdata.datashops.api.utils.ValidatorUtil;
 import com.bigdata.datashops.common.Constants;
+import com.bigdata.datashops.common.utils.JSONUtils;
 import com.bigdata.datashops.common.utils.JobUtils;
 import com.bigdata.datashops.dao.data.domain.PageRequest;
 import com.bigdata.datashops.model.DtoJobGraph;
@@ -33,6 +34,7 @@ import com.bigdata.datashops.model.pojo.job.JobDependency;
 import com.bigdata.datashops.model.pojo.job.JobGraph;
 import com.bigdata.datashops.model.pojo.job.JobRelation;
 import com.bigdata.datashops.service.utils.CronHelper;
+import com.google.common.collect.Maps;
 
 @RestController
 @RequestMapping("/v1/job")
@@ -73,7 +75,8 @@ public class JobController extends BasicController {
         if (Objects.isNull(job)) {
             job = new Job();
         }
-        job.setData(params.get("sql"));
+        job.setData(
+                JSONUtils.toJsonString(JobUtils.buildJobData(Integer.parseInt(params.get("type")), params.get("sql"))));
         jobService.save(job);
         return ok();
     }
@@ -233,5 +236,16 @@ public class JobController extends BasicController {
         jobDependency.setOffset(offset);
         jobDependencyService.save(jobDependency);
         return ok();
+    }
+
+    private Map buildJobData(String sql) {
+        Map<String, Object> result = Maps.newHashMap();
+        result.put("dbType", 0);
+        result.put("user", "develop");
+        result.put("password", "3NOPvVw9HLt0akfh");
+        result.put("address", "jdbc:hive2://192.168.1.124:10000/default");
+        result.put("database", "default");
+        result.put("data", sql);
+        return result;
     }
 }
