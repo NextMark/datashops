@@ -18,7 +18,7 @@ import com.bigdata.datashops.model.vo.VoJobDependency;
 public class JobDependencyController extends BasicController {
     @PostMapping(value = "/getJobDependency")
     public Result getJobDependency(@RequestBody Map<String, String> params) {
-        String maskId = params.get("maskId");
+        String maskId = params.get("id");
         List<JobDependency> jobDependencies = jobDependencyService.getJobDependency("targetId=" + maskId);
         List<VoJobDependency> vos = jobDependencyService.fillJobInfo(jobDependencies);
         return ok(vos);

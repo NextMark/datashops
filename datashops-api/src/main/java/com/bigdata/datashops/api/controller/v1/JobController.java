@@ -75,8 +75,7 @@ public class JobController extends BasicController {
         if (Objects.isNull(job)) {
             job = new Job();
         }
-        job.setData(
-                JSONUtils.toJsonString(JobUtils.buildJobData(Integer.parseInt(params.get("type")), params.get("sql"))));
+        job.setData(JSONUtils.toJsonString(JobUtils.buildJobData(0, params.get("sql"))));
         jobService.save(job);
         return ok();
     }
