@@ -27,8 +27,8 @@ public class HiveJob extends AbstractJob {
         DataSourceFactory.loadClass(baseDataSource.dbType());
         try {
             Connection connection = creatConnection();
-            PreparedStatement ps = connection.prepareStatement(baseDataSource.getData());
-            LOG.info("Execute hive: {}", baseDataSource.getData());
+            PreparedStatement ps = connection.prepareStatement(baseDataSource.getValue());
+            LOG.info("Execute hive: {}", baseDataSource.getValue());
             ResultSet rs = ps.executeQuery();
             resultProcess(rs);
             buildGrpcRequest(Constants.RPC_JOB_SUCCESS);

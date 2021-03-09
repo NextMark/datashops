@@ -68,4 +68,6 @@ public class DtoJob {
 
     private Date validEndDate;
 
+    private String data;
+
 }

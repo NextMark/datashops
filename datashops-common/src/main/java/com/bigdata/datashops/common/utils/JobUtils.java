@@ -15,8 +15,10 @@ public class JobUtils {
         return prefix + DateUtils.getCurrentTime("yyMMddHHmmss") + RandomStringUtils.randomNumeric(3);
     }
 
-    public static Map buildJobData(int type, String value) {
+    public static String buildJobData(int type, String value) {
+        Map data = JSONUtils.toMap(value);
         Map<String, Object> result = Maps.newHashMap();
+        result.putAll(data);
         switch (type) {
             case 0:
                 result.put("dbType", 0);
@@ -24,10 +26,6 @@ public class JobUtils {
                 result.put("password", "3NOPvVw9HLt0akfh");
                 result.put("address", "jdbc:hive2://192.168.1.124:10000/default");
                 result.put("database", "default");
-                result.put("data", value);
-                break;
-            case 1:
-                result.put("data", value);
                 break;
             case 4:
                 result.put("dbType", 4);
@@ -35,7 +33,6 @@ public class JobUtils {
                 result.put("password", "3NOPvVw9HLt0akfh");
                 result.put("address", "jdbc:hive2://192.168.1.124:10000/default");
                 result.put("database", "default");
-                result.put("data", value);
                 break;
             case 6:
                 result.put("dbType", 6);
@@ -43,14 +40,9 @@ public class JobUtils {
                 result.put("password", "3NOPvVw9HLt0akfh");
                 result.put("address", "jdbc:hive2://192.168.1.124:10000/default");
                 result.put("database", "default");
-                result.put("data", value);
-                break;
-            case 11:
-                result.put("version", "python2");
-                result.put("data", value);
                 break;
         }
 
-        return result;
+        return JSONUtils.toJsonString(result);
     }
 }

@@ -22,7 +22,7 @@ public abstract class BaseDataSource {
 
     private String params;
 
-    private String data;
+    private String value;
 
     protected String fillParams(String params) {
         return params;

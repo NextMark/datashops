@@ -26,7 +26,6 @@ import com.bigdata.datashops.common.utils.JobUtils;
 import com.bigdata.datashops.dao.data.domain.PageRequest;
 import com.bigdata.datashops.model.DtoJobGraph;
 import com.bigdata.datashops.model.dto.DtoCronExpression;
-import com.bigdata.datashops.model.dto.DtoJob;
 import com.bigdata.datashops.model.dto.DtoPageQuery;
 import com.bigdata.datashops.model.enums.JobType;
 import com.bigdata.datashops.model.pojo.job.Job;
@@ -57,13 +56,14 @@ public class JobController extends BasicController {
     }
 
     @PostMapping(value = "/modifyJob")
-    public Result modifyJob(@RequestBody DtoJob dtoJob) throws SchedulerException {
+    public Result modifyJob(@RequestBody Job dtoJob) throws SchedulerException {
         Job job = jobService.getJob(dtoJob.getId());
         BeanUtils.copyProperties(dtoJob, job);
         DtoCronExpression cronExpression = DtoCronExpression.builder().schedulingPeriod(dtoJob.getSchedulingPeriod())
                                                    .config(dtoJob.getTimeConfig()).build();
         String cron = CronHelper.buildCronExpression(cronExpression);
         job.setCronExpression(cron);
+        job.setData(JobUtils.buildJobData(dtoJob.getType(), dtoJob.getData()));
         jobService.modifyJob(job);
         return ok(job);
     }

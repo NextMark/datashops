@@ -23,8 +23,8 @@ public class MysqlJob extends AbstractJob {
 
         try {
             Connection connection = creatConnection();
-            PreparedStatement ps = connection.prepareStatement(baseDataSource.getData());
-            LOG.info("Execute mysql: {}", baseDataSource.getData());
+            PreparedStatement ps = connection.prepareStatement(baseDataSource.getValue());
+            LOG.info("Execute mysql: {}", baseDataSource.getValue());
             ResultSet rs = ps.executeQuery();
             resultProcess(rs);
             buildGrpcRequest(Constants.RPC_JOB_SUCCESS);

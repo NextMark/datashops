@@ -21,7 +21,7 @@ public class ClickHouseJob extends AbstractJob {
         DataSourceFactory.loadClass(baseDataSource.dbType());
         try {
             Connection connection = creatConnection();
-            PreparedStatement ps = connection.prepareStatement(baseDataSource.getData());
+            PreparedStatement ps = connection.prepareStatement(baseDataSource.getValue());
             ResultSet rs = ps.executeQuery();
             resultProcess(rs);
             buildGrpcRequest(Constants.RPC_JOB_SUCCESS);
