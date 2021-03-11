@@ -1,4 +1,4 @@
-package com.bigdata.datashops.server.graph;
+package com.bigdata.datashops.service.graph;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +7,9 @@ import lombok.Data;
 
 @Data
 public class Vertex {
-    private String jobInstanceId;
+    private String id;
+
+    private String name;
 
     private boolean beingVisited;
 
@@ -19,14 +21,15 @@ public class Vertex {
     // 出度
     private int out;
 
-    private List<Vertex> adjacencyList;
+    private List<Vertex> children;
 
-    public Vertex(String jobInstanceId) {
-        this.jobInstanceId = jobInstanceId;
-        this.adjacencyList = new ArrayList<>();
+    public Vertex(String id, String name) {
+        this.id = id;
+        this.name = name;
+        this.children = new ArrayList<>();
     }
 
     public void addNeighbor(Vertex adjacent) {
-        this.adjacencyList.add(adjacent);
+        this.children.add(adjacent);
     }
 }

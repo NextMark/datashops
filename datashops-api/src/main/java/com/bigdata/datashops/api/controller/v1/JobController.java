@@ -33,13 +33,19 @@ import com.bigdata.datashops.model.pojo.job.JobDependency;
 import com.bigdata.datashops.model.pojo.job.JobGraph;
 import com.bigdata.datashops.model.pojo.job.JobRelation;
 import com.bigdata.datashops.service.utils.CronHelper;
-import com.google.common.collect.Maps;
 
 @RestController
 @RequestMapping("/v1/job")
 public class JobController extends BasicController {
     @RequestMapping(value = "/getJobGraphById")
-    public Result getJobGraphById(@NotNull String id) {
+    public Result getJobGraphById(@NotNull Integer id) {
+        JobGraph jobGraph = jobGraphService.getJobGraph(id);
+        jobGraphService.fillJobWithDependency(jobGraph);
+        return ok(jobGraph);
+    }
+
+    @RequestMapping(value = "/getJobGraphByMaskId")
+    public Result getJobGraphByMaskId(@NotNull String id) {
         JobGraph jobGraph = jobGraphService.getJobGraphByMaskId(id);
         jobGraphService.fillJobWithDependency(jobGraph);
         return ok(jobGraph);
@@ -237,14 +243,9 @@ public class JobController extends BasicController {
         return ok();
     }
 
-    private Map buildJobData(String sql) {
-        Map<String, Object> result = Maps.newHashMap();
-        result.put("dbType", 0);
-        result.put("user", "develop");
-        result.put("password", "3NOPvVw9HLt0akfh");
-        result.put("address", "jdbc:hive2://192.168.1.124:10000/default");
-        result.put("database", "default");
-        result.put("data", sql);
-        return result;
+    @RequestMapping(value = "/getJobGraph")
+    public Result getJobGraph(@NotNull Integer id) {
+        Map<String, Object> nodes = jobDependencyService.getJobDependencyGraph(id);
+        return ok(nodes);
     }
 }

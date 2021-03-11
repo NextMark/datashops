@@ -1,4 +1,4 @@
-package com.bigdata.datashops.server.graph;
+package com.bigdata.datashops.service.graph;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -29,7 +29,7 @@ public class Graph {
     private boolean hasCycle(Vertex root) {
         root.setBeingVisited(true);
 
-        for (Vertex neighbor : root.getAdjacencyList()) {
+        for (Vertex neighbor : root.getChildren()) {
             if (neighbor.isBeingVisited()) {
                 return true;
             } else if (!neighbor.isVisited() && hasCycle(neighbor)) {
@@ -50,7 +50,7 @@ public class Graph {
             Vertex vertex = stack.pop();
             if (!visited.contains(vertex)) {
                 visited.add(vertex);
-                for (Vertex v : vertex.getAdjacencyList()) {
+                for (Vertex v : vertex.getChildren()) {
                     stack.push(v);
                 }
             }
@@ -65,7 +65,7 @@ public class Graph {
         visited.add(root);
         while (!queue.isEmpty()) {
             Vertex vertex = queue.poll();
-            for (Vertex v : vertex.getAdjacencyList()) {
+            for (Vertex v : vertex.getChildren()) {
                 if (!visited.contains(v)) {
                     visited.add(v);
                     queue.add(v);
@@ -73,10 +73,6 @@ public class Graph {
             }
         }
         return visited;
-    }
-
-    public void buildGraph() {
-
     }
 
 }
