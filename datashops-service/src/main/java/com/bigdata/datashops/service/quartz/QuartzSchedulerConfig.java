@@ -32,6 +32,8 @@ public class QuartzSchedulerConfig {
     public SchedulerFactoryBean schedulerFactoryBean() throws IOException {
         SchedulerFactoryBean scheduler = new SchedulerFactoryBean();
         scheduler.setQuartzProperties(quartzProperties());
+        boolean autoStartUp = Boolean.parseBoolean(quartzProperties().getProperty("quartz.autoStartup"));
+        scheduler.setAutoStartup(autoStartUp);
         scheduler.setJobFactory(myJobFactory);
         return scheduler;
     }
@@ -44,7 +46,6 @@ public class QuartzSchedulerConfig {
 
         factory.setQuartzProperties(quartzProperties());
         factory.afterPropertiesSet();
-
         Scheduler scheduler = schedulerFactoryBean().getScheduler();
         scheduler.setJobFactory(myJobFactory);
         return scheduler;
