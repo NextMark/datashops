@@ -1,5 +1,6 @@
 package com.bigdata.datashops.api.controller.v1;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Objects;
 
@@ -21,6 +22,7 @@ import com.bigdata.datashops.api.response.Result;
 import com.bigdata.datashops.api.response.ResultCode;
 import com.bigdata.datashops.api.utils.ValidatorUtil;
 import com.bigdata.datashops.common.Constants;
+import com.bigdata.datashops.common.utils.DateUtils;
 import com.bigdata.datashops.common.utils.JSONUtils;
 import com.bigdata.datashops.common.utils.JobUtils;
 import com.bigdata.datashops.dao.data.domain.PageRequest;
@@ -28,11 +30,13 @@ import com.bigdata.datashops.model.DtoJobGraph;
 import com.bigdata.datashops.model.dto.DtoCronExpression;
 import com.bigdata.datashops.model.dto.DtoPageQuery;
 import com.bigdata.datashops.model.enums.JobType;
+import com.bigdata.datashops.model.enums.SchedulingPeriod;
 import com.bigdata.datashops.model.pojo.job.Job;
 import com.bigdata.datashops.model.pojo.job.JobDependency;
 import com.bigdata.datashops.model.pojo.job.JobGraph;
 import com.bigdata.datashops.model.pojo.job.JobRelation;
 import com.bigdata.datashops.service.utils.CronHelper;
+import com.google.common.collect.Maps;
 
 @RestController
 @RequestMapping("/v1/job")
@@ -69,7 +73,9 @@ public class JobController extends BasicController {
                                                    .config(dtoJob.getTimeConfig()).build();
         String cron = CronHelper.buildCronExpression(cronExpression);
         job.setCronExpression(cron);
-        job.setData(JobUtils.buildJobData(dtoJob.getType(), dtoJob.getData()));
+        if (dtoJob.getData() != null) {
+            job.setData(JobUtils.buildJobData(dtoJob.getType(), dtoJob.getData()));
+        }
         jobService.modifyJob(job);
         return ok(job);
     }
@@ -95,6 +101,13 @@ public class JobController extends BasicController {
         job.setMaskId(JobUtils.genMaskId("1-" + params.get("projectId") + "-"));
         job.setHostSelector(Integer.valueOf(params.get("hostSelector")));
         job.setName(name);
+        // 初始化调度时间
+        job.setSchedulingPeriod(SchedulingPeriod.DAY.getCode());
+        Map<String, String> timeConfig = Maps.newHashMap();
+        timeConfig.put("hour", DateUtils.getCurrentTime("HH"));
+        timeConfig.put("minute", DateUtils.getCurrentTime("mm"));
+        job.setTimeConfig(JSONUtils.toJsonString(timeConfig));
+
         job.setType(Integer.valueOf(params.get("type")));
         jobService.save(job);
         return ok(job);

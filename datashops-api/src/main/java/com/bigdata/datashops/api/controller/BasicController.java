@@ -28,6 +28,7 @@ import com.bigdata.datashops.service.PermissionService;
 import com.bigdata.datashops.service.ProjectService;
 import com.bigdata.datashops.service.RolePermissionService;
 import com.bigdata.datashops.service.RoleService;
+import com.bigdata.datashops.service.SysOperationService;
 import com.bigdata.datashops.service.UserService;
 import com.bigdata.datashops.service.YarnQueueService;
 
@@ -88,6 +89,9 @@ public class BasicController {
 
     //    @Autowired
     //    protected ZookeeperOperator zookeeperOperator;
+
+    @Autowired
+    protected SysOperationService sysOperationService;
 
     private static final Map<String, Boolean> HAS_FACADE_METHOD = new ConcurrentHashMap<>();
     private static final Map<String, Method> FACADE_METHOD_CACHE = new ConcurrentHashMap<>();

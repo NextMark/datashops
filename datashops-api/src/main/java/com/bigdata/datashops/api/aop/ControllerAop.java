@@ -25,6 +25,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.bigdata.datashops.api.config.security.jwt.JwtUtil;
 import com.bigdata.datashops.common.utils.JSONUtils;
+import com.bigdata.datashops.model.pojo.user.SysOperation;
+import com.bigdata.datashops.service.SysOperationService;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 @Component
@@ -46,6 +48,9 @@ public class ControllerAop {
 
     @Autowired
     private JwtUtil jwtUtil;
+
+    @Autowired
+    private SysOperationService sysOperationService;
 
     @Autowired
     public void setRequest(HttpServletRequest request) {
@@ -98,6 +103,13 @@ public class ControllerAop {
         log.put("time_seconds", Instant.now().getEpochSecond());
         log.put("time", LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
 
+        SysOperation sysOperation = new SysOperation();
+        sysOperation.setIp(getClientIp());
+        sysOperation.setOperator(request.getHeader("userName"));
+        sysOperation.setMethod(request.getMethod());
+        sysOperation.setPath(request.getRequestURI());
+        sysOperation.setSpend((int) (System.currentTimeMillis() - REQUEST_BEGIN_TIME_TL.get()));
+        sysOperationService.save(sysOperation);
         // requestLogger.info("{}", log);
 
         // ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
