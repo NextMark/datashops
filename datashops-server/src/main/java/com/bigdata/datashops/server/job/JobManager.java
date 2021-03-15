@@ -37,6 +37,8 @@ public class JobManager {
                 return new HiveJob(jobContext);
             case SHELL:
                 return new ShellJob(jobContext);
+            case PYTHON:
+                return new PythonJob(jobContext);
             case MYSQL:
                 return new MysqlJob(jobContext);
             case SPARK:

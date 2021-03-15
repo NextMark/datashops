@@ -32,8 +32,8 @@ public class CronHelper {
                 }
                 if (type == 1) {
                     expression = String.format(expression, "00", hour.getHourMinute(),
-                            String.format("%s-%s/%s", hour.getHourBegin(), hour.getHourEnd(), hour.getPeriod()), "*",
-                            "*", "?");
+                            String.format("%s-%s/%s", hour.getHourBegin(), hour.getHourEnd(), hour.getHourPeriod()),
+                            "*", "*", "?");
                 }
                 break;
             case DAY:

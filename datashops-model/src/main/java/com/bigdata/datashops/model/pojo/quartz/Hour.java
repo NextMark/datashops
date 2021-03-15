@@ -20,7 +20,7 @@ public class Hour {
     private String hourBegin;
     @Pattern(regexp = "^[0-9]{2}$", message = "时间格式不正确")
     private String hourMinute;
-    private String period;
+    private String hourPeriod;
     @Pattern(regexp = "^[0-9]{2}$", message = "时间格式不正确")
     private String hourEnd;
 }
