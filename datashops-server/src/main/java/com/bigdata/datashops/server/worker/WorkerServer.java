@@ -12,7 +12,8 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 
-import com.bigdata.datashops.server.config.BaseConfig;
+import com.bigdata.datashops.common.Constants;
+import com.bigdata.datashops.common.utils.PropertyUtils;
 import com.bigdata.datashops.server.master.MasterServer;
 import com.bigdata.datashops.server.master.processor.MasterGrpcProcessor;
 import com.bigdata.datashops.server.rpc.GrpcRemotingServer;
@@ -37,9 +38,6 @@ public class WorkerServer {
     private WorkerHeartBeat heartBeat;
 
     @Autowired
-    private BaseConfig baseConfig;
-
-    @Autowired
     WorkerRequestServiceGrpcImpl requestServiceGrpc;
 
     public static void main(String[] args) {
@@ -51,9 +49,9 @@ public class WorkerServer {
     public void init() throws IOException, InterruptedException {
         workerRegistry.registry();
 
-        ThreadUtil.scheduleAtFixedRate(heartBeat, baseConfig.getWorkerHeartbeatInterval());
+        ThreadUtil.scheduleAtFixedRate(heartBeat, PropertyUtils.getInt(Constants.WORKER_HEARTBEAT_INTERVAL));
 
-        grpcRemotingServer.start(baseConfig.getWorkerPort(), requestServiceGrpc);
+        grpcRemotingServer.start(PropertyUtils.getInt(Constants.WORKER_GRPC_SERVER_PORT), requestServiceGrpc);
         grpcRemotingServer.blockUntilShutdown();
 
         Runtime.getRuntime().addShutdownHook(new Thread(this::close));

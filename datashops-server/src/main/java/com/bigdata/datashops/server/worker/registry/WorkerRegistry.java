@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bigdata.datashops.common.utils.NetUtils;
-import com.bigdata.datashops.server.config.BaseConfig;
 import com.bigdata.datashops.server.utils.ZKUtils;
 import com.bigdata.datashops.server.zookeeper.ZookeeperOperator;
 
@@ -12,9 +11,6 @@ import com.bigdata.datashops.server.zookeeper.ZookeeperOperator;
 public class WorkerRegistry {
     @Autowired
     private ZookeeperOperator zookeeperOperator;
-
-    @Autowired
-    private BaseConfig baseConfig;
 
     public void registry() {
         //        String address = NetUtils.getLocalAddress();

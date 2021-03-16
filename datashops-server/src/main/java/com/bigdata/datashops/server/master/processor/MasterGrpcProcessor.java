@@ -12,10 +12,10 @@ import org.springframework.stereotype.Component;
 
 import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.common.utils.JSONUtils;
+import com.bigdata.datashops.common.utils.PropertyUtils;
 import com.bigdata.datashops.model.enums.RunState;
 import com.bigdata.datashops.model.pojo.job.JobInstance;
 import com.bigdata.datashops.protocol.GrpcRequest;
-import com.bigdata.datashops.server.config.BaseConfig;
 import com.bigdata.datashops.server.job.JobManager;
 import com.bigdata.datashops.server.job.JobResult;
 import com.bigdata.datashops.server.thread.ThreadUtil;
@@ -25,8 +25,6 @@ import com.bigdata.datashops.service.JobInstanceService;
 @Component
 public class MasterGrpcProcessor implements InitializingBean {
     private static final Logger LOG = LoggerFactory.getLogger(MasterGrpcProcessor.class);
-    @Autowired
-    private BaseConfig baseConfig;
 
     private ExecutorService executorService;
 
@@ -38,8 +36,8 @@ public class MasterGrpcProcessor implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() {
-        this.executorService =
-                ThreadUtil.newDaemonFixedThreadExecutor("master-rpc-process", baseConfig.getMasterJobThreads());
+        this.executorService = ThreadUtil.newDaemonFixedThreadExecutor("master-rpc-process",
+                PropertyUtils.getInt(Constants.MASTER_RPC_PROCESS_THREADS));
     }
 
     public void process(GrpcRequest.Request request) {

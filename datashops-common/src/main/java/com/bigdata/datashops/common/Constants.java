@@ -19,7 +19,7 @@ public class Constants {
     /**
      * common properties path
      */
-    public static final String COMMON_PROPERTIES_PATH = "/common.properties";
+    public static final String COMMON_PROPERTIES_PATH = "/datashops.properties";
     public static final String DATA_BASEDIR_PATH = "data.basedir.path";
     public static final String PID = "pid";
     public static final int EXIT_SUCCESS_CODE = 0;
@@ -201,7 +201,24 @@ public class Constants {
      */
     public static final String RUNNING = "RUNNING";
 
+    /**
+     * common.properties
+     */
     public static final String FLINK_BASE_PATH = "flink.base.path";
 
     public static final String FLINK_USER_JARS_PATH = "flink.user.jars.path";
+
+    public static final String MASTER_GRPC_SERVER_PORT = "master.grpc.server.port";
+
+    public static final String WORKER_GRPC_SERVER_PORT = "worker.grpc.server.port";
+
+    public static final String WORKER_JOB_EXEC_THREADS = "worker.job.exec.threads";
+
+    public static final String MASTER_HEARTBEAT_INTERVAL = "master.heartbeat.interval";
+
+    public static final String WORKER_HEARTBEAT_INTERVAL = "worker.heartbeat.interval";
+
+    public static final String MASTER_RPC_PROCESS_THREADS = "master.rpc.process.threads";
+
+    public static final String MASTER_FINDER_INTERVAL = "master.finder.interval";
 }

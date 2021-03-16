@@ -19,7 +19,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.bigdata.datashops.server.config.BaseConfig;
+import com.bigdata.datashops.common.Constants;
+import com.bigdata.datashops.common.utils.PropertyUtils;
 import com.bigdata.datashops.server.master.heartbeat.MasterHeartBeat;
 import com.bigdata.datashops.server.master.registry.MasterRegistry;
 import com.bigdata.datashops.server.master.scheduler.Finder;
@@ -58,9 +59,6 @@ public class MasterServer {
     private JobQueue jobQueue;
 
     @Autowired
-    private BaseConfig baseConfig;
-
-    @Autowired
     private MasterHeartBeat heartBeat;
 
     @Autowired
@@ -74,7 +72,7 @@ public class MasterServer {
     @PostConstruct
     public void init() throws IOException, InterruptedException, SchedulerException {
         masterRegistry.registry();
-        ThreadUtil.scheduleAtFixedRate(heartBeat, baseConfig.getMasterHeartbeatInterval());
+        ThreadUtil.scheduleAtFixedRate(heartBeat, PropertyUtils.getInt(Constants.MASTER_HEARTBEAT_INTERVAL));
 
         // 启动quartz任务
         scheduler.start();
@@ -86,9 +84,9 @@ public class MasterServer {
         jobQueue.initQueue();
 
         // 扫描作业实例
-        ThreadUtil.scheduleAtFixedRate(finder, baseConfig.getMasterFinderInterval());
+        ThreadUtil.scheduleAtFixedRate(finder, PropertyUtils.getInt(Constants.MASTER_FINDER_INTERVAL));
 
-        grpcRemotingServer.start(baseConfig.getMasterPort(), requestServiceGrpc);
+        grpcRemotingServer.start(PropertyUtils.getInt(Constants.MASTER_GRPC_SERVER_PORT), requestServiceGrpc);
         grpcRemotingServer.blockUntilShutdown();
 
         Runtime.getRuntime().addShutdownHook(new Thread(this::close));

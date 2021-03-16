@@ -17,12 +17,12 @@ import org.slf4j.Logger;
 import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.common.utils.JSONUtils;
 import com.bigdata.datashops.common.utils.NetUtils;
+import com.bigdata.datashops.common.utils.PropertyUtils;
 import com.bigdata.datashops.dao.datasource.BaseDataSource;
 import com.bigdata.datashops.model.enums.HostSelector;
 import com.bigdata.datashops.model.pojo.job.JobInstance;
 import com.bigdata.datashops.model.pojo.rpc.Host;
 import com.bigdata.datashops.protocol.GrpcRequest;
-import com.bigdata.datashops.server.config.BaseConfig;
 import com.bigdata.datashops.server.master.selector.AssignSelector;
 import com.bigdata.datashops.server.master.selector.RandomHostSelector;
 import com.bigdata.datashops.server.master.selector.ScoreSelector;
@@ -45,8 +45,6 @@ public abstract class AbstractJob {
 
     protected ZookeeperOperator zookeeperOperator;
 
-    protected BaseConfig baseConfig;
-
     protected GrpcRequest.Request request;
 
     protected JobResult result = new JobResult();
@@ -59,7 +57,6 @@ public abstract class AbstractJob {
         this.LOG = jobContext.getLogger();
         this.grpcRemotingClient = jobContext.getGrpcRemotingClient();
         this.zookeeperOperator = jobContext.getZookeeperOperator();
-        this.baseConfig = jobContext.getBaseConfig();
         result.setInstanceId(jobInstance.getInstanceId());
     }
 
@@ -116,7 +113,7 @@ public abstract class AbstractJob {
         switch (selector) {
             case ASSIGN:
                 host.setIp(jobInstance.getHost());
-                host.setPort(baseConfig.getWorkerPort());
+                host.setPort(PropertyUtils.getInt(Constants.WORKER_GRPC_SERVER_PORT));
                 host = new AssignSelector().select(Collections.singleton(host));
                 break;
             case SCORE:

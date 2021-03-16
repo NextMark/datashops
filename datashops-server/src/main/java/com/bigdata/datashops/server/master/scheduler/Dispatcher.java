@@ -13,13 +13,13 @@ import org.springframework.stereotype.Component;
 import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.common.utils.JSONUtils;
 import com.bigdata.datashops.common.utils.NetUtils;
+import com.bigdata.datashops.common.utils.PropertyUtils;
 import com.bigdata.datashops.model.enums.HostSelector;
 import com.bigdata.datashops.model.enums.JobType;
 import com.bigdata.datashops.model.enums.RunState;
 import com.bigdata.datashops.model.pojo.job.JobInstance;
 import com.bigdata.datashops.model.pojo.rpc.Host;
 import com.bigdata.datashops.protocol.GrpcRequest;
-import com.bigdata.datashops.server.config.BaseConfig;
 import com.bigdata.datashops.server.master.parser.SQLParser;
 import com.bigdata.datashops.server.master.selector.AssignSelector;
 import com.bigdata.datashops.server.master.selector.RandomHostSelector;
@@ -46,9 +46,6 @@ public class Dispatcher {
 
     @Autowired
     private GrpcRemotingClient grpcRemotingClient;
-
-    @Autowired
-    private BaseConfig baseConfig;
 
     public void dispatch(String instanceId) {
         LOG.info("Dispatch instance {}", instanceId);
@@ -83,7 +80,7 @@ public class Dispatcher {
         switch (selector) {
             case ASSIGN:
                 host.setIp(instance.getHost());
-                host.setPort(baseConfig.getWorkerPort());
+                host.setPort(PropertyUtils.getInt(Constants.WORKER_GRPC_SERVER_PORT));
                 host = new AssignSelector().select(Collections.singleton(host));
                 break;
             case SCORE:
