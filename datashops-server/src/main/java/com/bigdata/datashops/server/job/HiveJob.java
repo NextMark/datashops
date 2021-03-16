@@ -22,7 +22,7 @@ public class HiveJob extends AbstractJob {
 
     @Override
     public void process() throws Exception {
-        String data = instance.getData();
+        String data = jobInstance.getData();
         baseDataSource = DataSourceFactory.getDatasource(DbType.HIVE, data);
         DataSourceFactory.loadClass(baseDataSource.dbType());
         try {

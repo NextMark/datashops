@@ -17,7 +17,7 @@ public class MysqlJob extends AbstractJob {
 
     @Override
     protected void process() throws Exception {
-        String data = instance.getData();
+        String data = jobInstance.getData();
         baseDataSource = DataSourceFactory.getDatasource(DbType.MYSQL, data);
         DataSourceFactory.loadClass(baseDataSource.dbType());
 

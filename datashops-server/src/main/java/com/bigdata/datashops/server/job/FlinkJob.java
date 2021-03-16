@@ -1,10 +1,9 @@
 package com.bigdata.datashops.server.job;
 
-import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.flink.table.api.EnvironmentSettings;
-import org.apache.flink.table.api.bridge.java.StreamTableEnvironment;
-import org.apache.flink.table.api.internal.TableEnvironmentImpl;
-
+import com.bigdata.datashops.common.Constants;
+import com.bigdata.datashops.common.utils.JSONUtils;
+import com.bigdata.datashops.common.utils.PropertyUtils;
+import com.bigdata.datashops.model.pojo.job.data.FlinkData;
 import com.bigdata.datashops.server.job.excutor.FlinkCommandExecutor;
 
 public class FlinkJob extends AbstractJob {
@@ -18,15 +17,19 @@ public class FlinkJob extends AbstractJob {
 
     @Override
     protected void process() throws Exception {
-
-        StreamExecutionEnvironment.setDefaultLocalParallelism(1);
-        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        EnvironmentSettings settings = EnvironmentSettings.newInstance().useBlinkPlanner().inStreamingMode().build();
-        TableEnvironmentImpl tEnv = (TableEnvironmentImpl) StreamTableEnvironment.create(env, settings);
-
-        tEnv.sqlUpdate("sql");
-
-        tEnv.execute("name");
+        CommandResult commandResult = flinkCommandExecutor.run(buildCommand());
+        buildGrpcRequest(commandResult);
     }
 
+    private String buildCommand() {
+        FlinkData flinkData = JSONUtils.parseObject(jobInstance.getData(), FlinkData.class);
+        String flinkPath = PropertyUtils.getString(Constants.FLINK_BASE_PATH);
+        String localJar = "";
+        String command = String.format(
+                "%s/flink-%s/bin/%s run -m yarn-cluster -d -ynm %s -yq %s -yjm %s -ytm %s -yn %s -ys %s -c %s -p %s "
+                        + "-j %s %s", flinkPath, flinkData.getVersion(), flinkCommandExecutor.commandInterpreter(),
+                flinkData.getYnm(), flinkData.getYq(), flinkData.getYjm(), flinkData.getYtm(), flinkData.getYn(),
+                flinkData.getYs(), flinkData.getC(), flinkData.getP(), localJar, flinkData.getExtension());
+        return command;
+    }
 }

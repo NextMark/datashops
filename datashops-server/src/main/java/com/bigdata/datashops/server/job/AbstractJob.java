@@ -37,7 +37,7 @@ import com.google.protobuf.ByteString;
 public abstract class AbstractJob {
     protected Logger LOG;
 
-    protected JobInstance instance;
+    protected JobInstance jobInstance;
 
     protected BaseDataSource baseDataSource;
 
@@ -55,12 +55,12 @@ public abstract class AbstractJob {
     }
 
     public AbstractJob(JobContext jobContext) {
-        this.instance = jobContext.getJobInstance();
+        this.jobInstance = jobContext.getJobInstance();
         this.LOG = jobContext.getLogger();
         this.grpcRemotingClient = jobContext.getGrpcRemotingClient();
         this.zookeeperOperator = jobContext.getZookeeperOperator();
         this.baseConfig = jobContext.getBaseConfig();
-        result.setInstanceId(instance.getInstanceId());
+        result.setInstanceId(jobInstance.getInstanceId());
     }
 
     public void execute() throws Exception {
@@ -112,10 +112,10 @@ public abstract class AbstractJob {
             hosts.add(h);
         }
         Host host = new Host();
-        HostSelector selector = HostSelector.of(instance.getHostSelector());
+        HostSelector selector = HostSelector.of(jobInstance.getHostSelector());
         switch (selector) {
             case ASSIGN:
-                host.setIp(instance.getHost());
+                host.setIp(jobInstance.getHost());
                 host.setPort(baseConfig.getWorkerPort());
                 host = new AssignSelector().select(Collections.singleton(host));
                 break;

@@ -107,6 +107,8 @@ public class JobInstance extends BaseModel implements Comparable<JobInstance> {
 
     private int hostSelector;
 
+    private String extension;
+
     @Transient
     private Job job;
 

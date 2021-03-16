@@ -201,4 +201,7 @@ public class Constants {
      */
     public static final String RUNNING = "RUNNING";
 
+    public static final String FLINK_BASE_PATH = "flink.base.path";
+
+    public static final String FLINK_USER_JARS_PATH = "flink.user.jars.path";
 }

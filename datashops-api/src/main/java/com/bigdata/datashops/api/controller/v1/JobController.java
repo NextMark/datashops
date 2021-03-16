@@ -1,6 +1,6 @@
 package com.bigdata.datashops.api.controller.v1;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 
@@ -30,10 +30,12 @@ import com.bigdata.datashops.model.DtoJobGraph;
 import com.bigdata.datashops.model.dto.DtoCronExpression;
 import com.bigdata.datashops.model.dto.DtoPageQuery;
 import com.bigdata.datashops.model.enums.JobType;
+import com.bigdata.datashops.model.enums.RunState;
 import com.bigdata.datashops.model.enums.SchedulingPeriod;
 import com.bigdata.datashops.model.pojo.job.Job;
 import com.bigdata.datashops.model.pojo.job.JobDependency;
 import com.bigdata.datashops.model.pojo.job.JobGraph;
+import com.bigdata.datashops.model.pojo.job.JobInstance;
 import com.bigdata.datashops.model.pojo.job.JobRelation;
 import com.bigdata.datashops.service.utils.CronHelper;
 import com.google.common.collect.Maps;
@@ -78,18 +80,6 @@ public class JobController extends BasicController {
         }
         jobService.modifyJob(job);
         return ok(job);
-    }
-
-    @PostMapping(value = "/saveHiveSql")
-    public Result saveHiveSql(@RequestBody Map<String, String> params) {
-        String maskId = params.get("maskId");
-        Job job = jobService.getJobByMaskId(maskId);
-        if (Objects.isNull(job)) {
-            job = new Job();
-        }
-        job.setData(JSONUtils.toJsonString(JobUtils.buildJobData(0, params.get("sql"))));
-        jobService.save(job);
-        return ok();
     }
 
     @PostMapping(value = "/addNewJob")
@@ -260,5 +250,32 @@ public class JobController extends BasicController {
     public Result getJobGraph(@NotNull Integer id) {
         Map<String, Object> nodes = jobDependencyService.getJobDependencyGraph(id);
         return ok(nodes);
+    }
+
+    @RequestMapping(value = "/runJob")
+    public Result runJob(@NotNull Integer id, @NotNull String operator) {
+        JobInstance instance = jobInstanceService.createNewJobInstance(id, operator);
+        jobInstanceService.save(instance);
+        return ok();
+    }
+
+    @RequestMapping(value = "/reRunJob")
+    public Result reRunJob(@NotNull Integer id, @NotNull String operator) {
+        JobInstance instance = jobInstanceService.findById(id);
+        instance.setState(RunState.CREATED.getCode());
+        instance.setOperator(operator);
+        instance.setSubmitTime(new Date());
+        jobInstanceService.save(instance);
+        return ok();
+    }
+
+    @RequestMapping(value = "/cancelJob")
+    public Result cancelJob(@NotNull Integer id, @NotNull String operator) {
+        JobInstance instance = jobInstanceService.findById(id);
+        instance.setState(RunState.CANCEL.getCode());
+        instance.setOperator(operator);
+        instance.setSubmitTime(new Date());
+        jobInstanceService.save(instance);
+        return ok();
     }
 }
