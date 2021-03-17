@@ -7,7 +7,7 @@
     </formats>
 
     <includeBaseDirectory>true</includeBaseDirectory>
-    <baseDirectory>${project.build.finalName}-datashops-bin</baseDirectory>
+    <baseDirectory>${project.build.finalName}-bin</baseDirectory>
 
     <fileSets>
         <fileSet>

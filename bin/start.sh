@@ -1,4 +1,3 @@
 #!/bin/sh
 
-
-sh bin/datashops-daemon.sh start worker-server;
+sh bin/datashops-daemon.sh $1
