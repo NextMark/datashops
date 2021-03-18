@@ -31,7 +31,7 @@ public class UserController extends BasicController {
 
     @PostMapping("/register")
     public Object register(@RequestBody DtoRegister params) {
-        User dbUser = userService.getUser("phone=" + params.getEmail());
+        User dbUser = userService.getUser("phone=" + params.getPhone());
         if (dbUser != null) {
             return fail(ResultCode.USER_REGISTERED);
         }

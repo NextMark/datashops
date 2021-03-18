@@ -6,10 +6,7 @@ if [ $# -le 1 ]; then
   exit 1
 fi
 
-startStop=$1
-shift
 command=$1
-shift
 
 BIN_DIR=$(dirname $0)
 BIN_DIR=$(
@@ -18,7 +15,7 @@ BIN_DIR=$(
 )
 DATASHOPS_HOME=$BIN_DIR/..
 
-source /etc/profile
+source ~/.bash_profile
 
 export JAVA_HOME=$JAVA_HOME
 export HOSTNAME=$(hostname)
@@ -56,7 +53,7 @@ elif [ "$command" = "api" ]; then
   HEAP_MAX_SIZE=512m
   HEAP_NEW_GENERATION__SIZE=128m
   LOG_FILE="-Dlogging.config=classpath:logback.xml"
-  CLASS=com.bigdata.datashops.server.api.ApiApplication
+  CLASS=com.bigdata.datashops.api.ApiApplication
 fi
 
 export DATASHOPS_OPTS="-server -Xms$HEAP_INITIAL_SIZE -Xmx$HEAP_MAX_SIZE -Xmn$HEAP_NEW_GENERATION__SIZE -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m  -Xss512k -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:+CMSParallelRemarkEnabled -XX:LargePageSizeInBytes=128m -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=70 -XX:+PrintGCDetails -Xloggc:gc.log -XX:+HeapDumpOnOutOfMemoryError  -XX:HeapDumpPath=dump.hprof"
