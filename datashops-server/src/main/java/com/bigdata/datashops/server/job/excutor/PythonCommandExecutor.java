@@ -1,5 +1,7 @@
 package com.bigdata.datashops.server.job.excutor;
 
+import java.util.List;
+
 import com.bigdata.datashops.server.job.JobContext;
 
 public class PythonCommandExecutor extends CommandExecutor {
@@ -17,5 +19,10 @@ public class PythonCommandExecutor extends CommandExecutor {
     @Override
     public String commandInterpreter() {
         return "python";
+    }
+
+    @Override
+    public List<String> commandArgs() {
+        return null;
     }
 }

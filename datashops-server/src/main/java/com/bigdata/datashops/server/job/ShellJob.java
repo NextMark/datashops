@@ -1,7 +1,10 @@
 package com.bigdata.datashops.server.job;
 
 import java.io.IOException;
+import java.util.Objects;
 
+import com.bigdata.datashops.common.utils.JSONUtils;
+import com.bigdata.datashops.model.pojo.job.data.ShellData;
 import com.bigdata.datashops.server.job.excutor.ShellCommandExecutor;
 
 public class ShellJob extends AbstractJob {
@@ -29,6 +32,7 @@ public class ShellJob extends AbstractJob {
     }
 
     private String buildCommand() {
-        return "#!/bin/bash\ntouch /Users/qinshiwei/1.txt";
+        ShellData shellData = JSONUtils.parseObject(jobInstance.getData(), ShellData.class);
+        return Objects.requireNonNull(shellData).getValue();
     }
 }

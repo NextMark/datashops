@@ -31,6 +31,8 @@ public abstract class CommandExecutor {
 
     public abstract String commandInterpreter();
 
+    public abstract List<String> commandArgs();
+
     public CommandResult run(String command) throws IOException, InterruptedException {
         CommandResult result = new CommandResult();
         String commandFilePath = buildCommandFilePath();
@@ -65,10 +67,13 @@ public abstract class CommandExecutor {
         processBuilder.directory(new File(jobContext.getExecutePath()));
         processBuilder.redirectErrorStream(true);
 
-        //        command.add("sudo");
-        //        command.add("-u");
-        //        command.add(jobContext.getExecuteUser());
+        if (jobContext.getExecuteUser() != null) {
+            command.add("sudo");
+            command.add("-u");
+            command.add(jobContext.getExecuteUser());
+        }
         command.add(commandInterpreter());
+        command.addAll(commandArgs());
         command.add(commandFile);
 
         processBuilder.command(command);
@@ -78,7 +83,6 @@ public abstract class CommandExecutor {
 
     private void commandToFile(String command, String file) throws IOException {
         FileUtils.writeStringToFile(new File(file), command, StandardCharsets.UTF_8);
-
     }
 
     private int getProcessId(Process process) {

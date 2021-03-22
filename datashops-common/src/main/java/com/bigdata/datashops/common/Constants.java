@@ -221,4 +221,18 @@ public class Constants {
     public static final String MASTER_RPC_PROCESS_THREADS = "master.rpc.process.threads";
 
     public static final String MASTER_FINDER_INTERVAL = "master.finder.interval";
+
+    /**
+     * aliyun
+     */
+    public static final String ALIYUN_OSS_REGION = "aliyun.oss.region";
+
+    public static final String ALIYUN_OSS_ENDPOINT = "aliyun.oss.endpoint";
+
+    public static final String ALIYUN_OSS_KEY_ID = "aliyun.oss.key.id";
+
+    public static final String ALIYUN_OSS_KEY_SECRET = "aliyun.oss.key.secret";
+
+    public static final String ALIYUN_OSS_BUCKET_NAME = "aliyun.oss.bucket.name";
+
 }

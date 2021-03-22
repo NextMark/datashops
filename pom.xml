@@ -52,6 +52,7 @@
         <hadoop.version>3.0.0</hadoop.version>
         <scala.binary.version>2.11</scala.binary.version>
         <flink.version>1.12.0</flink.version>
+        <aliyun.oss.version>3.11.3</aliyun.oss.version>
 
 
         <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
