@@ -98,6 +98,8 @@ public class HadoopUtils implements Closeable {
     private void init() {
         try {
             configuration = new Configuration();
+            //            configuration.addResource("classpath:/core-site.xml");
+            //            configuration.addResource("classpath:/hdfs-site.xml");
 
             String resourceStorageType = PropertyUtils.getUpperCaseString(Constants.RESOURCE_STORAGE_TYPE);
             ResUploadType resUploadType = ResUploadType.valueOf(resourceStorageType);
@@ -106,7 +108,7 @@ public class HadoopUtils implements Closeable {
                 if (PropertyUtils.getBoolean(Constants.HADOOP_SECURITY_AUTHENTICATION_STARTUP_STATE, false)) {
                     System.setProperty(Constants.JAVA_SECURITY_KRB5_CONF,
                             PropertyUtils.getString(Constants.JAVA_SECURITY_KRB5_CONF_PATH));
-                    configuration.set(Constants.HADOOP_SECURITY_AUTHENTICATION, "kerberos");
+                    configuration.set(Constants.HADOOP_SECURITY_AUTHENTICATION, "simple");
                     hdfsUser = "";
                     UserGroupInformation.setConfiguration(configuration);
                     UserGroupInformation

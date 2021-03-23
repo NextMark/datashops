@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 
 import org.apache.commons.io.IOUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 public class FileUtils {
     public static final String DATA_BASEDIR = PropertyUtils.getString(DATA_BASEDIR_PATH, "/tmp/datashops");
@@ -71,5 +72,23 @@ public class FileUtils {
 
     public static void deleteFile(String filename) throws IOException {
         org.apache.commons.io.FileUtils.forceDelete(new File(filename));
+    }
+
+    public static String writeToLocal(MultipartFile file) {
+        if (file.isEmpty()) {
+            return null;
+        }
+        String fileName = file.getOriginalFilename();
+        File dest = new File(new File(DATA_BASEDIR).getAbsolutePath() + "/" + fileName);
+        if (!dest.getParentFile().exists()) {
+            dest.getParentFile().mkdirs();
+        }
+        try {
+            file.transferTo(dest); // 保存文件
+            return dest.getAbsolutePath();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

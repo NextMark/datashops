@@ -95,9 +95,6 @@ public class BasicController {
     protected SysOperationService sysOperationService;
 
     @Autowired
-    protected AliyunService aliyunService;
-
-    @Autowired
     protected ResourceInfoService resourceInfoService;
 
     private static final Map<String, Boolean> HAS_FACADE_METHOD = new ConcurrentHashMap<>();

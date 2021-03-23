@@ -2,11 +2,11 @@ package com.bigdata.datashops.server.job;
 
 import com.bigdata.datashops.server.job.excutor.FlinkCommandExecutor;
 
-public class FlinkJob extends AbstractJob {
+public class FlinkPerJob extends AbstractJob {
 
     private FlinkCommandExecutor flinkCommandExecutor;
 
-    public FlinkJob(JobContext jobContext) {
+    public FlinkPerJob(JobContext jobContext) {
         super(jobContext);
         flinkCommandExecutor = new FlinkCommandExecutor(jobContext);
     }
@@ -15,5 +15,10 @@ public class FlinkJob extends AbstractJob {
     protected void process() throws Exception {
         CommandResult commandResult = flinkCommandExecutor.run();
         buildGrpcRequest(commandResult);
+    }
+
+    @Override
+    protected void after() {
+
     }
 }

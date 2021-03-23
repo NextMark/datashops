@@ -39,7 +39,7 @@ public class JobManager {
             case SPARK:
                 return new SparkJob(jobContext);
             case FLINK:
-                return new FlinkJob(jobContext);
+                return new FlinkAppModeJob(jobContext);
             case CLICK_HOUSE:
                 return new ClickHouseJob(jobContext);
             default:

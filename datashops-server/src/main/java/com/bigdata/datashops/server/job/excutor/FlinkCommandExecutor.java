@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 import com.bigdata.datashops.common.Constants;
-import com.bigdata.datashops.common.utils.AliyunUtils;
+import com.bigdata.datashops.common.utils.HadoopUtils;
 import com.bigdata.datashops.common.utils.JSONUtils;
 import com.bigdata.datashops.common.utils.PropertyUtils;
 import com.bigdata.datashops.model.pojo.job.data.FlinkData;
@@ -37,6 +37,7 @@ public class FlinkCommandExecutor extends CommandExecutor {
 
     @Override
     public void buildCommandFile() throws IOException {
-        AliyunUtils.download(flinkData.getUrl().replace(AliyunUtils.getLocationPrefix(), ""), buildCommandFilePath());
+        HadoopUtils.getInstance().copyHdfsToLocal(flinkData.getUrl(), buildCommandFilePath(), false, false);
+        //AliyunUtils.download(flinkData.getUrl().replace(AliyunUtils.getLocationPrefix(), ""), buildCommandFilePath());
     }
 }

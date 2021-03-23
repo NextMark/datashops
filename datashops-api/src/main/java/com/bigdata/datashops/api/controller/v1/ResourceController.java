@@ -1,6 +1,6 @@
 package com.bigdata.datashops.api.controller.v1;
 
-import java.io.InputStream;
+import java.io.IOException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.bigdata.datashops.api.controller.BasicController;
-import com.bigdata.datashops.common.utils.AliyunUtils;
+import com.bigdata.datashops.common.Constants;
+import com.bigdata.datashops.common.utils.FileUtils;
+import com.bigdata.datashops.common.utils.HadoopUtils;
+import com.bigdata.datashops.common.utils.PropertyUtils;
 import com.bigdata.datashops.model.pojo.hadoop.ResourceInfo;
 
 @RestController
@@ -20,23 +23,29 @@ public class ResourceController extends BasicController {
     private static final Logger LOG = LoggerFactory.getLogger(ResourceController.class);
 
     @RequestMapping(value = "/uploadJar", method = RequestMethod.POST)
-    public Object create(@RequestParam("jobId") int jobId, @RequestParam("file") MultipartFile file) {
+    public Object uploadJar(@RequestParam("jobId") int jobId, @RequestParam("file") MultipartFile file)
+            throws IOException {
         String path = null;
-        if (!file.isEmpty()) {
-            try {
-                InputStream is = file.getInputStream();
-                path = AliyunUtils.putByteFile(is, String.format("ds/%s/%s", jobId, file.getOriginalFilename()));
-            } catch (Exception e) {
-                LOG.error("Fail read upload file", e);
-            }
-        } else {
-            LOG.warn("No file in post");
-        }
+        //        if (!file.isEmpty()) {
+        //            try {
+        //                InputStream is = file.getInputStream();
+        //                path = AliyunUtils.putByteFile(is, String.format("ds/%s/%s", jobId, file
+        //                .getOriginalFilename()));
+        //            } catch (Exception e) {
+        //                LOG.error("Fail read upload file", e);
+        //            }
+        //        } else {
+        //            LOG.warn("No file in post");
+        //        }
+        String localPath = FileUtils.writeToLocal(file);
+        String hdfsPath = String.format("/%s/%s/%s", PropertyUtils.getString(Constants.FLINK_USER_JAR_PATH), jobId,
+                file.getOriginalFilename());
+        HadoopUtils.getInstance().copyLocalToHdfs(localPath, hdfsPath, false, false);
         ResourceInfo resourceInfo = new ResourceInfo();
         resourceInfo.setJobId(jobId);
         resourceInfo.setSize(file.getSize());
         resourceInfo.setName(file.getOriginalFilename());
-        resourceInfo.setUrl(path);
+        resourceInfo.setUrl("hdfs:/" + hdfsPath);
         resourceInfoService.save(resourceInfo);
         return ok(resourceInfo);
     }

@@ -15,4 +15,9 @@ public class SparkJob extends AbstractJob {
         CommandResult commandResult = sparkCommandExecutor.run();
         buildGrpcRequest(commandResult);
     }
+
+    @Override
+    protected void after() {
+
+    }
 }

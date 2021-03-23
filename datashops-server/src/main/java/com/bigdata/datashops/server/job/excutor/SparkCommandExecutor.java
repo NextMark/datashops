@@ -1,9 +1,10 @@
 package com.bigdata.datashops.server.job.excutor;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
-import com.bigdata.datashops.common.utils.AliyunUtils;
+import com.bigdata.datashops.common.utils.HadoopUtils;
 import com.bigdata.datashops.common.utils.JSONUtils;
 import com.bigdata.datashops.model.pojo.job.data.SparkData;
 import com.bigdata.datashops.server.job.JobContext;
@@ -33,7 +34,9 @@ public class SparkCommandExecutor extends CommandExecutor {
     }
 
     @Override
-    public void buildCommandFile() {
-        AliyunUtils.download(sparkData.getUrl().replace(AliyunUtils.getLocationPrefix(), ""), buildCommandFilePath());
+    public void buildCommandFile() throws IOException {
+        HadoopUtils.getInstance().copyHdfsToLocal(sparkData.getUrl(), buildCommandFilePath(), false, false);
+
+        //AliyunUtils.download(sparkData.getUrl().replace(AliyunUtils.getLocationPrefix(), ""), buildCommandFilePath());
     }
 }

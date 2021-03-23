@@ -20,6 +20,7 @@
                 <include>**/*.properties</include>
                 <include>**/*.xml</include>
                 <include>**/*.json</include>
+                <include>**/*.yaml</include>
             </includes>
             <outputDirectory>conf</outputDirectory>
         </fileSet>

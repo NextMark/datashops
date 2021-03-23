@@ -206,7 +206,11 @@ public class Constants {
      */
     public static final String FLINK_BASE_PATH = "flink.base.path";
 
-    public static final String FLINK_USER_JARS_PATH = "flink.user.jars.path";
+    public static final String FLINK_LIBS_PATH = "flink.libs.path";
+
+    public static final String FLINK_USER_JAR_PATH = "flink.user.jar.path";
+
+    public static final String FLINK_DIST_JAR_PATH = "flink.dist.jar.path";
 
     public static final String MASTER_GRPC_SERVER_PORT = "master.grpc.server.port";
 
