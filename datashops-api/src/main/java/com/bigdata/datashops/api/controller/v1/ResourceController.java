@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.bigdata.datashops.api.controller.BasicController;
+import com.bigdata.datashops.common.utils.AliyunUtils;
 import com.bigdata.datashops.model.pojo.hadoop.ResourceInfo;
 
 @RestController
@@ -24,7 +25,7 @@ public class ResourceController extends BasicController {
         if (!file.isEmpty()) {
             try {
                 InputStream is = file.getInputStream();
-                path = aliyunService.putByteFile(is, String.format("ds/%s/%s", jobId, file.getOriginalFilename()));
+                path = AliyunUtils.putByteFile(is, String.format("ds/%s/%s", jobId, file.getOriginalFilename()));
             } catch (Exception e) {
                 LOG.error("Fail read upload file", e);
             }

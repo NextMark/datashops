@@ -33,10 +33,13 @@ public abstract class CommandExecutor {
 
     public abstract List<String> commandArgs();
 
-    public CommandResult run(String command) throws IOException, InterruptedException {
+    public abstract void buildCommandFile() throws IOException;
+
+    public CommandResult run() throws IOException, InterruptedException {
         CommandResult result = new CommandResult();
         String commandFilePath = buildCommandFilePath();
-        commandToFile(command, commandFilePath);
+        buildCommandFile();
+        //commandToFile(command, commandFilePath);
         buildProcess(commandFilePath);
         Integer processId = getProcessId(process);
 

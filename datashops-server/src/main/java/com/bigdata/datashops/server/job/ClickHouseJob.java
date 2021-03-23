@@ -34,6 +34,5 @@ public class ClickHouseJob extends AbstractJob {
     @Override
     public void after() {
         LOG.info("Job end");
-        grpcRemotingClient.send(request, selectHost());
     }
 }

@@ -24,6 +24,10 @@ public class SparkData {
 
     private String extension;
 
+    private String fileName;
+
+    private String url;
+
     public List<String> buildArgs() {
         List<String> args = Lists.newArrayList();
         args.add("--master");
