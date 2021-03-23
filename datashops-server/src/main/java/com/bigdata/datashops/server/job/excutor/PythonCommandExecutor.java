@@ -14,7 +14,10 @@ public class PythonCommandExecutor extends CommandExecutor {
 
     public PythonCommandExecutor(JobContext jobContext) {
         super(jobContext);
+        pythonData = JSONUtils.parseObject(jobContext.getJobInstance().getData(), PythonData.class);
     }
+
+    private PythonData pythonData;
 
     @Override
     public String buildCommandFilePath() {
@@ -24,7 +27,7 @@ public class PythonCommandExecutor extends CommandExecutor {
 
     @Override
     public String commandInterpreter() {
-        return "python";
+        return pythonData.getVersion();
     }
 
     @Override
@@ -34,7 +37,6 @@ public class PythonCommandExecutor extends CommandExecutor {
 
     @Override
     public void buildCommandFile() throws IOException {
-        PythonData data = JSONUtils.parseObject(jobContext.getJobInstance().getData(), PythonData.class);
-        FileUtils.writeStringToFile(new File(buildCommandFilePath()), data.getValue(), StandardCharsets.UTF_8);
+        FileUtils.writeStringToFile(new File(buildCommandFilePath()), pythonData.getValue(), StandardCharsets.UTF_8);
     }
 }
