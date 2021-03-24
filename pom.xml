@@ -53,6 +53,7 @@
         <scala.binary.version>2.11</scala.binary.version>
         <flink.version>1.12.0</flink.version>
         <aliyun.oss.version>3.11.3</aliyun.oss.version>
+        <sqoop.version>1.4.7-cdh6.3.2</sqoop.version>
 
 
         <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
@@ -366,6 +367,11 @@
                 <artifactId>flink-table-api-java-bridge_${scala.binary.version}</artifactId>
                 <version>${flink.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.sqoop</groupId>
+                <artifactId>sqoop</artifactId>
+                <version>${sqoop.version}</version>
+            </dependency>
 
         </dependencies>
     </dependencyManagement>
@@ -486,6 +492,10 @@
             <id>nexus-aliyun</id>
             <name>Nexus aliyun</name>
             <url>http://maven.aliyun.com/nexus/content/groups/public</url>
+        </repository>
+        <repository>
+            <id>cloudera</id>
+            <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
         </repository>
     </repositories>
 </project>

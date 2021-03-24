@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # if no args specified, show usage
-if [ $# -le 1 ]; then
+if [ $# -le 0 ]; then
   echo $usage
   exit 1
 fi

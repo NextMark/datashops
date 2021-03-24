@@ -42,6 +42,10 @@ public class JobManager {
                 return new FlinkAppModeJob(jobContext);
             case CLICK_HOUSE:
                 return new ClickHouseJob(jobContext);
+            case HIVE_2_MYSQL:
+                return new SqoopJob(jobContext);
+            case MYSQL_2_HIVE:
+                return new SqoopJob(jobContext);
             default:
                 throw new IllegalArgumentException();
         }

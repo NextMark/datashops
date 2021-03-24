@@ -226,6 +226,8 @@ public class Constants {
 
     public static final String MASTER_FINDER_INTERVAL = "master.finder.interval";
 
+    public static final String HDFS_DEFAULT_NAME = "fs.default.name";
+
     /**
      * aliyun
      */
