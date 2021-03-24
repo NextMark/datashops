@@ -13,47 +13,55 @@ import com.bigdata.datashops.model.pojo.job.data.SqoopData;
 public class SqoopJob extends AbstractJob {
     public SqoopJob(JobContext jobContext) {
         super(jobContext);
+        sqoopData = JSONUtils.parseObject(jobInstance.getData(), SqoopData.class);
     }
+
+    private SqoopData sqoopData;
 
     @Override
     protected void process() throws Exception {
-        String data = jobInstance.getData();
-        SqoopData sqoopData = JSONUtils.parseObject(data, SqoopData.class);
-
-        String[] args =
-                new String[] {"--connect", sqoopData.getMysqlJdbc(), "-username", sqoopData.getMysqlUser(), "-password",
-                        sqoopData.getMysqlPass(), "--table", sqoopData.getMysqlTable(), "--export-dir",
-                        sqoopData.getExportDir(), "-m", sqoopData.getMapNum(), "--input-lines-terminated-by", "'\\n'",
-                        "--input-fields-terminated-by", "'\\0001'"};
-        String[] expandArgs = OptionsFileUtil.expandArguments(args);
-        SqoopTool tool = SqoopTool.getTool("export");
-        Configuration conf = new Configuration();
-        conf.set("fs.default.name", PropertyUtils.getString(Constants.HDFS_DEFAULT_NAME));
-        Configuration loadPlugins = SqoopTool.loadPlugins(conf);
-        Sqoop sqoop = new Sqoop(tool, loadPlugins);
-        Sqoop.runSqoop(sqoop, expandArgs);
-
+        if (sqoopData.getType() == 1) {
+            hiveToMysql();
+        } else {
+            mysqlToHive();
+        }
         buildGrpcRequest(Constants.RPC_JOB_SUCCESS);
-
     }
 
-    private void mysqlToHive(String path, String username, String password, String table) {
+    private void hiveToMysql() {
         try {
-            String[] args =
-                    new String[] {"--connect", path, "-username", username, "-password", password, "--table", table,
-                            "-m", "1", "--target-dir", "java_import_user"};
+            String[] args = new String[] {"--connect", sqoopData.getMysqlJdbc(), "-username", sqoopData.getMysqlUser(),
+                    "-password", sqoopData.getMysqlPass(), "--table", sqoopData.getMysqlTable(), "--export-dir",
+                    sqoopData.getExportDir(), "-m", sqoopData.getMapNum(), "--input-lines-terminated-by",
+                    sqoopData.getLinesTerminated(), "--input-fields-terminated-by", sqoopData.getFieldsTerminated()};
+            String[] expandArgs = OptionsFileUtil.expandArguments(args);
+            SqoopTool tool = SqoopTool.getTool("export");
+            Configuration conf = new Configuration();
+            conf.set("fs.default.name", PropertyUtils.getString(Constants.HDFS_DEFAULT_NAME));
+            Configuration loadPlugins = SqoopTool.loadPlugins(conf);
+            Sqoop sqoop = new Sqoop(tool, loadPlugins);
+            Sqoop.runSqoop(sqoop, expandArgs);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void mysqlToHive() {
+        try {
+            String[] args = new String[] {"--connect", sqoopData.getMysqlJdbc(), "-username", sqoopData.getMysqlUser(),
+                    "-password", sqoopData.getMysqlPass(), "--table", sqoopData.getMysqlTable(),
+                    "--hive-drop-import-delims", "--hive-import", "-hive-overwrite", "--hive-database",
+                    sqoopData.getHiveDb(), "--hive-table", sqoopData.getHiveTable(), "--hive-partition-key",
+                    sqoopData.getPartitionKey(), "--hive-partition-value", sqoopData.getPartitionValue(), "-m",
+                    sqoopData.getMapNum(), "--fields-terminated-by", sqoopData.getFieldsTerminated()};
 
             String[] expandArguments = OptionsFileUtil.expandArguments(args);
-
             SqoopTool tool = SqoopTool.getTool("import");
-
             Configuration conf = new Configuration();
-            //			conf.set("fs.default.name", "hdfs://192.168.92.215:8020");// 设置HDFS服务地址
-            conf.set("fs.default.name", "hdfs://192.168.92.215:8020");// 设置HDFS服务地址
+            conf.set("fs.default.name", PropertyUtils.getString(Constants.HDFS_DEFAULT_NAME));
             Configuration loadPlugins = SqoopTool.loadPlugins(conf);
-
             Sqoop sqoop = new Sqoop(tool, loadPlugins);
-            System.out.println(Sqoop.runSqoop(sqoop, expandArguments));
+            Sqoop.runSqoop(sqoop, expandArguments);
         } catch (Exception e) {
             e.printStackTrace();
         }

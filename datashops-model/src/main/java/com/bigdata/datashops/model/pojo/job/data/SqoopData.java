@@ -26,4 +26,13 @@ public class SqoopData {
     private String mapNum;
 
     private String exportDir;
+
+    // mysql to hive
+    private String hiveDb;
+
+    private String hiveTable;
+
+    private String partitionKey;
+
+    private String partitionValue;
 }
