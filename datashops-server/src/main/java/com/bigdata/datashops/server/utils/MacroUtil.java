@@ -11,8 +11,7 @@ import java.time.temporal.TemporalAdjusters;
 
 import org.springframework.util.Assert;
 
-import com.dianzhong.hub.model.enums.BaseTimeType;
-import com.dianzhong.hub.model.enums.Macro;
+import com.bigdata.datashops.model.enums.Macro;
 
 /**
  * Created by qinshiwei on 2018/6/12.
@@ -161,14 +160,6 @@ public class MacroUtil {
     public static String getDefaultBaseTime(int shift, String btt) {
         LocalDateTime now = LocalDateTime.now();
         now = now.plusDays(shift);
-
-        if (btt.equals(BaseTimeType.DAY.toString())) {
-            return now.format(DATE_FORMAT);
-        }
-        if (btt.equals(BaseTimeType.HOUR.toString())) {
-            now = now.plusHours(shift);
-            return now.format(LDT);
-        }
         return now.format(DATE_FORMAT);
     }
 
