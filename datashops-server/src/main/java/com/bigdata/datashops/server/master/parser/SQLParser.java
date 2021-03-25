@@ -1,36 +1,32 @@
 package com.bigdata.datashops.server.master.parser;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import com.bigdata.datashops.server.utils.MacroUtil;
 
-@Service
 public class SQLParser {
 
-    private final String MacroPattern = "\\$\\{DATE([^}]*)\\}";
+    private static final String MacroPattern = "\\$\\{(YEAR|MONTH|DATE|HOUR|MINUTE|SECOND)(\\-|\\+)([^}]*)\\}";
 
-    private Pattern pattern = Pattern.compile(MacroPattern);
+    private static Pattern pattern = Pattern.compile(MacroPattern);
 
-    private final String OffsetPattern = "\\d+";
-
-    private Pattern offsetPattern = Pattern.compile(OffsetPattern);
-
-    public String parseSQL(String sql) {
+    public static String parseSQL(String sql) {
         return parseSQL(null, sql);
     }
 
-    public String parseSQL(Long baseTime, String sql) {
+    public static String parseSQL(LocalDateTime baseTime, String sql) {
         Assert.notNull(sql, "SQL is null");
-        Long now = Instant.now().getEpochSecond();
+        LocalDateTime ldt = LocalDateTime.now();
         if (baseTime != null) {
-            now = baseTime;
+            ldt = baseTime;
         }
+        Long now = ldt.toEpochSecond(ZoneOffset.of("+8"));
         if (sql.contains(MacroUtil.DATE)) {
             sql = sql.replace(MacroUtil.DATE, StringUtils.quote(MacroUtil.getDate(now)));
         }
@@ -87,24 +83,17 @@ public class SQLParser {
         }
         Matcher m = pattern.matcher(sql);
         while (m.find()) {
-            String macro = m.group();
-            if (macro.contains("-")) {
-                String[] fields = macro.split("-", 2);
-                Matcher offsetMatcher = offsetPattern.matcher(fields[1]);
-                while (offsetMatcher.find()) {
-                    int offset = Integer.parseInt(offsetMatcher.group());
-                    now -= offset * 24 * 60 * 60;
-                }
-            } else if (macro.contains("+")) {
-                String[] fields = macro.split("\\+", 2);
-                Matcher offsetMatcher = offsetPattern.matcher(fields[1]);
-                while (offsetMatcher.find()) {
-                    int offset = Integer.parseInt(offsetMatcher.group());
-                    now += offset * 24 * 60 * 60;
-                }
+            String exp = m.group();
+            String macro = m.group(1);
+            String plus = m.group(2);
+            int offset = Integer.parseInt(m.group(3));
+            if (plus.equals("-")) {
+                offset *= -1;
             }
-            sql = sql.replace(macro, StringUtils.quote(MacroUtil.getDate(now)));
-            now = baseTime == null ? Instant.now().getEpochSecond() : baseTime;
+
+            ldt = MacroUtil.parseMacro(macro, offset, ldt);
+            sql = sql.replace(exp, StringUtils.quote(MacroUtil.parseLdtToStr(macro, ldt)));
+            ldt = baseTime == null ? LocalDateTime.now() : baseTime;
         }
         return sql;
     }

@@ -42,9 +42,6 @@ public class Dispatcher {
     private ZookeeperOperator zookeeperOperator;
 
     @Autowired
-    private SQLParser sqlParser;
-
-    @Autowired
     private GrpcRemotingClient grpcRemotingClient;
 
     public void dispatch(String instanceId) {
@@ -71,7 +68,7 @@ public class Dispatcher {
 
         JobType jobType = JobType.of(instance.getType());
         if (jobType == JobType.HIVE || jobType == JobType.MYSQL || jobType == JobType.CLICK_HOUSE) {
-            instance.setData(sqlParser.parseSQL(instance.getData()));
+            instance.setData(SQLParser.parseSQL(instance.getData()));
         }
 
         // select host

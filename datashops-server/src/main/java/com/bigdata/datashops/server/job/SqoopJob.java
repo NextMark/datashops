@@ -1,5 +1,6 @@
 package com.bigdata.datashops.server.job;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.sqoop.Sqoop;
 import org.apache.sqoop.tool.SqoopTool;
@@ -19,7 +20,7 @@ public class SqoopJob extends AbstractJob {
     private SqoopData sqoopData;
 
     @Override
-    protected void process() throws Exception {
+    protected void process() {
         if (sqoopData.getType() == 1) {
             hiveToMysql();
         } else {
@@ -30,10 +31,8 @@ public class SqoopJob extends AbstractJob {
 
     private void hiveToMysql() {
         try {
-            String[] args = new String[] {"--connect", sqoopData.getMysqlJdbc(), "-username", sqoopData.getMysqlUser(),
-                    "-password", sqoopData.getMysqlPass(), "--table", sqoopData.getMysqlTable(), "--export-dir",
-                    sqoopData.getExportDir(), "-m", sqoopData.getMapNum(), "--input-lines-terminated-by",
-                    sqoopData.getLinesTerminated(), "--input-fields-terminated-by", sqoopData.getFieldsTerminated()};
+            String[] args = sqoopData.buildHive2Mysql();
+            LOG.info("Sqoop hive to mysql command, {}", StringUtils.join(" ", args));
             String[] expandArgs = OptionsFileUtil.expandArguments(args);
             SqoopTool tool = SqoopTool.getTool("export");
             Configuration conf = new Configuration();
@@ -48,13 +47,8 @@ public class SqoopJob extends AbstractJob {
 
     private void mysqlToHive() {
         try {
-            String[] args = new String[] {"--connect", sqoopData.getMysqlJdbc(), "-username", sqoopData.getMysqlUser(),
-                    "-password", sqoopData.getMysqlPass(), "--table", sqoopData.getMysqlTable(),
-                    "--hive-drop-import-delims", "--hive-import", "-hive-overwrite", "--hive-database",
-                    sqoopData.getHiveDb(), "--hive-table", sqoopData.getHiveTable(), "--hive-partition-key",
-                    sqoopData.getPartitionKey(), "--hive-partition-value", sqoopData.getPartitionValue(), "-m",
-                    sqoopData.getMapNum(), "--fields-terminated-by", sqoopData.getFieldsTerminated()};
-
+            String[] args = sqoopData.buildMysql2Hive();
+            LOG.info("Sqoop mysql to hive command, {}", StringUtils.join(" ", args));
             String[] expandArguments = OptionsFileUtil.expandArguments(args);
             SqoopTool tool = SqoopTool.getTool("import");
             Configuration conf = new Configuration();

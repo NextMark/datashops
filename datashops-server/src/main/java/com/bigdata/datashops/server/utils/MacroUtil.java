@@ -5,11 +5,18 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 
 import org.springframework.util.Assert;
 
+import com.dianzhong.hub.model.enums.BaseTimeType;
+import com.dianzhong.hub.model.enums.Macro;
+
+/**
+ * Created by qinshiwei on 2018/6/12.
+ */
 public class MacroUtil {
     public static final String MACRO_PREFIX = "$";
 
@@ -150,23 +157,73 @@ public class MacroUtil {
         LocalDate now = LocalDate.now();
         return now.format(DATE_FORMAT);
     }
-    //
-    //    public static String getDefaultBaseTime(int shift, String btt) {
-    //        LocalDateTime now = LocalDateTime.now();
-    //        now = now.plusDays(shift);
-    //
-    //        if (btt.equals(BaseTimeType.DAY.toString())) {
-    //            return now.format(DATE_FORMAT);
-    //        }
-    //        if (btt.equals(BaseTimeType.HOUR.toString())) {
-    //            now = now.plusHours(shift);
-    //            return now.format(LDT);
-    //        }
-    //        return now.format(DATE_FORMAT);
-    //    }
+
+    public static String getDefaultBaseTime(int shift, String btt) {
+        LocalDateTime now = LocalDateTime.now();
+        now = now.plusDays(shift);
+
+        if (btt.equals(BaseTimeType.DAY.toString())) {
+            return now.format(DATE_FORMAT);
+        }
+        if (btt.equals(BaseTimeType.HOUR.toString())) {
+            now = now.plusHours(shift);
+            return now.format(LDT);
+        }
+        return now.format(DATE_FORMAT);
+    }
 
     public static String getYesterdayBaseTime() {
         LocalDate yesterday = LocalDate.now().minusDays(1);
         return yesterday.format(DATE_FORMAT);
+    }
+
+    public static LocalDateTime parseMacro(String macro, int offset, LocalDateTime ldt) {
+        switch (Macro.valueOf(macro)) {
+            case YEAR:
+                ldt = ldt.plusYears(offset);
+                break;
+            case MONTH:
+                ldt = ldt.plusMonths(offset);
+                break;
+            case DATE:
+                ldt = ldt.plusDays(offset);
+                break;
+            case HOUR:
+                ldt = ldt.plusHours(offset);
+                break;
+            case MINUTE:
+                ldt = ldt.plusMinutes(offset);
+                break;
+            case SECOND:
+                ldt = ldt.plusSeconds(offset);
+                break;
+        }
+        return ldt;
+    }
+
+    public static String parseLdtToStr(String macro, LocalDateTime ldt) {
+        String value = "";
+        switch (Macro.valueOf(macro)) {
+            case YEAR:
+                value = MacroUtil.getYear(ldt.toEpochSecond(ZoneOffset.of("+8"))).toString();
+                break;
+            case MONTH:
+                value = MacroUtil.getMonth(ldt.toEpochSecond(ZoneOffset.of("+8"))).toString();
+                break;
+            case DATE:
+                value = MacroUtil.getDate(ldt.toEpochSecond(ZoneOffset.of("+8")));
+                break;
+            case HOUR:
+                value = MacroUtil.getHour(ldt.toEpochSecond(ZoneOffset.of("+8")));
+                break;
+            case MINUTE:
+                value = MacroUtil.getMinute(ldt.toEpochSecond(ZoneOffset.of("+8"))).toString();
+                break;
+            case SECOND:
+                value = MacroUtil.getSecond(ldt.toEpochSecond(ZoneOffset.of("+8"))).toString();
+                break;
+        }
+        return value;
+
     }
 }
