@@ -11,8 +11,9 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@Table(name = "t_resource_info")
-public class ResourceInfo extends BaseModel {
+@Table(name = "t_resource_file")
+public class ResourceFile extends BaseModel {
+    private Integer type;
 
     private Integer jobId;
 

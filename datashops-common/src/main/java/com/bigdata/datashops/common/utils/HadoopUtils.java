@@ -44,7 +44,7 @@ public class HadoopUtils implements Closeable {
     private static final Logger LOG = LoggerFactory.getLogger(HadoopUtils.class);
 
     private static String hdfsUser = PropertyUtils.getString(Constants.HDFS_ROOT_USER);
-    public static final String resourceUploadPath = PropertyUtils.getString(RESOURCE_UPLOAD_PATH, "/tmp/datashops");
+    public static final String resourceUploadPath = PropertyUtils.getString(RESOURCE_UPLOAD_PATH, "/tmp/ds");
     public static final String rmHaIds = PropertyUtils.getString(Constants.YARN_RESOURCEMANAGER_HA_RM_IDS);
     public static final String appAddress = PropertyUtils.getString(Constants.YARN_APPLICATION_STATUS_ADDRESS);
     public static final String jobHistoryAddress = PropertyUtils.getString(Constants.YARN_JOB_HISTORY_STATUS_ADDRESS);
@@ -98,8 +98,8 @@ public class HadoopUtils implements Closeable {
     private void init() {
         try {
             configuration = new Configuration();
-            //            configuration.addResource("classpath:/core-site.xml");
-            //            configuration.addResource("classpath:/hdfs-site.xml");
+            configuration.addResource(new Path("classpath:/core-site.xml"));
+            configuration.addResource(new Path("classpath:/hdfs-site.xml"));
 
             String resourceStorageType = PropertyUtils.getUpperCaseString(Constants.RESOURCE_STORAGE_TYPE);
             ResUploadType resUploadType = ResUploadType.valueOf(resourceStorageType);

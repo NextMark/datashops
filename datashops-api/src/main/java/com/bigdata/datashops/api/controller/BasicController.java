@@ -26,7 +26,7 @@ import com.bigdata.datashops.service.JobService;
 import com.bigdata.datashops.service.MenuService;
 import com.bigdata.datashops.service.PermissionService;
 import com.bigdata.datashops.service.ProjectService;
-import com.bigdata.datashops.service.ResourceInfoService;
+import com.bigdata.datashops.service.ResourceFileService;
 import com.bigdata.datashops.service.RolePermissionService;
 import com.bigdata.datashops.service.RoleService;
 import com.bigdata.datashops.service.SysOperationService;
@@ -95,7 +95,7 @@ public class BasicController {
     protected SysOperationService sysOperationService;
 
     @Autowired
-    protected ResourceInfoService resourceInfoService;
+    protected ResourceFileService resourceFileService;
 
     private static final Map<String, Boolean> HAS_FACADE_METHOD = new ConcurrentHashMap<>();
     private static final Map<String, Method> FACADE_METHOD_CACHE = new ConcurrentHashMap<>();
