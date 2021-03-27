@@ -24,13 +24,6 @@
             </includes>
             <outputDirectory>conf</outputDirectory>
         </fileSet>
-        <!--        <fileSet>-->
-        <!--            <directory>${basedir}/../datashops-protocol/src/main/resources</directory>-->
-        <!--            <includes>-->
-        <!--                <include>**/*.proto</include>-->
-        <!--            </includes>-->
-        <!--            <outputDirectory>conf</outputDirectory>-->
-        <!--        </fileSet>-->
         <fileSet>
             <directory>${basedir}/../datashops-api/src/main/resources</directory>
             <includes>
