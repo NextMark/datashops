@@ -377,6 +377,12 @@
                 <groupId>org.apache.sqoop</groupId>
                 <artifactId>sqoop</artifactId>
                 <version>${sqoop.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>log4j-slf4j-impl</artifactId>
+                        <groupId>org.apache.logging.log4j</groupId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
         </dependencies>
