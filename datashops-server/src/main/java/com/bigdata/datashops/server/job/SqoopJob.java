@@ -26,7 +26,7 @@ public class SqoopJob extends AbstractJob {
         } else {
             mysqlToHive();
         }
-        buildGrpcRequest(Constants.RPC_JOB_SUCCESS);
+        success();
     }
 
     private void hiveToMysql() {

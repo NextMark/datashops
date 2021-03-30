@@ -13,12 +13,11 @@ public class FlinkPerJob extends AbstractJob {
 
     @Override
     protected void process() throws Exception {
-        CommandResult commandResult = flinkCommandExecutor.run();
-        buildGrpcRequest(commandResult);
+        commandResult = flinkCommandExecutor.run();
     }
 
     @Override
     protected void after() {
-
+        success();
     }
 }

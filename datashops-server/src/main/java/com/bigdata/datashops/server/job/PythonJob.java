@@ -12,12 +12,12 @@ public class PythonJob extends AbstractJob {
 
     @Override
     protected void process() throws Exception {
-        CommandResult commandResult = pythonCommandExecutor.run();
-        buildGrpcRequest(commandResult);
+        commandResult = pythonCommandExecutor.run();
     }
 
     @Override
     protected void after() {
         LOG.info("Job end");
+        success();
     }
 }

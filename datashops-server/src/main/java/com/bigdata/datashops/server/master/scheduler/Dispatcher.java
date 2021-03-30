@@ -90,10 +90,12 @@ public class Dispatcher {
         instance.setState(RunState.RUNNING.getCode());
         instance.setStartTime(new Date());
         jobInstanceService.saveEntity(instance);
-        GrpcRequest.Request request =
-                GrpcRequest.Request.newBuilder().setHost(NetUtils.getLocalAddress()).setRequestId(RandomUtils.nextInt())
-                        .setRequestType(GrpcRequest.RequestType.JOB_EXECUTE_REQUEST)
-                        .setBody(ByteString.copyFrom(JSONUtils.toJsonString(instance).getBytes())).build();
+        GrpcRequest.Request request = GrpcRequest.Request.newBuilder().setIp(NetUtils.getLocalAddress())
+                                              .setPort(PropertyUtils.getInt(Constants.MASTER_GRPC_SERVER_PORT))
+                                              .setRequestId(RandomUtils.nextInt())
+                                              .setRequestType(GrpcRequest.RequestType.JOB_EXECUTE_REQUEST)
+                                              .setBody(ByteString.copyFrom(JSONUtils.toJsonString(instance).getBytes()))
+                                              .build();
         GrpcRequest.Response response = grpcRemotingClient.send(request, host);
     }
 

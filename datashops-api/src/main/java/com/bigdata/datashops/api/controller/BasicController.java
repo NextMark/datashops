@@ -16,6 +16,7 @@ import com.bigdata.datashops.api.response.Result;
 import com.bigdata.datashops.api.response.ResultCode;
 import com.bigdata.datashops.api.response.ResultGenerator;
 import com.bigdata.datashops.common.Constants;
+import com.bigdata.datashops.server.log.LogRequestProcessor;
 import com.bigdata.datashops.service.DataSourceService;
 import com.bigdata.datashops.service.JobDependencyService;
 import com.bigdata.datashops.service.JobGraphService;
@@ -96,6 +97,9 @@ public class BasicController {
 
     @Autowired
     protected ResourceFileService resourceFileService;
+
+    @Autowired
+    protected LogRequestProcessor logRequestProcessor;
 
     private static final Map<String, Boolean> HAS_FACADE_METHOD = new ConcurrentHashMap<>();
     private static final Map<String, Method> FACADE_METHOD_CACHE = new ConcurrentHashMap<>();

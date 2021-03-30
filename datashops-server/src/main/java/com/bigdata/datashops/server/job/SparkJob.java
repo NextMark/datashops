@@ -12,12 +12,11 @@ public class SparkJob extends AbstractJob {
 
     @Override
     protected void process() throws Exception {
-        CommandResult commandResult = sparkCommandExecutor.run();
-        buildGrpcRequest(commandResult);
+        commandResult = sparkCommandExecutor.run();
     }
 
     @Override
     protected void after() {
-
+        success();
     }
 }

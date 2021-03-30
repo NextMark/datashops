@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.dao.datasource.DataSourceFactory;
 import com.bigdata.datashops.model.enums.DbType;
 
@@ -24,9 +23,9 @@ public class ClickHouseJob extends AbstractJob {
             PreparedStatement ps = connection.prepareStatement(baseDataSource.getValue());
             ResultSet rs = ps.executeQuery();
             resultProcess(rs);
-            buildGrpcRequest(Constants.RPC_JOB_SUCCESS);
+            success();
         } catch (SQLException e) {
-            buildGrpcRequest(Constants.RPC_JOB_FAIL);
+            fail();
             e.printStackTrace();
         }
     }

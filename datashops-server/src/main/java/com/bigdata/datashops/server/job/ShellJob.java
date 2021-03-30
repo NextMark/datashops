@@ -18,12 +18,12 @@ public class ShellJob extends AbstractJob {
 
     @Override
     public void process() throws IOException, InterruptedException {
-        CommandResult commandResult = shellCommandExecutor.run();
-        buildGrpcRequest(commandResult);
+        commandResult = shellCommandExecutor.run();
     }
 
     @Override
     public void after() {
         LOG.info("Shell job execute end");
+        success();
     }
 }

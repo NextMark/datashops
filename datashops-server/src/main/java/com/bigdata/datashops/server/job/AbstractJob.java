@@ -47,6 +47,8 @@ public abstract class AbstractJob {
 
     protected GrpcRequest.Request request;
 
+    protected CommandResult commandResult;
+
     protected JobResult result = new JobResult();
 
     public AbstractJob() {
@@ -125,27 +127,23 @@ public abstract class AbstractJob {
         return host;
     }
 
-    protected void buildGrpcRequest(CommandResult commandResult) {
-        if (commandResult.getExistCode() == Constants.EXIT_SUCCESS_CODE) {
-            request = GrpcRequest.Request.newBuilder().setHost(NetUtils.getLocalAddress())
-                              .setRequestId(RandomUtils.nextInt())
-                              .setRequestType(GrpcRequest.RequestType.JOB_EXECUTE_RESPONSE)
-                              .setCode(Constants.RPC_JOB_SUCCESS)
-                              .setBody(ByteString.copyFrom(JSONUtils.toJsonString(result).getBytes())).build();
-        } else {
-            request = GrpcRequest.Request.newBuilder().setHost(NetUtils.getLocalAddress())
-                              .setRequestId(RandomUtils.nextInt())
-                              .setRequestType(GrpcRequest.RequestType.JOB_EXECUTE_RESPONSE)
-                              .setCode(Constants.RPC_JOB_FAIL)
-                              .setBody(ByteString.copyFrom(JSONUtils.toJsonString(result).getBytes())).build();
-        }
+    protected void success() {
+        request = GrpcRequest.Request.newBuilder().setIp(NetUtils.getLocalAddress())
+                          .setPort(PropertyUtils.getInt(Constants.WORKER_GRPC_SERVER_PORT))
+                          .setRequestId(RandomUtils.nextInt())
+                          .setRequestType(GrpcRequest.RequestType.JOB_EXECUTE_RESPONSE)
+                          .setCode(Constants.RPC_JOB_SUCCESS)
+                          .setBody(ByteString.copyFrom(JSONUtils.toJsonString(result).getBytes())).build();
+        grpcRemotingClient.send(request, selectHost());
     }
 
-    protected void buildGrpcRequest(int code) {
-        request =
-                GrpcRequest.Request.newBuilder().setHost(NetUtils.getLocalAddress()).setRequestId(RandomUtils.nextInt())
-                        .setRequestType(GrpcRequest.RequestType.JOB_EXECUTE_RESPONSE).setCode(code)
-                        .setBody(ByteString.copyFrom(JSONUtils.toJsonString(result).getBytes())).build();
+    protected void fail() {
+        request = GrpcRequest.Request.newBuilder().setIp(NetUtils.getLocalAddress())
+                          .setPort(PropertyUtils.getInt(Constants.WORKER_GRPC_SERVER_PORT))
+                          .setRequestId(RandomUtils.nextInt())
+                          .setRequestType(GrpcRequest.RequestType.JOB_EXECUTE_RESPONSE).setCode(Constants.RPC_JOB_FAIL)
+                          .setBody(ByteString.copyFrom(JSONUtils.toJsonString(result).getBytes())).build();
+        grpcRemotingClient.send(request, selectHost());
     }
 
     public void resultProcess(ResultSet resultSet) throws SQLException {

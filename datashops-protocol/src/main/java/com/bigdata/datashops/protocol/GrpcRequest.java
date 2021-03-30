@@ -55,6 +55,14 @@ public final class GrpcRequest {
      * <code>HEART_BEAT = 8;</code>
      */
     HEART_BEAT(8),
+    /**
+     * <code>READ_WHOLE_LOG_REQUEST = 9;</code>
+     */
+    READ_WHOLE_LOG_REQUEST(9),
+    /**
+     * <code>READ_WHOLE_LOG_RESPONSE = 10;</code>
+     */
+    READ_WHOLE_LOG_RESPONSE(10),
     UNRECOGNIZED(-1),
     ;
 
@@ -94,6 +102,14 @@ public final class GrpcRequest {
      * <code>HEART_BEAT = 8;</code>
      */
     public static final int HEART_BEAT_VALUE = 8;
+    /**
+     * <code>READ_WHOLE_LOG_REQUEST = 9;</code>
+     */
+    public static final int READ_WHOLE_LOG_REQUEST_VALUE = 9;
+    /**
+     * <code>READ_WHOLE_LOG_RESPONSE = 10;</code>
+     */
+    public static final int READ_WHOLE_LOG_RESPONSE_VALUE = 10;
 
 
     public final int getNumber() {
@@ -129,6 +145,8 @@ public final class GrpcRequest {
         case 6: return DELETE_LOG_REQUEST;
         case 7: return DELETE_LOG_RESPONSE;
         case 8: return HEART_BEAT;
+        case 9: return READ_WHOLE_LOG_REQUEST;
+        case 10: return READ_WHOLE_LOG_RESPONSE;
         default: return null;
       }
     }
@@ -196,36 +214,42 @@ public final class GrpcRequest {
     int getRequestId();
 
     /**
-     * <code>string host = 2;</code>
-     * @return The host.
+     * <code>string ip = 2;</code>
+     * @return The ip.
      */
-    java.lang.String getHost();
+    java.lang.String getIp();
     /**
-     * <code>string host = 2;</code>
-     * @return The bytes for host.
+     * <code>string ip = 2;</code>
+     * @return The bytes for ip.
      */
     com.google.protobuf.ByteString
-        getHostBytes();
+        getIpBytes();
 
     /**
-     * <code>.RequestType requestType = 3;</code>
+     * <code>int32 port = 3;</code>
+     * @return The port.
+     */
+    int getPort();
+
+    /**
+     * <code>.RequestType requestType = 4;</code>
      * @return The enum numeric value on the wire for requestType.
      */
     int getRequestTypeValue();
     /**
-     * <code>.RequestType requestType = 3;</code>
+     * <code>.RequestType requestType = 4;</code>
      * @return The requestType.
      */
     com.bigdata.datashops.protocol.GrpcRequest.RequestType getRequestType();
 
     /**
-     * <code>bytes body = 4;</code>
+     * <code>bytes body = 5;</code>
      * @return The body.
      */
     com.google.protobuf.ByteString getBody();
 
     /**
-     * <code>int32 code = 5;</code>
+     * <code>int32 code = 6;</code>
      * @return The code.
      */
     int getCode();
@@ -243,7 +267,7 @@ public final class GrpcRequest {
       super(builder);
     }
     private Request() {
-      host_ = "";
+      ip_ = "";
       requestType_ = 0;
       body_ = com.google.protobuf.ByteString.EMPTY;
     }
@@ -286,21 +310,26 @@ public final class GrpcRequest {
             case 18: {
               java.lang.String s = input.readStringRequireUtf8();
 
-              host_ = s;
+              ip_ = s;
               break;
             }
             case 24: {
+
+              port_ = input.readInt32();
+              break;
+            }
+            case 32: {
               int rawValue = input.readEnum();
 
               requestType_ = rawValue;
               break;
             }
-            case 34: {
+            case 42: {
 
               body_ = input.readBytes();
               break;
             }
-            case 40: {
+            case 48: {
 
               code_ = input.readInt32();
               break;
@@ -348,55 +377,66 @@ public final class GrpcRequest {
       return requestId_;
     }
 
-    public static final int HOST_FIELD_NUMBER = 2;
-    private volatile java.lang.Object host_;
+    public static final int IP_FIELD_NUMBER = 2;
+    private volatile java.lang.Object ip_;
     /**
-     * <code>string host = 2;</code>
-     * @return The host.
+     * <code>string ip = 2;</code>
+     * @return The ip.
      */
     @java.lang.Override
-    public java.lang.String getHost() {
-      java.lang.Object ref = host_;
+    public java.lang.String getIp() {
+      java.lang.Object ref = ip_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        host_ = s;
+        ip_ = s;
         return s;
       }
     }
     /**
-     * <code>string host = 2;</code>
-     * @return The bytes for host.
+     * <code>string ip = 2;</code>
+     * @return The bytes for ip.
      */
     @java.lang.Override
     public com.google.protobuf.ByteString
-        getHostBytes() {
-      java.lang.Object ref = host_;
+        getIpBytes() {
+      java.lang.Object ref = ip_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        host_ = b;
+        ip_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
 
-    public static final int REQUESTTYPE_FIELD_NUMBER = 3;
+    public static final int PORT_FIELD_NUMBER = 3;
+    private int port_;
+    /**
+     * <code>int32 port = 3;</code>
+     * @return The port.
+     */
+    @java.lang.Override
+    public int getPort() {
+      return port_;
+    }
+
+    public static final int REQUESTTYPE_FIELD_NUMBER = 4;
     private int requestType_;
     /**
-     * <code>.RequestType requestType = 3;</code>
+     * <code>.RequestType requestType = 4;</code>
      * @return The enum numeric value on the wire for requestType.
      */
     @java.lang.Override public int getRequestTypeValue() {
       return requestType_;
     }
     /**
-     * <code>.RequestType requestType = 3;</code>
+     * <code>.RequestType requestType = 4;</code>
      * @return The requestType.
      */
     @java.lang.Override public com.bigdata.datashops.protocol.GrpcRequest.RequestType getRequestType() {
@@ -405,10 +445,10 @@ public final class GrpcRequest {
       return result == null ? com.bigdata.datashops.protocol.GrpcRequest.RequestType.UNRECOGNIZED : result;
     }
 
-    public static final int BODY_FIELD_NUMBER = 4;
+    public static final int BODY_FIELD_NUMBER = 5;
     private com.google.protobuf.ByteString body_;
     /**
-     * <code>bytes body = 4;</code>
+     * <code>bytes body = 5;</code>
      * @return The body.
      */
     @java.lang.Override
@@ -416,10 +456,10 @@ public final class GrpcRequest {
       return body_;
     }
 
-    public static final int CODE_FIELD_NUMBER = 5;
+    public static final int CODE_FIELD_NUMBER = 6;
     private int code_;
     /**
-     * <code>int32 code = 5;</code>
+     * <code>int32 code = 6;</code>
      * @return The code.
      */
     @java.lang.Override
@@ -444,17 +484,20 @@ public final class GrpcRequest {
       if (requestId_ != 0) {
         output.writeInt32(1, requestId_);
       }
-      if (!getHostBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, host_);
+      if (!getIpBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, ip_);
+      }
+      if (port_ != 0) {
+        output.writeInt32(3, port_);
       }
       if (requestType_ != com.bigdata.datashops.protocol.GrpcRequest.RequestType.JOB_EXECUTE_REQUEST.getNumber()) {
-        output.writeEnum(3, requestType_);
+        output.writeEnum(4, requestType_);
       }
       if (!body_.isEmpty()) {
-        output.writeBytes(4, body_);
+        output.writeBytes(5, body_);
       }
       if (code_ != 0) {
-        output.writeInt32(5, code_);
+        output.writeInt32(6, code_);
       }
       unknownFields.writeTo(output);
     }
@@ -469,20 +512,24 @@ public final class GrpcRequest {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(1, requestId_);
       }
-      if (!getHostBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, host_);
+      if (!getIpBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, ip_);
+      }
+      if (port_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(3, port_);
       }
       if (requestType_ != com.bigdata.datashops.protocol.GrpcRequest.RequestType.JOB_EXECUTE_REQUEST.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(3, requestType_);
+          .computeEnumSize(4, requestType_);
       }
       if (!body_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(4, body_);
+          .computeBytesSize(5, body_);
       }
       if (code_ != 0) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(5, code_);
+          .computeInt32Size(6, code_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -501,8 +548,10 @@ public final class GrpcRequest {
 
       if (getRequestId()
           != other.getRequestId()) return false;
-      if (!getHost()
-          .equals(other.getHost())) return false;
+      if (!getIp()
+          .equals(other.getIp())) return false;
+      if (getPort()
+          != other.getPort()) return false;
       if (requestType_ != other.requestType_) return false;
       if (!getBody()
           .equals(other.getBody())) return false;
@@ -521,8 +570,10 @@ public final class GrpcRequest {
       hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + REQUESTID_FIELD_NUMBER;
       hash = (53 * hash) + getRequestId();
-      hash = (37 * hash) + HOST_FIELD_NUMBER;
-      hash = (53 * hash) + getHost().hashCode();
+      hash = (37 * hash) + IP_FIELD_NUMBER;
+      hash = (53 * hash) + getIp().hashCode();
+      hash = (37 * hash) + PORT_FIELD_NUMBER;
+      hash = (53 * hash) + getPort();
       hash = (37 * hash) + REQUESTTYPE_FIELD_NUMBER;
       hash = (53 * hash) + requestType_;
       hash = (37 * hash) + BODY_FIELD_NUMBER;
@@ -664,7 +715,9 @@ public final class GrpcRequest {
         super.clear();
         requestId_ = 0;
 
-        host_ = "";
+        ip_ = "";
+
+        port_ = 0;
 
         requestType_ = 0;
 
@@ -699,7 +752,8 @@ public final class GrpcRequest {
       public com.bigdata.datashops.protocol.GrpcRequest.Request buildPartial() {
         com.bigdata.datashops.protocol.GrpcRequest.Request result = new com.bigdata.datashops.protocol.GrpcRequest.Request(this);
         result.requestId_ = requestId_;
-        result.host_ = host_;
+        result.ip_ = ip_;
+        result.port_ = port_;
         result.requestType_ = requestType_;
         result.body_ = body_;
         result.code_ = code_;
@@ -754,9 +808,12 @@ public final class GrpcRequest {
         if (other.getRequestId() != 0) {
           setRequestId(other.getRequestId());
         }
-        if (!other.getHost().isEmpty()) {
-          host_ = other.host_;
+        if (!other.getIp().isEmpty()) {
+          ip_ = other.ip_;
           onChanged();
+        }
+        if (other.getPort() != 0) {
+          setPort(other.getPort());
         }
         if (other.requestType_ != 0) {
           setRequestTypeValue(other.getRequestTypeValue());
@@ -827,92 +884,123 @@ public final class GrpcRequest {
         return this;
       }
 
-      private java.lang.Object host_ = "";
+      private java.lang.Object ip_ = "";
       /**
-       * <code>string host = 2;</code>
-       * @return The host.
+       * <code>string ip = 2;</code>
+       * @return The ip.
        */
-      public java.lang.String getHost() {
-        java.lang.Object ref = host_;
+      public java.lang.String getIp() {
+        java.lang.Object ref = ip_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
-          host_ = s;
+          ip_ = s;
           return s;
         } else {
           return (java.lang.String) ref;
         }
       }
       /**
-       * <code>string host = 2;</code>
-       * @return The bytes for host.
+       * <code>string ip = 2;</code>
+       * @return The bytes for ip.
        */
       public com.google.protobuf.ByteString
-          getHostBytes() {
-        java.lang.Object ref = host_;
+          getIpBytes() {
+        java.lang.Object ref = ip_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          host_ = b;
+          ip_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
       /**
-       * <code>string host = 2;</code>
-       * @param value The host to set.
+       * <code>string ip = 2;</code>
+       * @param value The ip to set.
        * @return This builder for chaining.
        */
-      public Builder setHost(
+      public Builder setIp(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   
-        host_ = value;
+        ip_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>string host = 2;</code>
+       * <code>string ip = 2;</code>
        * @return This builder for chaining.
        */
-      public Builder clearHost() {
+      public Builder clearIp() {
         
-        host_ = getDefaultInstance().getHost();
+        ip_ = getDefaultInstance().getIp();
         onChanged();
         return this;
       }
       /**
-       * <code>string host = 2;</code>
-       * @param value The bytes for host to set.
+       * <code>string ip = 2;</code>
+       * @param value The bytes for ip to set.
        * @return This builder for chaining.
        */
-      public Builder setHostBytes(
+      public Builder setIpBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
         
-        host_ = value;
+        ip_ = value;
+        onChanged();
+        return this;
+      }
+
+      private int port_ ;
+      /**
+       * <code>int32 port = 3;</code>
+       * @return The port.
+       */
+      @java.lang.Override
+      public int getPort() {
+        return port_;
+      }
+      /**
+       * <code>int32 port = 3;</code>
+       * @param value The port to set.
+       * @return This builder for chaining.
+       */
+      public Builder setPort(int value) {
+        
+        port_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int32 port = 3;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearPort() {
+        
+        port_ = 0;
         onChanged();
         return this;
       }
 
       private int requestType_ = 0;
       /**
-       * <code>.RequestType requestType = 3;</code>
+       * <code>.RequestType requestType = 4;</code>
        * @return The enum numeric value on the wire for requestType.
        */
       @java.lang.Override public int getRequestTypeValue() {
         return requestType_;
       }
       /**
-       * <code>.RequestType requestType = 3;</code>
+       * <code>.RequestType requestType = 4;</code>
        * @param value The enum numeric value on the wire for requestType to set.
        * @return This builder for chaining.
        */
@@ -923,7 +1011,7 @@ public final class GrpcRequest {
         return this;
       }
       /**
-       * <code>.RequestType requestType = 3;</code>
+       * <code>.RequestType requestType = 4;</code>
        * @return The requestType.
        */
       @java.lang.Override
@@ -933,7 +1021,7 @@ public final class GrpcRequest {
         return result == null ? com.bigdata.datashops.protocol.GrpcRequest.RequestType.UNRECOGNIZED : result;
       }
       /**
-       * <code>.RequestType requestType = 3;</code>
+       * <code>.RequestType requestType = 4;</code>
        * @param value The requestType to set.
        * @return This builder for chaining.
        */
@@ -947,7 +1035,7 @@ public final class GrpcRequest {
         return this;
       }
       /**
-       * <code>.RequestType requestType = 3;</code>
+       * <code>.RequestType requestType = 4;</code>
        * @return This builder for chaining.
        */
       public Builder clearRequestType() {
@@ -959,7 +1047,7 @@ public final class GrpcRequest {
 
       private com.google.protobuf.ByteString body_ = com.google.protobuf.ByteString.EMPTY;
       /**
-       * <code>bytes body = 4;</code>
+       * <code>bytes body = 5;</code>
        * @return The body.
        */
       @java.lang.Override
@@ -967,7 +1055,7 @@ public final class GrpcRequest {
         return body_;
       }
       /**
-       * <code>bytes body = 4;</code>
+       * <code>bytes body = 5;</code>
        * @param value The body to set.
        * @return This builder for chaining.
        */
@@ -981,7 +1069,7 @@ public final class GrpcRequest {
         return this;
       }
       /**
-       * <code>bytes body = 4;</code>
+       * <code>bytes body = 5;</code>
        * @return This builder for chaining.
        */
       public Builder clearBody() {
@@ -993,7 +1081,7 @@ public final class GrpcRequest {
 
       private int code_ ;
       /**
-       * <code>int32 code = 5;</code>
+       * <code>int32 code = 6;</code>
        * @return The code.
        */
       @java.lang.Override
@@ -1001,7 +1089,7 @@ public final class GrpcRequest {
         return code_;
       }
       /**
-       * <code>int32 code = 5;</code>
+       * <code>int32 code = 6;</code>
        * @param value The code to set.
        * @return This builder for chaining.
        */
@@ -1012,7 +1100,7 @@ public final class GrpcRequest {
         return this;
       }
       /**
-       * <code>int32 code = 5;</code>
+       * <code>int32 code = 6;</code>
        * @return This builder for chaining.
        */
       public Builder clearCode() {
@@ -1085,51 +1173,45 @@ public final class GrpcRequest {
     int getRequestId();
 
     /**
-     * <code>string host = 2;</code>
-     * @return The host.
+     * <code>string ip = 2;</code>
+     * @return The ip.
      */
-    java.lang.String getHost();
+    java.lang.String getIp();
     /**
-     * <code>string host = 2;</code>
-     * @return The bytes for host.
+     * <code>string ip = 2;</code>
+     * @return The bytes for ip.
      */
     com.google.protobuf.ByteString
-        getHostBytes();
+        getIpBytes();
 
     /**
-     * <code>.RequestType requestType = 3;</code>
+     * <code>int32 port = 3;</code>
+     * @return The port.
+     */
+    int getPort();
+
+    /**
+     * <code>.RequestType requestType = 4;</code>
      * @return The enum numeric value on the wire for requestType.
      */
     int getRequestTypeValue();
     /**
-     * <code>.RequestType requestType = 3;</code>
+     * <code>.RequestType requestType = 4;</code>
      * @return The requestType.
      */
     com.bigdata.datashops.protocol.GrpcRequest.RequestType getRequestType();
 
     /**
-     * <code>bytes body = 4;</code>
+     * <code>bytes body = 5;</code>
      * @return The body.
      */
     com.google.protobuf.ByteString getBody();
 
     /**
-     * <code>int32 status = 5;</code>
-     * @return The status.
+     * <code>int32 code = 6;</code>
+     * @return The code.
      */
-    int getStatus();
-
-    /**
-     * <code>string errorMsg = 6;</code>
-     * @return The errorMsg.
-     */
-    java.lang.String getErrorMsg();
-    /**
-     * <code>string errorMsg = 6;</code>
-     * @return The bytes for errorMsg.
-     */
-    com.google.protobuf.ByteString
-        getErrorMsgBytes();
+    int getCode();
   }
   /**
    * Protobuf type {@code Response}
@@ -1144,10 +1226,9 @@ public final class GrpcRequest {
       super(builder);
     }
     private Response() {
-      host_ = "";
+      ip_ = "";
       requestType_ = 0;
       body_ = com.google.protobuf.ByteString.EMPTY;
-      errorMsg_ = "";
     }
 
     @java.lang.Override
@@ -1188,29 +1269,28 @@ public final class GrpcRequest {
             case 18: {
               java.lang.String s = input.readStringRequireUtf8();
 
-              host_ = s;
+              ip_ = s;
               break;
             }
             case 24: {
+
+              port_ = input.readInt32();
+              break;
+            }
+            case 32: {
               int rawValue = input.readEnum();
 
               requestType_ = rawValue;
               break;
             }
-            case 34: {
+            case 42: {
 
               body_ = input.readBytes();
               break;
             }
-            case 40: {
+            case 48: {
 
-              status_ = input.readInt32();
-              break;
-            }
-            case 50: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              errorMsg_ = s;
+              code_ = input.readInt32();
               break;
             }
             default: {
@@ -1256,55 +1336,66 @@ public final class GrpcRequest {
       return requestId_;
     }
 
-    public static final int HOST_FIELD_NUMBER = 2;
-    private volatile java.lang.Object host_;
+    public static final int IP_FIELD_NUMBER = 2;
+    private volatile java.lang.Object ip_;
     /**
-     * <code>string host = 2;</code>
-     * @return The host.
+     * <code>string ip = 2;</code>
+     * @return The ip.
      */
     @java.lang.Override
-    public java.lang.String getHost() {
-      java.lang.Object ref = host_;
+    public java.lang.String getIp() {
+      java.lang.Object ref = ip_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        host_ = s;
+        ip_ = s;
         return s;
       }
     }
     /**
-     * <code>string host = 2;</code>
-     * @return The bytes for host.
+     * <code>string ip = 2;</code>
+     * @return The bytes for ip.
      */
     @java.lang.Override
     public com.google.protobuf.ByteString
-        getHostBytes() {
-      java.lang.Object ref = host_;
+        getIpBytes() {
+      java.lang.Object ref = ip_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        host_ = b;
+        ip_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
 
-    public static final int REQUESTTYPE_FIELD_NUMBER = 3;
+    public static final int PORT_FIELD_NUMBER = 3;
+    private int port_;
+    /**
+     * <code>int32 port = 3;</code>
+     * @return The port.
+     */
+    @java.lang.Override
+    public int getPort() {
+      return port_;
+    }
+
+    public static final int REQUESTTYPE_FIELD_NUMBER = 4;
     private int requestType_;
     /**
-     * <code>.RequestType requestType = 3;</code>
+     * <code>.RequestType requestType = 4;</code>
      * @return The enum numeric value on the wire for requestType.
      */
     @java.lang.Override public int getRequestTypeValue() {
       return requestType_;
     }
     /**
-     * <code>.RequestType requestType = 3;</code>
+     * <code>.RequestType requestType = 4;</code>
      * @return The requestType.
      */
     @java.lang.Override public com.bigdata.datashops.protocol.GrpcRequest.RequestType getRequestType() {
@@ -1313,10 +1404,10 @@ public final class GrpcRequest {
       return result == null ? com.bigdata.datashops.protocol.GrpcRequest.RequestType.UNRECOGNIZED : result;
     }
 
-    public static final int BODY_FIELD_NUMBER = 4;
+    public static final int BODY_FIELD_NUMBER = 5;
     private com.google.protobuf.ByteString body_;
     /**
-     * <code>bytes body = 4;</code>
+     * <code>bytes body = 5;</code>
      * @return The body.
      */
     @java.lang.Override
@@ -1324,53 +1415,15 @@ public final class GrpcRequest {
       return body_;
     }
 
-    public static final int STATUS_FIELD_NUMBER = 5;
-    private int status_;
+    public static final int CODE_FIELD_NUMBER = 6;
+    private int code_;
     /**
-     * <code>int32 status = 5;</code>
-     * @return The status.
+     * <code>int32 code = 6;</code>
+     * @return The code.
      */
     @java.lang.Override
-    public int getStatus() {
-      return status_;
-    }
-
-    public static final int ERRORMSG_FIELD_NUMBER = 6;
-    private volatile java.lang.Object errorMsg_;
-    /**
-     * <code>string errorMsg = 6;</code>
-     * @return The errorMsg.
-     */
-    @java.lang.Override
-    public java.lang.String getErrorMsg() {
-      java.lang.Object ref = errorMsg_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        errorMsg_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>string errorMsg = 6;</code>
-     * @return The bytes for errorMsg.
-     */
-    @java.lang.Override
-    public com.google.protobuf.ByteString
-        getErrorMsgBytes() {
-      java.lang.Object ref = errorMsg_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        errorMsg_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+    public int getCode() {
+      return code_;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -1390,20 +1443,20 @@ public final class GrpcRequest {
       if (requestId_ != 0) {
         output.writeInt32(1, requestId_);
       }
-      if (!getHostBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, host_);
+      if (!getIpBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, ip_);
+      }
+      if (port_ != 0) {
+        output.writeInt32(3, port_);
       }
       if (requestType_ != com.bigdata.datashops.protocol.GrpcRequest.RequestType.JOB_EXECUTE_REQUEST.getNumber()) {
-        output.writeEnum(3, requestType_);
+        output.writeEnum(4, requestType_);
       }
       if (!body_.isEmpty()) {
-        output.writeBytes(4, body_);
+        output.writeBytes(5, body_);
       }
-      if (status_ != 0) {
-        output.writeInt32(5, status_);
-      }
-      if (!getErrorMsgBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 6, errorMsg_);
+      if (code_ != 0) {
+        output.writeInt32(6, code_);
       }
       unknownFields.writeTo(output);
     }
@@ -1418,23 +1471,24 @@ public final class GrpcRequest {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(1, requestId_);
       }
-      if (!getHostBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, host_);
+      if (!getIpBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, ip_);
+      }
+      if (port_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(3, port_);
       }
       if (requestType_ != com.bigdata.datashops.protocol.GrpcRequest.RequestType.JOB_EXECUTE_REQUEST.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(3, requestType_);
+          .computeEnumSize(4, requestType_);
       }
       if (!body_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(4, body_);
+          .computeBytesSize(5, body_);
       }
-      if (status_ != 0) {
+      if (code_ != 0) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(5, status_);
-      }
-      if (!getErrorMsgBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, errorMsg_);
+          .computeInt32Size(6, code_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -1453,15 +1507,15 @@ public final class GrpcRequest {
 
       if (getRequestId()
           != other.getRequestId()) return false;
-      if (!getHost()
-          .equals(other.getHost())) return false;
+      if (!getIp()
+          .equals(other.getIp())) return false;
+      if (getPort()
+          != other.getPort()) return false;
       if (requestType_ != other.requestType_) return false;
       if (!getBody()
           .equals(other.getBody())) return false;
-      if (getStatus()
-          != other.getStatus()) return false;
-      if (!getErrorMsg()
-          .equals(other.getErrorMsg())) return false;
+      if (getCode()
+          != other.getCode()) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -1475,16 +1529,16 @@ public final class GrpcRequest {
       hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + REQUESTID_FIELD_NUMBER;
       hash = (53 * hash) + getRequestId();
-      hash = (37 * hash) + HOST_FIELD_NUMBER;
-      hash = (53 * hash) + getHost().hashCode();
+      hash = (37 * hash) + IP_FIELD_NUMBER;
+      hash = (53 * hash) + getIp().hashCode();
+      hash = (37 * hash) + PORT_FIELD_NUMBER;
+      hash = (53 * hash) + getPort();
       hash = (37 * hash) + REQUESTTYPE_FIELD_NUMBER;
       hash = (53 * hash) + requestType_;
       hash = (37 * hash) + BODY_FIELD_NUMBER;
       hash = (53 * hash) + getBody().hashCode();
-      hash = (37 * hash) + STATUS_FIELD_NUMBER;
-      hash = (53 * hash) + getStatus();
-      hash = (37 * hash) + ERRORMSG_FIELD_NUMBER;
-      hash = (53 * hash) + getErrorMsg().hashCode();
+      hash = (37 * hash) + CODE_FIELD_NUMBER;
+      hash = (53 * hash) + getCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -1620,15 +1674,15 @@ public final class GrpcRequest {
         super.clear();
         requestId_ = 0;
 
-        host_ = "";
+        ip_ = "";
+
+        port_ = 0;
 
         requestType_ = 0;
 
         body_ = com.google.protobuf.ByteString.EMPTY;
 
-        status_ = 0;
-
-        errorMsg_ = "";
+        code_ = 0;
 
         return this;
       }
@@ -1657,11 +1711,11 @@ public final class GrpcRequest {
       public com.bigdata.datashops.protocol.GrpcRequest.Response buildPartial() {
         com.bigdata.datashops.protocol.GrpcRequest.Response result = new com.bigdata.datashops.protocol.GrpcRequest.Response(this);
         result.requestId_ = requestId_;
-        result.host_ = host_;
+        result.ip_ = ip_;
+        result.port_ = port_;
         result.requestType_ = requestType_;
         result.body_ = body_;
-        result.status_ = status_;
-        result.errorMsg_ = errorMsg_;
+        result.code_ = code_;
         onBuilt();
         return result;
       }
@@ -1713,9 +1767,12 @@ public final class GrpcRequest {
         if (other.getRequestId() != 0) {
           setRequestId(other.getRequestId());
         }
-        if (!other.getHost().isEmpty()) {
-          host_ = other.host_;
+        if (!other.getIp().isEmpty()) {
+          ip_ = other.ip_;
           onChanged();
+        }
+        if (other.getPort() != 0) {
+          setPort(other.getPort());
         }
         if (other.requestType_ != 0) {
           setRequestTypeValue(other.getRequestTypeValue());
@@ -1723,12 +1780,8 @@ public final class GrpcRequest {
         if (other.getBody() != com.google.protobuf.ByteString.EMPTY) {
           setBody(other.getBody());
         }
-        if (other.getStatus() != 0) {
-          setStatus(other.getStatus());
-        }
-        if (!other.getErrorMsg().isEmpty()) {
-          errorMsg_ = other.errorMsg_;
-          onChanged();
+        if (other.getCode() != 0) {
+          setCode(other.getCode());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -1790,92 +1843,123 @@ public final class GrpcRequest {
         return this;
       }
 
-      private java.lang.Object host_ = "";
+      private java.lang.Object ip_ = "";
       /**
-       * <code>string host = 2;</code>
-       * @return The host.
+       * <code>string ip = 2;</code>
+       * @return The ip.
        */
-      public java.lang.String getHost() {
-        java.lang.Object ref = host_;
+      public java.lang.String getIp() {
+        java.lang.Object ref = ip_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
-          host_ = s;
+          ip_ = s;
           return s;
         } else {
           return (java.lang.String) ref;
         }
       }
       /**
-       * <code>string host = 2;</code>
-       * @return The bytes for host.
+       * <code>string ip = 2;</code>
+       * @return The bytes for ip.
        */
       public com.google.protobuf.ByteString
-          getHostBytes() {
-        java.lang.Object ref = host_;
+          getIpBytes() {
+        java.lang.Object ref = ip_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          host_ = b;
+          ip_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
       /**
-       * <code>string host = 2;</code>
-       * @param value The host to set.
+       * <code>string ip = 2;</code>
+       * @param value The ip to set.
        * @return This builder for chaining.
        */
-      public Builder setHost(
+      public Builder setIp(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   
-        host_ = value;
+        ip_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>string host = 2;</code>
+       * <code>string ip = 2;</code>
        * @return This builder for chaining.
        */
-      public Builder clearHost() {
+      public Builder clearIp() {
         
-        host_ = getDefaultInstance().getHost();
+        ip_ = getDefaultInstance().getIp();
         onChanged();
         return this;
       }
       /**
-       * <code>string host = 2;</code>
-       * @param value The bytes for host to set.
+       * <code>string ip = 2;</code>
+       * @param value The bytes for ip to set.
        * @return This builder for chaining.
        */
-      public Builder setHostBytes(
+      public Builder setIpBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
         
-        host_ = value;
+        ip_ = value;
+        onChanged();
+        return this;
+      }
+
+      private int port_ ;
+      /**
+       * <code>int32 port = 3;</code>
+       * @return The port.
+       */
+      @java.lang.Override
+      public int getPort() {
+        return port_;
+      }
+      /**
+       * <code>int32 port = 3;</code>
+       * @param value The port to set.
+       * @return This builder for chaining.
+       */
+      public Builder setPort(int value) {
+        
+        port_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int32 port = 3;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearPort() {
+        
+        port_ = 0;
         onChanged();
         return this;
       }
 
       private int requestType_ = 0;
       /**
-       * <code>.RequestType requestType = 3;</code>
+       * <code>.RequestType requestType = 4;</code>
        * @return The enum numeric value on the wire for requestType.
        */
       @java.lang.Override public int getRequestTypeValue() {
         return requestType_;
       }
       /**
-       * <code>.RequestType requestType = 3;</code>
+       * <code>.RequestType requestType = 4;</code>
        * @param value The enum numeric value on the wire for requestType to set.
        * @return This builder for chaining.
        */
@@ -1886,7 +1970,7 @@ public final class GrpcRequest {
         return this;
       }
       /**
-       * <code>.RequestType requestType = 3;</code>
+       * <code>.RequestType requestType = 4;</code>
        * @return The requestType.
        */
       @java.lang.Override
@@ -1896,7 +1980,7 @@ public final class GrpcRequest {
         return result == null ? com.bigdata.datashops.protocol.GrpcRequest.RequestType.UNRECOGNIZED : result;
       }
       /**
-       * <code>.RequestType requestType = 3;</code>
+       * <code>.RequestType requestType = 4;</code>
        * @param value The requestType to set.
        * @return This builder for chaining.
        */
@@ -1910,7 +1994,7 @@ public final class GrpcRequest {
         return this;
       }
       /**
-       * <code>.RequestType requestType = 3;</code>
+       * <code>.RequestType requestType = 4;</code>
        * @return This builder for chaining.
        */
       public Builder clearRequestType() {
@@ -1922,7 +2006,7 @@ public final class GrpcRequest {
 
       private com.google.protobuf.ByteString body_ = com.google.protobuf.ByteString.EMPTY;
       /**
-       * <code>bytes body = 4;</code>
+       * <code>bytes body = 5;</code>
        * @return The body.
        */
       @java.lang.Override
@@ -1930,7 +2014,7 @@ public final class GrpcRequest {
         return body_;
       }
       /**
-       * <code>bytes body = 4;</code>
+       * <code>bytes body = 5;</code>
        * @param value The body to set.
        * @return This builder for chaining.
        */
@@ -1944,7 +2028,7 @@ public final class GrpcRequest {
         return this;
       }
       /**
-       * <code>bytes body = 4;</code>
+       * <code>bytes body = 5;</code>
        * @return This builder for chaining.
        */
       public Builder clearBody() {
@@ -1954,109 +2038,33 @@ public final class GrpcRequest {
         return this;
       }
 
-      private int status_ ;
+      private int code_ ;
       /**
-       * <code>int32 status = 5;</code>
-       * @return The status.
+       * <code>int32 code = 6;</code>
+       * @return The code.
        */
       @java.lang.Override
-      public int getStatus() {
-        return status_;
+      public int getCode() {
+        return code_;
       }
       /**
-       * <code>int32 status = 5;</code>
-       * @param value The status to set.
+       * <code>int32 code = 6;</code>
+       * @param value The code to set.
        * @return This builder for chaining.
        */
-      public Builder setStatus(int value) {
+      public Builder setCode(int value) {
         
-        status_ = value;
+        code_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>int32 status = 5;</code>
+       * <code>int32 code = 6;</code>
        * @return This builder for chaining.
        */
-      public Builder clearStatus() {
+      public Builder clearCode() {
         
-        status_ = 0;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object errorMsg_ = "";
-      /**
-       * <code>string errorMsg = 6;</code>
-       * @return The errorMsg.
-       */
-      public java.lang.String getErrorMsg() {
-        java.lang.Object ref = errorMsg_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          errorMsg_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>string errorMsg = 6;</code>
-       * @return The bytes for errorMsg.
-       */
-      public com.google.protobuf.ByteString
-          getErrorMsgBytes() {
-        java.lang.Object ref = errorMsg_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          errorMsg_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>string errorMsg = 6;</code>
-       * @param value The errorMsg to set.
-       * @return This builder for chaining.
-       */
-      public Builder setErrorMsg(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        errorMsg_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string errorMsg = 6;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearErrorMsg() {
-        
-        errorMsg_ = getDefaultInstance().getErrorMsg();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string errorMsg = 6;</code>
-       * @param value The bytes for errorMsg to set.
-       * @return This builder for chaining.
-       */
-      public Builder setErrorMsgBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        errorMsg_ = value;
+        code_ = 0;
         onChanged();
         return this;
       }
@@ -2132,21 +2140,23 @@ public final class GrpcRequest {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\rrequest.proto\"i\n\007Request\022\021\n\trequestId\030" +
-      "\001 \001(\005\022\014\n\004host\030\002 \001(\t\022!\n\013requestType\030\003 \001(\016" +
-      "2\014.RequestType\022\014\n\004body\030\004 \001(\014\022\014\n\004code\030\005 \001" +
-      "(\005\"~\n\010Response\022\021\n\trequestId\030\001 \001(\005\022\014\n\004hos" +
-      "t\030\002 \001(\t\022!\n\013requestType\030\003 \001(\0162\014.RequestTy" +
-      "pe\022\014\n\004body\030\004 \001(\014\022\016\n\006status\030\005 \001(\005\022\020\n\010erro" +
-      "rMsg\030\006 \001(\t*\345\001\n\013RequestType\022\027\n\023JOB_EXECUT" +
-      "E_REQUEST\020\000\022\030\n\024JOB_EXECUTE_RESPONSE\020\001\022\024\n" +
-      "\020JOB_KILL_REQUEST\020\002\022\025\n\021JOB_KILL_RESPONSE" +
-      "\020\003\022\031\n\025ROLL_READ_LOG_REQUEST\020\004\022\032\n\026ROLL_RE" +
-      "AD_LOG_RESPONSE\020\005\022\026\n\022DELETE_LOG_REQUEST\020" +
-      "\006\022\027\n\023DELETE_LOG_RESPONSE\020\007\022\016\n\nHEART_BEAT" +
-      "\020\0102/\n\016RequestService\022\035\n\004send\022\010.Request\032\t" +
-      ".Response\"\000B-\n\036com.bigdata.datashops.pro" +
-      "tocolB\013GrpcRequestb\006proto3"
+      "\n\rrequest.proto\"u\n\007Request\022\021\n\trequestId\030" +
+      "\001 \001(\005\022\n\n\002ip\030\002 \001(\t\022\014\n\004port\030\003 \001(\005\022!\n\013reque" +
+      "stType\030\004 \001(\0162\014.RequestType\022\014\n\004body\030\005 \001(\014" +
+      "\022\014\n\004code\030\006 \001(\005\"v\n\010Response\022\021\n\trequestId\030" +
+      "\001 \001(\005\022\n\n\002ip\030\002 \001(\t\022\014\n\004port\030\003 \001(\005\022!\n\013reque" +
+      "stType\030\004 \001(\0162\014.RequestType\022\014\n\004body\030\005 \001(\014" +
+      "\022\014\n\004code\030\006 \001(\005*\236\002\n\013RequestType\022\027\n\023JOB_EX" +
+      "ECUTE_REQUEST\020\000\022\030\n\024JOB_EXECUTE_RESPONSE\020" +
+      "\001\022\024\n\020JOB_KILL_REQUEST\020\002\022\025\n\021JOB_KILL_RESP" +
+      "ONSE\020\003\022\031\n\025ROLL_READ_LOG_REQUEST\020\004\022\032\n\026ROL" +
+      "L_READ_LOG_RESPONSE\020\005\022\026\n\022DELETE_LOG_REQU" +
+      "EST\020\006\022\027\n\023DELETE_LOG_RESPONSE\020\007\022\016\n\nHEART_" +
+      "BEAT\020\010\022\032\n\026READ_WHOLE_LOG_REQUEST\020\t\022\033\n\027RE" +
+      "AD_WHOLE_LOG_RESPONSE\020\n2/\n\016RequestServic" +
+      "e\022\035\n\004send\022\010.Request\032\t.Response\"\000B-\n\036com." +
+      "bigdata.datashops.protocolB\013GrpcRequestb" +
+      "\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -2157,13 +2167,13 @@ public final class GrpcRequest {
     internal_static_Request_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Request_descriptor,
-        new java.lang.String[] { "RequestId", "Host", "RequestType", "Body", "Code", });
+        new java.lang.String[] { "RequestId", "Ip", "Port", "RequestType", "Body", "Code", });
     internal_static_Response_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_Response_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Response_descriptor,
-        new java.lang.String[] { "RequestId", "Host", "RequestType", "Body", "Status", "ErrorMsg", });
+        new java.lang.String[] { "RequestId", "Ip", "Port", "RequestType", "Body", "Code", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

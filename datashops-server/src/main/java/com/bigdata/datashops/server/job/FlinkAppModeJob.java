@@ -108,6 +108,6 @@ public class FlinkAppModeJob extends AbstractJob {
 
     @Override
     public void after() {
-        buildGrpcRequest(Constants.RPC_JOB_SUCCESS);
+        success();
     }
 }

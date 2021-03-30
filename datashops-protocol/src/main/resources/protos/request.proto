@@ -24,34 +24,39 @@ enum RequestType {
 
     HEART_BEAT = 8;
 
+    READ_WHOLE_LOG_REQUEST = 9;
+
+    READ_WHOLE_LOG_RESPONSE = 10;
 }
 
 message Request {
 
     int32 requestId = 1;
 
-    string host = 2;
+    string ip = 2;
 
-    RequestType requestType = 3;
+    int32 port = 3;
 
-    bytes body = 4;
+    RequestType requestType = 4;
 
-    int32 code = 5;
+    bytes body = 5;
+
+    int32 code = 6;
 }
 
 message Response {
 
     int32 requestId = 1;
 
-    string host = 2;
+    string ip = 2;
 
-    RequestType requestType = 3;
+    int32 port = 3;
 
-    bytes body = 4;
+    RequestType requestType = 4;
 
-    int32 status = 5;
+    bytes body = 5;
 
-    string errorMsg = 6;
+    int32 code = 6;
 }
 
 service RequestService {
