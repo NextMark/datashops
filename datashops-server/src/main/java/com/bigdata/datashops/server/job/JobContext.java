@@ -3,8 +3,8 @@ package com.bigdata.datashops.server.job;
 import org.slf4j.Logger;
 
 import com.bigdata.datashops.model.pojo.job.JobInstance;
-import com.bigdata.datashops.server.rpc.GrpcRemotingClient;
-import com.bigdata.datashops.server.zookeeper.ZookeeperOperator;
+import com.bigdata.datashops.remote.rpc.GrpcRemotingClient;
+import com.bigdata.datashops.service.zookeeper.ZookeeperOperator;
 
 import lombok.Data;
 

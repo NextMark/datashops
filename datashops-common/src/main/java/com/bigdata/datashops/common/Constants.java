@@ -21,6 +21,7 @@ public class Constants {
      */
     public static final String COMMON_PROPERTIES_PATH = "/datashops.properties";
     public static final String DATA_BASEDIR_PATH = "data.basedir.path";
+    public static final String LOG_BASEDIR_PATH = "log.basedir.path";
     public static final String PID = "pid";
     public static final int EXIT_SUCCESS_CODE = 0;
     public static final int EXIT_FAIL_CODE = -1;

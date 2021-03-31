@@ -1,4 +1,4 @@
-package com.bigdata.datashops.server.zookeeper;
+package com.bigdata.datashops.service.zookeeper;
 
 import java.io.IOException;
 
@@ -8,7 +8,7 @@ public class DefaultEnsembleProvider implements EnsembleProvider {
 
     private final String serverList;
 
-    public DefaultEnsembleProvider(String serverList){
+    public DefaultEnsembleProvider(String serverList) {
         this.serverList = serverList;
     }
 

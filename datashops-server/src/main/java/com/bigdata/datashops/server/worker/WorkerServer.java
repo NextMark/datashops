@@ -14,9 +14,9 @@ import org.springframework.context.annotation.FilterType;
 
 import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.common.utils.PropertyUtils;
+import com.bigdata.datashops.remote.rpc.GrpcRemotingServer;
 import com.bigdata.datashops.server.master.MasterServer;
 import com.bigdata.datashops.server.master.processor.MasterGrpcProcessor;
-import com.bigdata.datashops.server.rpc.GrpcRemotingServer;
 import com.bigdata.datashops.server.rpc.WorkerRequestServiceGrpcImpl;
 import com.bigdata.datashops.server.thread.ThreadUtil;
 import com.bigdata.datashops.server.worker.heartbeat.WorkerHeartBeat;

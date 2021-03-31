@@ -20,14 +20,14 @@ import com.bigdata.datashops.model.enums.RunState;
 import com.bigdata.datashops.model.pojo.job.JobInstance;
 import com.bigdata.datashops.model.pojo.rpc.Host;
 import com.bigdata.datashops.protocol.GrpcRequest;
+import com.bigdata.datashops.remote.rpc.GrpcRemotingClient;
 import com.bigdata.datashops.server.master.parser.SQLParser;
 import com.bigdata.datashops.server.master.selector.AssignSelector;
 import com.bigdata.datashops.server.master.selector.RandomHostSelector;
 import com.bigdata.datashops.server.master.selector.ScoreSelector;
-import com.bigdata.datashops.server.rpc.GrpcRemotingClient;
 import com.bigdata.datashops.server.utils.ZKUtils;
-import com.bigdata.datashops.server.zookeeper.ZookeeperOperator;
 import com.bigdata.datashops.service.JobInstanceService;
+import com.bigdata.datashops.service.zookeeper.ZookeeperOperator;
 import com.google.common.collect.Lists;
 import com.google.protobuf.ByteString;
 

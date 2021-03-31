@@ -1,20 +1,29 @@
 package com.bigdata.datashops.api.controller.v1;
 
+import javax.validation.constraints.NotNull;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bigdata.datashops.api.controller.BasicController;
 import com.bigdata.datashops.api.response.Result;
+import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.common.utils.FileUtils;
+import com.bigdata.datashops.common.utils.PropertyUtils;
+import com.bigdata.datashops.model.pojo.job.JobInstance;
 import com.bigdata.datashops.model.pojo.rpc.Host;
 
 @RestController
 @RequestMapping("/v1/log")
 public class LogController extends BasicController {
     @RequestMapping(value = "/rollReadLog")
-    public Result rollReadLog(String instanceId, int skip, int limit) {
+    public Result rollReadLog(@NotNull String instanceId, @NotNull Integer skipLines, @NotNull Integer limit) {
+        JobInstance instance = jobInstanceService.findJobInstance("instanceId=" + instanceId);
+        Host host = new Host();
+        host.setIp(instance.getHost());
+        host.setPort(PropertyUtils.getInt(Constants.WORKER_GRPC_SERVER_PORT));
         String filePath = String.format("%s%s%s", FileUtils.getJobExecLogDir(), instanceId, ".log");
-        logRequestProcessor.rollReadLog(filePath, skip, limit, new Host());
-        return ok();
+        String content = logRequestProcessor.rollReadLog(filePath, skipLines, limit, host);
+        return ok(content);
     }
 }

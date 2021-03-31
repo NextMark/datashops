@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.bigdata.datashops.common.utils.NetUtils;
 import com.bigdata.datashops.server.utils.ZKUtils;
-import com.bigdata.datashops.server.zookeeper.ZookeeperOperator;
+import com.bigdata.datashops.service.zookeeper.ZookeeperOperator;
 
 @Service
 public class WorkerRegistry {

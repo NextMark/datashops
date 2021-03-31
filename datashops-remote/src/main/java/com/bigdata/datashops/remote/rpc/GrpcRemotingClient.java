@@ -1,4 +1,4 @@
-package com.bigdata.datashops.server.rpc;
+package com.bigdata.datashops.remote.rpc;
 
 import java.util.concurrent.ConcurrentHashMap;
 

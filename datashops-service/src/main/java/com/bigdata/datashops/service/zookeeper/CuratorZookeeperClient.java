@@ -1,4 +1,4 @@
-package com.bigdata.datashops.server.zookeeper;
+package com.bigdata.datashops.service.zookeeper;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;

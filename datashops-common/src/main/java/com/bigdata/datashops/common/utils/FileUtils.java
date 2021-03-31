@@ -1,6 +1,7 @@
 package com.bigdata.datashops.common.utils;
 
 import static com.bigdata.datashops.common.Constants.DATA_BASEDIR_PATH;
+import static com.bigdata.datashops.common.Constants.LOG_BASEDIR_PATH;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -13,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class FileUtils {
     public static final String DATA_BASEDIR = PropertyUtils.getString(DATA_BASEDIR_PATH, "/tmp/datashops");
+    public static final String LOG_BASEDIR = PropertyUtils.getString(LOG_BASEDIR_PATH, "/var/log/ds");
 
     public static String getProcessExecDir(int projectId, int jobId) {
         String fileName = String.format("%s/exec/process/%s/%s", DATA_BASEDIR, projectId, jobId);
@@ -25,7 +27,7 @@ public class FileUtils {
     }
 
     public static String getJobExecLogDir() {
-        String fileName = String.format("%s/log/", DATA_BASEDIR);
+        String fileName = String.format("%s/log/", LOG_BASEDIR);
         File file = new File(fileName);
         if (!file.getParentFile().exists()) {
             file.getParentFile().mkdirs();

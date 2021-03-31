@@ -1,4 +1,4 @@
-package com.bigdata.datashops.server.log;
+package com.bigdata.datashops.model.pojo.log;
 
 import lombok.Data;
 

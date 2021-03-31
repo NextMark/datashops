@@ -1,4 +1,4 @@
-package com.bigdata.datashops.server.zookeeper;
+package com.bigdata.datashops.service.zookeeper;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;

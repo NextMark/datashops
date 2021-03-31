@@ -19,7 +19,7 @@
         <module>datashops-server</module>
         <module>datashops-protocol</module>
         <module>datashops-dist</module>
-        <module>datashops-ui</module>
+        <module>datashops-remote</module>
     </modules>
 
     <properties>
@@ -181,11 +181,11 @@
             </dependency>
 
             <!-- log -->
-<!--            <dependency>-->
-<!--                <groupId>org.slf4j</groupId>-->
-<!--                <artifactId>slf4j-api</artifactId>-->
-<!--                <version>${slf4j.version}</version>-->
-<!--            </dependency>-->
+            <!--            <dependency>-->
+            <!--                <groupId>org.slf4j</groupId>-->
+            <!--                <artifactId>slf4j-api</artifactId>-->
+            <!--                <version>${slf4j.version}</version>-->
+            <!--            </dependency>-->
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>

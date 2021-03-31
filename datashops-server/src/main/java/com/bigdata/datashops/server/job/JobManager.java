@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 import com.bigdata.datashops.common.utils.FileUtils;
 import com.bigdata.datashops.model.enums.JobType;
 import com.bigdata.datashops.model.pojo.job.JobInstance;
-import com.bigdata.datashops.server.rpc.GrpcRemotingClient;
-import com.bigdata.datashops.server.zookeeper.ZookeeperOperator;
+import com.bigdata.datashops.remote.rpc.GrpcRemotingClient;
+import com.bigdata.datashops.service.zookeeper.ZookeeperOperator;
 
 @Component
 public class JobManager {

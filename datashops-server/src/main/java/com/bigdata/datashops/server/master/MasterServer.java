@@ -21,11 +21,11 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.common.utils.PropertyUtils;
+import com.bigdata.datashops.remote.rpc.GrpcRemotingServer;
 import com.bigdata.datashops.server.master.heartbeat.MasterHeartBeat;
 import com.bigdata.datashops.server.master.registry.MasterRegistry;
 import com.bigdata.datashops.server.master.scheduler.Finder;
 import com.bigdata.datashops.server.queue.JobQueue;
-import com.bigdata.datashops.server.rpc.GrpcRemotingServer;
 import com.bigdata.datashops.server.rpc.MasterRequestServiceGrpcImpl;
 import com.bigdata.datashops.server.thread.ThreadUtil;
 import com.bigdata.datashops.service.JobInstanceService;

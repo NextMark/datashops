@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.bigdata.datashops.protocol.GrpcRequest;
 import com.bigdata.datashops.protocol.RequestServiceGrpc;
+import com.bigdata.datashops.remote.rpc.GrpcRemotingServer;
 import com.google.common.collect.Lists;
 
 import io.grpc.ManagedChannel;
@@ -37,9 +38,9 @@ public class GrpcServerTest {
         }
         for (Integer num : nums) {
             Thread.sleep(1000);
-            GrpcRequest.Request request = GrpcRequest.Request.newBuilder().setHost(num.toString()).build();
+            GrpcRequest.Request request = GrpcRequest.Request.newBuilder().setIp(num.toString()).build();
             GrpcRequest.Response response = blockingStub.send(request);
-            System.out.println("resp " + response.getHost());
+            System.out.println("resp " + response.getIp());
         }
         Thread.sleep(10000);
     }

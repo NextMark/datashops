@@ -35,20 +35,6 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.apache.curator</groupId>
-            <artifactId>curator-framework</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.curator</groupId>
-            <artifactId>curator-recipes</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.zookeeper</groupId>
-                    <artifactId>zookeeper</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
 
         <dependency>
             <groupId>com.bigdata.datashops</groupId>
@@ -113,6 +99,12 @@
             <groupId>org.apache.sqoop</groupId>
             <artifactId>sqoop</artifactId>
             <version>${sqoop.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.bigdata.datashops</groupId>
+            <artifactId>datashops-remote</artifactId>
+            <version>0.0.1</version>
+            <scope>compile</scope>
         </dependency>
 
     </dependencies>

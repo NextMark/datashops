@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 import com.bigdata.datashops.server.master.scheduler.Dispatcher;
 import com.bigdata.datashops.server.utils.ZKUtils;
-import com.bigdata.datashops.server.zookeeper.ZookeeperOperator;
+import com.bigdata.datashops.service.zookeeper.ZookeeperOperator;
 
 @Component
 public class JobQueue {

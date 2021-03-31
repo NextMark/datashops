@@ -1,4 +1,4 @@
-package com.bigdata.datashops.model;
+package com.bigdata.datashops.model.dto;
 
 import javax.validation.constraints.NotBlank;
 
