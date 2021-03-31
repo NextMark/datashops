@@ -26,8 +26,8 @@ public class JobExecutor implements Runnable {
     public void run() {
         String body = request.getBody().toStringUtf8();
         JobInstance instance = JSONUtils.parseObject(body, JobInstance.class);
-        Logger logger = LogUtils.getLogger("%d{yyyyMMddHH}-" + instance.getInstanceId() + ".log", "job",
-                FileUtils.getJobExecLogDir());
+        //"%d{yyyyMMddHH}-" +
+        Logger logger = LogUtils.getLogger(instance.getInstanceId() + ".log", "job", FileUtils.getJobExecLogDir());
         logger.info("Run job from {}, id: {}", request.getIp(), request.getRequestId());
         job = jobManager.createJob(instance, logger);
         try {

@@ -21,7 +21,7 @@ public class GrpcRemotingClient {
     private ConcurrentHashMap<Host, RequestServiceGrpc.RequestServiceBlockingStub> stubs = new ConcurrentHashMap<>(32);
 
     public GrpcRequest.Response send(GrpcRequest.Request request, Host host) {
-        LOG.info("Grpc Send request id {}, host {}, type {}", request.getRequestId(), request.getIp(),
+        LOG.info("Grpc send request id {}, host {}, type {}", request.getRequestId(), request.getIp(),
                 request.getRequestType());
         final RequestServiceGrpc.RequestServiceBlockingStub stub = getStub(host);
         GrpcRequest.Response response;

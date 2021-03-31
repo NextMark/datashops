@@ -1,6 +1,8 @@
 package com.bigdata.datashops.remote.log;
 
 import org.apache.commons.lang3.RandomUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,8 @@ import com.google.protobuf.ByteString;
 
 @Service
 public class LogRequestProcessor {
+    private static final Logger LOG = LoggerFactory.getLogger(LogRequestProcessor.class);
+
     @Autowired
     private GrpcRemotingClient grpcRemotingClient;
 
@@ -30,6 +34,11 @@ public class LogRequestProcessor {
                                               .setRequestType(GrpcRequest.RequestType.ROLL_READ_LOG_REQUEST).setBody(
                         ByteString.copyFrom(JSONUtils.toJsonString(rollViewLogRequest).getBytes())).build();
         GrpcRequest.Response response = grpcRemotingClient.send(request, host);
-        return response.getBody().toStringUtf8();
+        LOG.info("roll read log response {} {} {}", response.getRequestId(), response.getRequestType(),
+                response.getBody());
+        if (response.getBody() != null) {
+            return response.getBody().toStringUtf8();
+        }
+        return null;
     }
 }
