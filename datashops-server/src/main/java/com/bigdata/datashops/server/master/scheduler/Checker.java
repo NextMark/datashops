@@ -56,6 +56,9 @@ public class Checker {
             sb.append("bizTime=").append(dependencyBizTime).append(";");
 
             JobInstance relyOn = jobInstanceService.findJobInstance(sb.toString());
+            if (relyOn == null) {
+                return RunState.SUCCESS;
+            }
             RunState runState = RunState.of(relyOn.getState());
             if (runState != RunState.SUCCESS) {
                 LOG.info("[Checker] dependency not ready, instance id {}, biz time {}", jobInstance.getInstanceId(),
