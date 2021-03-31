@@ -51,14 +51,6 @@
             <outputDirectory>./bin</outputDirectory>
         </fileSet>
 
-        <fileSet>
-            <directory>${basedir}/../datashops-ui/dist</directory>
-            <includes>
-                <include>**/*.*</include>
-            </includes>
-            <outputDirectory>./ui</outputDirectory>
-        </fileSet>
-
     </fileSets>
 
     <dependencySets>
