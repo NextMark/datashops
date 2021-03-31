@@ -36,6 +36,8 @@ spring:
     port: 465
     username: xxx
     password: xxx
+  main:
+    allow-bean-definition-overriding: true
 
 server:
   port: 8666
