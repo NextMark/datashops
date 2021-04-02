@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import org.apache.commons.compress.utils.Lists;
+
 import com.bigdata.datashops.common.utils.FileUtils;
 import com.bigdata.datashops.common.utils.JSONUtils;
 import com.bigdata.datashops.model.pojo.job.data.ShellData;
@@ -28,7 +30,7 @@ public class ShellCommandExecutor extends CommandExecutor {
 
     @Override
     public List<String> commandArgs() {
-        return null;
+        return Lists.newArrayList();
     }
 
     @Override

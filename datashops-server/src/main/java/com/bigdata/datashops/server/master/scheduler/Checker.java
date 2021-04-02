@@ -62,7 +62,7 @@ public class Checker {
             }
             RunState runState = RunState.of(relyOn.getState());
             if (runState != RunState.SUCCESS) {
-                LOG.info("Dependency not ready, instance id {}, pre jobId {}, offset {}, biz time {}",
+                LOG.info("Dependency not ready, instanceId={}, preJobId={}, offset={}, bizTime={}",
                         jobInstance.getInstanceId(), preJobId, offset, relyOn.getBizTime());
                 return RunState.WAIT_FOR_DEPENDENCY;
             }

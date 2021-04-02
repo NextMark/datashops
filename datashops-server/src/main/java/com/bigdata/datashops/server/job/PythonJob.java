@@ -11,18 +11,19 @@ public class PythonJob extends AbstractJob {
     private PythonCommandExecutor pythonCommandExecutor;
 
     @Override
-    protected void process() throws Exception {
+    protected void process() {
         try {
             commandResult = pythonCommandExecutor.run();
             success();
         } catch (Exception e) {
+            LOG.error(String.format("Job execute error class=%s, name=%s, instanceId=%s", this.getClass(),
+                    jobInstance.getName(), jobInstance.getInstanceId()), e);
             fail();
         }
     }
 
     @Override
     protected void after() {
-        LOG.info("Job end");
         success();
     }
 }

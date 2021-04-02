@@ -25,13 +25,13 @@ public class ClickHouseJob extends AbstractJob {
             resultProcess(rs);
             success();
         } catch (SQLException e) {
+            LOG.error(String.format("Job execute error class=%s, name=%s, instanceId=%s", this.getClass(),
+                    jobInstance.getName(), jobInstance.getInstanceId()), e);
             fail();
-            e.printStackTrace();
         }
     }
 
     @Override
     public void after() {
-        LOG.info("Job end");
     }
 }

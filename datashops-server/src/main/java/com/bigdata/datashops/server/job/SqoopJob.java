@@ -29,6 +29,8 @@ public class SqoopJob extends AbstractJob {
             }
             success();
         } catch (Exception e) {
+            LOG.error(String.format("Job execute error class=%s, name=%s, instanceId=%s", this.getClass(),
+                    jobInstance.getName(), jobInstance.getInstanceId()), e);
             fail();
         }
 
@@ -53,7 +55,7 @@ public class SqoopJob extends AbstractJob {
     private void mysqlToHive() {
         try {
             String[] args = sqoopData.buildMysql2Hive();
-            LOG.info("Sqoop mysql to hive command, {}", StringUtils.join(" ", args));
+            LOG.info("Sqoop mysql to hive command\n{}", StringUtils.join(" ", args));
             String[] expandArguments = OptionsFileUtil.expandArguments(args);
             SqoopTool tool = SqoopTool.getTool("import");
             Configuration conf = new Configuration();

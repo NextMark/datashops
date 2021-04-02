@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import org.apache.commons.compress.utils.Lists;
+
 import com.bigdata.datashops.common.utils.FileUtils;
 import com.bigdata.datashops.common.utils.JSONUtils;
 import com.bigdata.datashops.model.pojo.job.data.PythonData;
@@ -32,7 +34,7 @@ public class PythonCommandExecutor extends CommandExecutor {
 
     @Override
     public List<String> commandArgs() {
-        return null;
+        return Lists.newArrayList();
     }
 
     @Override

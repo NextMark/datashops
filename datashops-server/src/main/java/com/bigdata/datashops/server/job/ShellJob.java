@@ -1,7 +1,5 @@
 package com.bigdata.datashops.server.job;
 
-import java.io.IOException;
-
 import com.bigdata.datashops.server.job.excutor.ShellCommandExecutor;
 
 public class ShellJob extends AbstractJob {
@@ -17,11 +15,13 @@ public class ShellJob extends AbstractJob {
     }
 
     @Override
-    public void process() throws IOException, InterruptedException {
+    public void process() {
         try {
             commandResult = shellCommandExecutor.run();
             success();
         } catch (Exception e) {
+            LOG.error(String.format("Job execute error class=%s, name=%s, instanceId=%s", this.getClass(),
+                    jobInstance.getName(), jobInstance.getInstanceId()), e);
             fail();
         }
     }

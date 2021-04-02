@@ -65,9 +65,13 @@ public abstract class AbstractJob {
     }
 
     public void execute() throws Exception {
+        LOG.info("Job {} begin, name={}, instanceId={}", this.getClass(), jobInstance.getName(),
+                jobInstance.getInstanceId());
         before();
         process();
         after();
+        LOG.info("Job {} end, name={}, instanceId={}", this.getClass(), jobInstance.getName(),
+                jobInstance.getInstanceId());
     }
 
     protected void before() {
@@ -126,8 +130,7 @@ public abstract class AbstractJob {
             default:
                 host = new RandomHostSelector().select(hosts);
         }
-        log.info("select host {}", host.toString());
-        LOG.info("select host {}", host.toString());
+        LOG.info("Select {}", host.toString());
         return host;
     }
 

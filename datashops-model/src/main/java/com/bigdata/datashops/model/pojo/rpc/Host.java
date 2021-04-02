@@ -35,6 +35,6 @@ public class Host {
 
     @Override
     public String toString() {
-        return "Host{address='" + address + "'}";
+        return "Host{address='" + getAddress() + "'}";
     }
 }

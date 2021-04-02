@@ -11,11 +11,13 @@ public class SparkJob extends AbstractJob {
     }
 
     @Override
-    protected void process() throws Exception {
+    protected void process() {
         try {
             commandResult = sparkCommandExecutor.run();
             success();
         } catch (Exception e) {
+            LOG.error(String.format("Job execute error class=%s, name=%s, instanceId=%s", this.getClass(),
+                    jobInstance.getName(), jobInstance.getInstanceId()), e);
             fail();
         }
     }

@@ -46,6 +46,8 @@ public class JobManager {
                 return new SqoopJob(jobContext);
             case MYSQL_2_HIVE:
                 return new SqoopJob(jobContext);
+            case FSQL:
+                return new FlinkSQLJob(jobContext);
             default:
                 throw new IllegalArgumentException();
         }

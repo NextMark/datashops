@@ -43,19 +43,17 @@ public abstract class CommandExecutor {
         buildProcess(commandFilePath);
         Integer processId = getProcessId(process);
 
-        LOG.info("process start, process id is: {}", processId);
-
+        LOG.info("Process start, process id is={}", processId);
         boolean status = process.waitFor(jobContext.getJobInstance().getJob().getTimeout(), TimeUnit.MILLISECONDS);
-
         result.setProcessId(processId);
-        LOG.info("process has exited, execute path:{}, processId:{} ,status:{}", jobContext.getExecutePath(), processId,
+        LOG.info("Process has exited, execute path={}, processId={} ,status={}", jobContext.getExecutePath(), processId,
                 status);
         if (status) {
-            LOG.info("Process job success, projectId:{}, instanceId:{}", jobContext.getJobInstance().getProjectId(),
+            LOG.info("Process job success, projectId={}, instanceId={}", jobContext.getJobInstance().getProjectId(),
                     jobContext.getJobInstance().getInstanceId());
             result.setExistCode(Constants.EXIT_SUCCESS_CODE);
         } else {
-            LOG.error("Process job failed {}, projectId:{}, instanceId:{}", process.exitValue(),
+            LOG.error("Process job failed {}, projectId={}, instanceId={}", process.exitValue(),
                     jobContext.getJobInstance().getProjectId(), jobContext.getJobInstance().getInstanceId());
             result.setExistCode(Constants.EXIT_FAIL_CODE);
         }

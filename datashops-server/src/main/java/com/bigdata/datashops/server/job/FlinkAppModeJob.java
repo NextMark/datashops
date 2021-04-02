@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.flink.client.deployment.ClusterDeploymentException;
 import org.apache.flink.client.deployment.ClusterSpecification;
 import org.apache.flink.client.deployment.application.ApplicationConfiguration;
 import org.apache.flink.client.program.ClusterClient;
@@ -102,10 +101,11 @@ public class FlinkAppModeJob extends AbstractJob {
 
             ClusterClient<ApplicationId> clusterClient = clusterClientProvider.getClusterClient();
             ApplicationId applicationId = clusterClient.getClusterId();
-            LOG.info("flink submit app, id {}", applicationId);
-        } catch (ClusterDeploymentException e) {
+            LOG.info("Flink submit app, id={}", applicationId);
+        } catch (Exception e) {
+            LOG.error(String.format("Job execute error class=%s, name=%s, instanceId=%s", this.getClass(),
+                    jobInstance.getName(), jobInstance.getInstanceId()), e);
             fail();
-            e.printStackTrace();
         }
     }
 

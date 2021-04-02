@@ -36,7 +36,6 @@ public class Finder implements Runnable {
 
     @Override
     public void run() {
-        LOG.info("Finder run");
         InterProcessMutex mutex = null;
         try {
             mutex = new InterProcessMutex(zookeeperOperator.getZkClient(), ZKUtils.getFinderLockPath());

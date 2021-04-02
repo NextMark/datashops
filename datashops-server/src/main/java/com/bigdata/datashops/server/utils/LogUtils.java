@@ -14,13 +14,14 @@ import ch.qos.logback.core.rolling.TimeBasedRollingPolicy;
 
 public class LogUtils {
 
-    public static Logger getLogger(String loggerName, String logDir, String filePattern) {
+    public static Logger getLogger(String loggerName, String logDir, String file, String filePattern) {
         LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
         Logger logger = LoggerFactory.getLogger(loggerName);
         ch.qos.logback.classic.Logger newLogger = (ch.qos.logback.classic.Logger) logger;
         newLogger.detachAndStopAllAppenders();
 
         RollingFileAppender<ILoggingEvent> appender = new RollingFileAppender<>();
+        appender.setFile(logDir + file);
         //policy
         TimeBasedRollingPolicy<ILoggingEvent> policy = new TimeBasedRollingPolicy<>();
         policy.setContext(loggerContext);

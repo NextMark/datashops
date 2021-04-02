@@ -24,7 +24,7 @@ public class QuartzJob implements Job {
         JobDataMap jobDataMap = jobExecutionContext.getMergedJobDataMap();
         int projectId = jobDataMap.getInt("projectId");
         int jobId = jobDataMap.getInt("jobId");
-        LOG.info("Run job, projectId {}, jobId {}", projectId, jobId);
+        LOG.info("Run job, projectId={}, jobId={}", projectId, jobId);
 
         JobInstance instance = jobInstanceService.createNewJobInstance(jobId, Constants.JOB_DEFAULT_OPERATOR);
         jobInstanceService.save(instance);
