@@ -56,11 +56,7 @@ elif [ "$command" = "api" ]; then
   CLASS=com.bigdata.datashops.api.ApiApplication
 fi
 
-export DATASHOPS_OPTS="-server -Xms$HEAP_INITIAL_SIZE -Xmx$HEAP_MAX_SIZE -Xmn$HEAP_NEW_GENERATION__SIZE \\
--XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m  -Xss512k -XX:+UseParNewGC -XX:+UseConcMarkSweepGC \\
--XX:+CMSParallelRemarkEnabled -XX:LargePageSizeInBytes=128m -XX:+UseCMSInitiatingOccupancyOnly \\
--XX:CMSInitiatingOccupancyFraction=70 -XX:+PrintGCDetails -Xloggc:${DATASHOPS_LOG_DIR}/gc.log \\
--XX:+HeapDumpOnOutOfMemoryError  -XX:HeapDumpPath=dump.hprof"
+export DATASHOPS_OPTS="-server -Xms$HEAP_INITIAL_SIZE -Xmx$HEAP_MAX_SIZE -Xmn$HEAP_NEW_GENERATION__SIZE -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m  -Xss512k -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:+CMSParallelRemarkEnabled -XX:LargePageSizeInBytes=128m -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=70 -XX:+PrintGCDetails -Xloggc:${DATASHOPS_LOG_DIR}/gc.log -XX:+HeapDumpOnOutOfMemoryError  -XX:HeapDumpPath=dump.hprof"
 
 exec_command="$LOG_FILE $DATASHOPS_OPTS -classpath $DATASHOPS_CONF_DIR:$DATASHOPS_LIB_JARS $CLASS"
 
