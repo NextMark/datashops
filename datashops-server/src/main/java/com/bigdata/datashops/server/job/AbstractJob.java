@@ -33,6 +33,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Lists;
 import com.google.protobuf.ByteString;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public abstract class AbstractJob {
     protected Logger LOG;
 
@@ -123,6 +126,8 @@ public abstract class AbstractJob {
             default:
                 host = new RandomHostSelector().select(hosts);
         }
+        log.info("select host {}", host.toString());
+        LOG.info("select host {}", host.toString());
         return host;
     }
 

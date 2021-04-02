@@ -14,7 +14,7 @@ import ch.qos.logback.core.rolling.TimeBasedRollingPolicy;
 
 public class LogUtils {
 
-    public static Logger getLogger(String filePattern, String loggerName, String logDir) {
+    public static Logger getLogger(String loggerName, String logDir, String filePattern) {
         LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
         Logger logger = LoggerFactory.getLogger(loggerName);
         ch.qos.logback.classic.Logger newLogger = (ch.qos.logback.classic.Logger) logger;
