@@ -35,7 +35,7 @@ import com.bigdata.datashops.model.pojo.job.data.FlinkData;
 public class FlinkAppModeJob extends AbstractJob {
     public FlinkAppModeJob(JobContext jobContext) {
         super(jobContext);
-        flinkData = JSONUtils.parseObject(jobContext.getJobInstance().getData(), FlinkData.class);
+        flinkData = JSONUtils.parseObject(jobContext.getJobInstance().getJob().getData(), FlinkData.class);
     }
 
     private FlinkData flinkData;

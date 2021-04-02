@@ -15,7 +15,7 @@ public class ClickHouseJob extends AbstractJob {
 
     @Override
     protected void process() throws Exception {
-        String data = jobInstance.getData();
+        String data = jobInstance.getJob().getData();
         baseDataSource = DataSourceFactory.getDatasource(DbType.CLICK_HOUSE, data);
         DataSourceFactory.loadClass(baseDataSource.dbType());
         try {

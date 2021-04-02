@@ -117,10 +117,10 @@ public abstract class AbstractJob {
             hosts.add(h);
         }
         Host host = new Host();
-        HostSelector selector = HostSelector.of(jobInstance.getHostSelector());
+        HostSelector selector = HostSelector.of(jobInstance.getJob().getHostSelector());
         switch (selector) {
             case ASSIGN:
-                host.setIp(jobInstance.getHost());
+                host.setIp(jobInstance.getJob().getHost());
                 host.setPort(PropertyUtils.getInt(Constants.WORKER_GRPC_SERVER_PORT));
                 host = new AssignSelector().select(Collections.singleton(host));
                 break;

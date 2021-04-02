@@ -8,7 +8,7 @@ import com.bigdata.datashops.model.pojo.job.JobInstance;
 @Component
 public class SelectorManager {
     public AbstractSelector create(JobInstance instance) {
-        HostSelector selector = HostSelector.of(instance.getHostSelector());
+        HostSelector selector = HostSelector.of(instance.getJob().getHostSelector());
         switch (selector) {
             case ASSIGN:
                 return new AssignSelector();

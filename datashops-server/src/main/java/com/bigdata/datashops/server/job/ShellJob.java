@@ -28,6 +28,5 @@ public class ShellJob extends AbstractJob {
 
     @Override
     public void after() {
-        LOG.info("Shell job execute end");
     }
 }

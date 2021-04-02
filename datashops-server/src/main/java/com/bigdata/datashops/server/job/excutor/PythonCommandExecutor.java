@@ -16,7 +16,7 @@ public class PythonCommandExecutor extends CommandExecutor {
 
     public PythonCommandExecutor(JobContext jobContext) {
         super(jobContext);
-        pythonData = JSONUtils.parseObject(jobContext.getJobInstance().getData(), PythonData.class);
+        pythonData = JSONUtils.parseObject(jobContext.getJobInstance().getJob().getData(), PythonData.class);
     }
 
     private PythonData pythonData;

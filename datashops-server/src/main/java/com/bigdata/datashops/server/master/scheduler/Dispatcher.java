@@ -67,15 +67,15 @@ public class Dispatcher {
 
         JobType jobType = JobType.of(instance.getType());
         if (jobType == JobType.HIVE || jobType == JobType.MYSQL || jobType == JobType.CLICK_HOUSE) {
-            instance.setData(SQLParser.parseSQL(instance.getData()));
+            instance.getJob().setData(SQLParser.parseSQL(instance.getJob().getData()));
         }
 
         // select host
         Host host = new Host();
-        HostSelector selector = HostSelector.of(instance.getHostSelector());
+        HostSelector selector = HostSelector.of(instance.getJob().getHostSelector());
         switch (selector) {
             case ASSIGN:
-                host.setIp(instance.getHost());
+                host.setIp(instance.getJob().getHost());
                 host.setPort(PropertyUtils.getInt(Constants.WORKER_GRPC_SERVER_PORT));
                 host = new AssignSelector().select(Collections.singleton(host));
                 break;

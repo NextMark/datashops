@@ -14,7 +14,7 @@ import com.bigdata.datashops.model.pojo.job.data.SqoopData;
 public class SqoopJob extends AbstractJob {
     public SqoopJob(JobContext jobContext) {
         super(jobContext);
-        sqoopData = JSONUtils.parseObject(jobInstance.getData(), SqoopData.class);
+        sqoopData = JSONUtils.parseObject(jobInstance.getJob().getData(), SqoopData.class);
     }
 
     private SqoopData sqoopData;

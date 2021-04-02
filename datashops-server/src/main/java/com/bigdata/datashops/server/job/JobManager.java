@@ -25,7 +25,7 @@ public class JobManager {
         jobContext.setZookeeperOperator(zookeeperOperator);
         jobContext.setJobInstance(instance);
         jobContext.setLogger(logger);
-        jobContext.setExecuteUser("root");
+        //        jobContext.setExecuteUser("root");
         jobContext.setExecutePath(FileUtils.getProcessExecDir(instance.getProjectId(), instance.getJob().getId()));
         switch (jobType) {
             case HIVE:

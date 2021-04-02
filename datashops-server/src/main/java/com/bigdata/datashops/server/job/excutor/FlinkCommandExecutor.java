@@ -14,7 +14,7 @@ import com.bigdata.datashops.server.job.JobContext;
 public class FlinkCommandExecutor extends CommandExecutor {
     public FlinkCommandExecutor(JobContext jobContext) {
         super(jobContext);
-        flinkData = JSONUtils.parseObject(jobContext.getJobInstance().getData(), FlinkData.class);
+        flinkData = JSONUtils.parseObject(jobContext.getJobInstance().getJob().getData(), FlinkData.class);
     }
 
     private FlinkData flinkData;

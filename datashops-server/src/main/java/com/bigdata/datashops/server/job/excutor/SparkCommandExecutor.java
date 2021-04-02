@@ -12,7 +12,7 @@ import com.bigdata.datashops.server.job.JobContext;
 public class SparkCommandExecutor extends CommandExecutor {
     public SparkCommandExecutor(JobContext jobContext) {
         super(jobContext);
-        sparkData = JSONUtils.parseObject(jobContext.getJobInstance().getData(), SparkData.class);
+        sparkData = JSONUtils.parseObject(jobContext.getJobInstance().getJob().getData(), SparkData.class);
     }
 
     private SparkData sparkData;

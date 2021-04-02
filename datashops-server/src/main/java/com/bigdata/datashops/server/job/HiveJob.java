@@ -24,7 +24,7 @@ public class HiveJob extends AbstractJob {
     @Override
     public void process() throws Exception {
         try {
-            String data = jobInstance.getData();
+            String data = jobInstance.getJob().getData();
             baseDataSource = DataSourceFactory.getDatasource(DbType.HIVE, data);
             DataSourceFactory.loadClass(baseDataSource.dbType());
             Connection connection = creatConnection();

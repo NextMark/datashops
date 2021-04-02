@@ -1,7 +1,9 @@
 package com.bigdata.datashops.server.job.excutor;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
@@ -41,6 +43,17 @@ public abstract class CommandExecutor {
         buildCommandFile();
         //commandToFile(command, commandFilePath);
         buildProcess(commandFilePath);
+
+        BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        BufferedReader stdError = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+
+        String s;
+        while ((s = stdInput.readLine()) != null) {
+            LOG.info("Std out {}", s);
+        }
+        while ((s = stdError.readLine()) != null) {
+            LOG.info("Std err {}", s);
+        }
         Integer processId = getProcessId(process);
 
         LOG.info("Process start, process id is={}", processId);

@@ -35,7 +35,7 @@ public class ShellCommandExecutor extends CommandExecutor {
 
     @Override
     public void buildCommandFile() throws IOException {
-        ShellData shellData = JSONUtils.parseObject(jobContext.getJobInstance().getData(), ShellData.class);
+        ShellData shellData = JSONUtils.parseObject(jobContext.getJobInstance().getJob().getData(), ShellData.class);
         FileUtils.writeStringToFile(new File(buildCommandFilePath()), shellData.getValue(), StandardCharsets.UTF_8);
     }
 

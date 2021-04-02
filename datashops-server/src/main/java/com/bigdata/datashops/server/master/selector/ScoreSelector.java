@@ -8,6 +8,6 @@ public class ScoreSelector extends AbstractSelector<Host> {
 
     @Override
     protected Host doSelect(Collection<Host> hosts) {
-        return null;
+        return hosts.stream().findFirst().get();
     }
 }

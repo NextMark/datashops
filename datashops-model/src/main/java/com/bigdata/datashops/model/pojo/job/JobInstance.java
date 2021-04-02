@@ -53,8 +53,6 @@ public class JobInstance extends BaseModel implements Comparable<JobInstance> {
      */
     private Integer status;
 
-    private String host;
-
     private String operator;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
@@ -65,14 +63,6 @@ public class JobInstance extends BaseModel implements Comparable<JobInstance> {
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date endTime;
-
-    private Integer retryTimes;
-
-    private Integer retryInterval;
-
-    private Integer priority;
-
-    private Integer failureStrategy;
 
     /**
      * 基准时间，依赖及指定数据时间用
@@ -92,22 +82,20 @@ public class JobInstance extends BaseModel implements Comparable<JobInstance> {
      */
     private String dynamicDependency;
 
-    /**
-     * 依赖的图或节点，数组，逗号分隔
-     * example: id|offset，12|0，12|-3，13|1
-     */
-    private String preDependency;
-
-    /**
-     * 下游依赖节点，数组，逗号分隔
-     */
-    private String postDependency;
-
-    private String data;
-
-    private int hostSelector;
+    //    /**
+    //     * 依赖的图或节点，数组，逗号分隔
+    //     * example: id|offset，12|0，12|-3，13|1
+    //     */
+    //    private String preDependency;
+    //
+    //    /**
+    //     * 下游依赖节点，数组，逗号分隔
+    //     */
+    //    private String postDependency;
 
     private String extension;
+
+    private String host;
 
     @Transient
     private Job job;
@@ -132,10 +120,10 @@ public class JobInstance extends BaseModel implements Comparable<JobInstance> {
     @Override
     public int compareTo(JobInstance o) {
         if (o != null) {
-            if (this.priority.equals(o.priority)) {
+            if (this.job.getPriority().equals(o.getJob().getPriority())) {
                 return this.createTime.after(o.createTime) ? 1 : -1;
             }
-            return this.priority.compareTo(o.getPriority());
+            return this.job.getPriority().compareTo(o.getJob().getPriority());
         }
         return 0;
     }
