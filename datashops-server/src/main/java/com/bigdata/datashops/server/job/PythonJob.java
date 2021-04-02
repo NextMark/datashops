@@ -12,7 +12,12 @@ public class PythonJob extends AbstractJob {
 
     @Override
     protected void process() throws Exception {
-        commandResult = pythonCommandExecutor.run();
+        try {
+            commandResult = pythonCommandExecutor.run();
+            success();
+        } catch (Exception e) {
+            fail();
+        }
     }
 
     @Override

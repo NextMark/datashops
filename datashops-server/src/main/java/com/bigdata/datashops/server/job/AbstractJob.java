@@ -11,7 +11,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
 
 import com.bigdata.datashops.common.Constants;
@@ -130,7 +129,7 @@ public abstract class AbstractJob {
     protected void success() {
         request = GrpcRequest.Request.newBuilder().setIp(NetUtils.getLocalAddress())
                           .setPort(PropertyUtils.getInt(Constants.WORKER_GRPC_SERVER_PORT))
-                          .setRequestId(RandomUtils.nextInt())
+                          .setRequestId(jobInstance.getInstanceId())
                           .setRequestType(GrpcRequest.RequestType.JOB_EXECUTE_RESPONSE)
                           .setCode(Constants.RPC_JOB_SUCCESS)
                           .setBody(ByteString.copyFrom(JSONUtils.toJsonString(result).getBytes())).build();
@@ -140,7 +139,7 @@ public abstract class AbstractJob {
     protected void fail() {
         request = GrpcRequest.Request.newBuilder().setIp(NetUtils.getLocalAddress())
                           .setPort(PropertyUtils.getInt(Constants.WORKER_GRPC_SERVER_PORT))
-                          .setRequestId(RandomUtils.nextInt())
+                          .setRequestId(jobInstance.getInstanceId())
                           .setRequestType(GrpcRequest.RequestType.JOB_EXECUTE_RESPONSE).setCode(Constants.RPC_JOB_FAIL)
                           .setBody(ByteString.copyFrom(JSONUtils.toJsonString(result).getBytes())).build();
         grpcRemotingClient.send(request, selectHost());

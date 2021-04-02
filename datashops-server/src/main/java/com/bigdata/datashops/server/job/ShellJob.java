@@ -18,12 +18,16 @@ public class ShellJob extends AbstractJob {
 
     @Override
     public void process() throws IOException, InterruptedException {
-        commandResult = shellCommandExecutor.run();
+        try {
+            commandResult = shellCommandExecutor.run();
+            success();
+        } catch (Exception e) {
+            fail();
+        }
     }
 
     @Override
     public void after() {
         LOG.info("Shell job execute end");
-        success();
     }
 }

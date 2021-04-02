@@ -13,7 +13,12 @@ public class FlinkPerJob extends AbstractJob {
 
     @Override
     protected void process() throws Exception {
-        commandResult = flinkCommandExecutor.run();
+        try {
+            commandResult = flinkCommandExecutor.run();
+            success();
+        } catch (Exception e) {
+            fail();
+        }
     }
 
     @Override

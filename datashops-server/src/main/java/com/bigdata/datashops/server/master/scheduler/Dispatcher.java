@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,7 +91,7 @@ public class Dispatcher {
         jobInstanceService.saveEntity(instance);
         GrpcRequest.Request request = GrpcRequest.Request.newBuilder().setIp(NetUtils.getLocalAddress())
                                               .setPort(PropertyUtils.getInt(Constants.MASTER_GRPC_SERVER_PORT))
-                                              .setRequestId(RandomUtils.nextInt())
+                                              .setRequestId(instanceId)
                                               .setRequestType(GrpcRequest.RequestType.JOB_EXECUTE_REQUEST)
                                               .setBody(ByteString.copyFrom(JSONUtils.toJsonString(instance).getBytes()))
                                               .build();

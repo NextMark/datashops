@@ -20,7 +20,7 @@ public class MasterHeartBeat implements Runnable {
     @Override
     public void run() {
         String address = NetUtils.getLocalAddress();
-        log.info("Report heartbeat {}", address);
+        log.info("Master heartbeat {}", address);
         // TODO 计算权重
         float weight = 0.2f;
         zookeeperOperator.persistEphemeral(String.format("%s/%s_%s", ZKUtils.getMasterRegistryPath(), address,

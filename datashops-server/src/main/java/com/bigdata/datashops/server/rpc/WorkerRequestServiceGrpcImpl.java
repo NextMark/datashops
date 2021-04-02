@@ -20,7 +20,7 @@ public class WorkerRequestServiceGrpcImpl extends RequestServiceGrpc.RequestServ
 
     @Override
     public void send(GrpcRequest.Request request, StreamObserver<GrpcRequest.Response> responseObserver) {
-        LOG.info("Grpc Receive request {}, from: {}, type: {}", request.getRequestId(), request.getIp(),
+        LOG.info("Grpc Receive request={}, from={}, type={}", request.getRequestId(), request.getIp(),
                 request.getRequestType());
         // TODO
         GrpcRequest.RequestType type = request.getRequestType();

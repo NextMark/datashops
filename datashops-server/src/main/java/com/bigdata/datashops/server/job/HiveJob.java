@@ -21,10 +21,10 @@ public class HiveJob extends AbstractJob {
 
     @Override
     public void process() throws Exception {
-        String data = jobInstance.getData();
-        baseDataSource = DataSourceFactory.getDatasource(DbType.HIVE, data);
-        DataSourceFactory.loadClass(baseDataSource.dbType());
         try {
+            String data = jobInstance.getData();
+            baseDataSource = DataSourceFactory.getDatasource(DbType.HIVE, data);
+            DataSourceFactory.loadClass(baseDataSource.dbType());
             Connection connection = creatConnection();
             PreparedStatement ps = connection.prepareStatement(baseDataSource.getValue());
             LOG.info("Execute hive: {}", baseDataSource.getValue());

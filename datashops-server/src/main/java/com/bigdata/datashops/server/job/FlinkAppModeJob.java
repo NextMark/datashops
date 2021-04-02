@@ -43,67 +43,70 @@ public class FlinkAppModeJob extends AbstractJob {
 
     @Override
     protected void process() {
-        YarnClient yarnClient = YarnClient.createYarnClient();
-        YarnConfiguration yarnConfiguration = new YarnConfiguration();
-        yarnConfiguration
-                .addResource(new Path(String.format("%s/conf/%s", System.getProperty("user.dir"), "yarn-site.xml")));
-        yarnConfiguration
-                .addResource(new Path(String.format("%s/conf/%s", System.getProperty("user.dir"), "hdfs-site.xml")));
-        yarnConfiguration
-                .addResource(new Path(String.format("%s/conf/%s", System.getProperty("user.dir"), "core-site.xml")));
-
-        yarnClient.init(yarnConfiguration);
-        yarnClient.start();
-
-        YarnClusterInformationRetriever clusterInformationRetriever =
-                YarnClientYarnClusterInformationRetriever.create(yarnClient);
-
-        Configuration flinkConfiguration = GlobalConfiguration.loadConfiguration(
-                String.format("%s%s", System.getProperty("user.dir"), "/conf/flink"));
-        flinkConfiguration.set(CheckpointingOptions.INCREMENTAL_CHECKPOINTS, true);
-        flinkConfiguration.set(PipelineOptions.JARS, Collections.singletonList(flinkData.getUrl()));
-
-        Path remoteLib = new Path(PropertyUtils.getString(Constants.FLINK_LIBS_PATH));
-        flinkConfiguration.set(YarnConfigOptions.PROVIDED_LIB_DIRS, Collections.singletonList(remoteLib.toString()));
-
-        //flinkConfiguration.set(YarnConfigOptions.FLINK_DIST_JAR, flinkDistJar);
-        flinkConfiguration.set(DeploymentOptions.TARGET, YarnDeploymentTarget.APPLICATION.getName());
-        flinkConfiguration.set(YarnConfigOptions.APPLICATION_NAME, flinkData.getYarnAppName());
-
-        if (StringUtils.isNotEmpty(flinkData.getJobManagerMemory())) {
-            flinkConfiguration
-                    .set(JobManagerOptions.TOTAL_FLINK_MEMORY, MemorySize.parse(flinkData.getJobManagerMemory()));
-        }
-        if (StringUtils.isNotEmpty(flinkData.getTaskManagerMemory())) {
-            flinkConfiguration
-                    .set(TaskManagerOptions.TOTAL_FLINK_MEMORY, MemorySize.parse(flinkData.getTaskManagerMemory()));
-        }
-        if (StringUtils.isNotEmpty(flinkData.getYarnQueue())) {
-            flinkConfiguration.set(YarnConfigOptions.APPLICATION_QUEUE, flinkData.getYarnQueue());
-        }
-        if (!Objects.isNull(flinkData.getTaskSlotNum())) {
-            flinkConfiguration.set(TaskManagerOptions.NUM_TASK_SLOTS, flinkData.getTaskSlotNum());
-        }
-        if (!Objects.isNull(flinkData.getParallelism())) {
-            flinkConfiguration.set(CoreOptions.DEFAULT_PARALLELISM, flinkData.getParallelism());
-        }
-
-        ClusterSpecification clusterSpecification =
-                new ClusterSpecification.ClusterSpecificationBuilder().createClusterSpecification();
-        ApplicationConfiguration appConfig = new ApplicationConfiguration(null, flinkData.getClassName());
-        YarnClusterDescriptor yarnClusterDescriptor =
-                new YarnClusterDescriptor(flinkConfiguration, yarnConfiguration, yarnClient,
-                        clusterInformationRetriever, true);
-        ClusterClientProvider<ApplicationId> clusterClientProvider = null;
         try {
+            YarnClient yarnClient = YarnClient.createYarnClient();
+            YarnConfiguration yarnConfiguration = new YarnConfiguration();
+            yarnConfiguration.addResource(
+                    new Path(String.format("%s/conf/%s", System.getProperty("user.dir"), "yarn-site.xml")));
+            yarnConfiguration.addResource(
+                    new Path(String.format("%s/conf/%s", System.getProperty("user.dir"), "hdfs-site.xml")));
+            yarnConfiguration.addResource(
+                    new Path(String.format("%s/conf/%s", System.getProperty("user.dir"), "core-site.xml")));
+
+            yarnClient.init(yarnConfiguration);
+            yarnClient.start();
+
+            YarnClusterInformationRetriever clusterInformationRetriever =
+                    YarnClientYarnClusterInformationRetriever.create(yarnClient);
+
+            Configuration flinkConfiguration = GlobalConfiguration.loadConfiguration(
+                    String.format("%s%s", System.getProperty("user.dir"), "/conf/flink"));
+            flinkConfiguration.set(CheckpointingOptions.INCREMENTAL_CHECKPOINTS, true);
+            flinkConfiguration.set(PipelineOptions.JARS, Collections.singletonList(flinkData.getUrl()));
+
+            Path remoteLib = new Path(PropertyUtils.getString(Constants.FLINK_LIBS_PATH));
+            flinkConfiguration
+                    .set(YarnConfigOptions.PROVIDED_LIB_DIRS, Collections.singletonList(remoteLib.toString()));
+
+            //flinkConfiguration.set(YarnConfigOptions.FLINK_DIST_JAR, flinkDistJar);
+            flinkConfiguration.set(DeploymentOptions.TARGET, YarnDeploymentTarget.APPLICATION.getName());
+            flinkConfiguration.set(YarnConfigOptions.APPLICATION_NAME, flinkData.getYarnAppName());
+
+            if (StringUtils.isNotEmpty(flinkData.getJobManagerMemory())) {
+                flinkConfiguration
+                        .set(JobManagerOptions.TOTAL_FLINK_MEMORY, MemorySize.parse(flinkData.getJobManagerMemory()));
+            }
+            if (StringUtils.isNotEmpty(flinkData.getTaskManagerMemory())) {
+                flinkConfiguration
+                        .set(TaskManagerOptions.TOTAL_FLINK_MEMORY, MemorySize.parse(flinkData.getTaskManagerMemory()));
+            }
+            if (StringUtils.isNotEmpty(flinkData.getYarnQueue())) {
+                flinkConfiguration.set(YarnConfigOptions.APPLICATION_QUEUE, flinkData.getYarnQueue());
+            }
+            if (!Objects.isNull(flinkData.getTaskSlotNum())) {
+                flinkConfiguration.set(TaskManagerOptions.NUM_TASK_SLOTS, flinkData.getTaskSlotNum());
+            }
+            if (!Objects.isNull(flinkData.getParallelism())) {
+                flinkConfiguration.set(CoreOptions.DEFAULT_PARALLELISM, flinkData.getParallelism());
+            }
+
+            ClusterSpecification clusterSpecification =
+                    new ClusterSpecification.ClusterSpecificationBuilder().createClusterSpecification();
+            ApplicationConfiguration appConfig = new ApplicationConfiguration(null, flinkData.getClassName());
+            YarnClusterDescriptor yarnClusterDescriptor =
+                    new YarnClusterDescriptor(flinkConfiguration, yarnConfiguration, yarnClient,
+                            clusterInformationRetriever, true);
+            ClusterClientProvider<ApplicationId> clusterClientProvider = null;
+
             clusterClientProvider = yarnClusterDescriptor.deployApplicationCluster(clusterSpecification, appConfig);
+
+            ClusterClient<ApplicationId> clusterClient = clusterClientProvider.getClusterClient();
+            ApplicationId applicationId = clusterClient.getClusterId();
+            LOG.info("flink submit app, id {}", applicationId);
         } catch (ClusterDeploymentException e) {
+            fail();
             e.printStackTrace();
         }
-
-        ClusterClient<ApplicationId> clusterClient = clusterClientProvider.getClusterClient();
-        ApplicationId applicationId = clusterClient.getClusterId();
-        LOG.info("flink submit app, id {}", applicationId);
     }
 
     @Override

@@ -21,12 +21,17 @@ public class SqoopJob extends AbstractJob {
 
     @Override
     protected void process() {
-        if (sqoopData.getType() == 1) {
-            hiveToMysql();
-        } else {
-            mysqlToHive();
+        try {
+            if (sqoopData.getType() == 1) {
+                hiveToMysql();
+            } else {
+                mysqlToHive();
+            }
+            success();
+        } catch (Exception e) {
+            fail();
         }
-        success();
+
     }
 
     private void hiveToMysql() {

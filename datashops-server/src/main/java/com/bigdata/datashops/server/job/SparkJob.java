@@ -12,7 +12,12 @@ public class SparkJob extends AbstractJob {
 
     @Override
     protected void process() throws Exception {
-        commandResult = sparkCommandExecutor.run();
+        try {
+            commandResult = sparkCommandExecutor.run();
+            success();
+        } catch (Exception e) {
+            fail();
+        }
     }
 
     @Override

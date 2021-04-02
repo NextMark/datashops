@@ -1,6 +1,6 @@
 package com.bigdata.datashops.remote.log;
 
-import org.apache.commons.lang3.RandomUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class LogRequestProcessor {
         rollViewLogRequest.setSkipLineNum(skipLines);
         GrpcRequest.Request request = GrpcRequest.Request.newBuilder().setIp(NetUtils.getLocalAddress())
                                               .setPort(PropertyUtils.getInt(Constants.WORKER_GRPC_SERVER_PORT))
-                                              .setRequestId(RandomUtils.nextInt())
+                                              .setRequestId(RandomStringUtils.randomNumeric(6))
                                               .setRequestType(GrpcRequest.RequestType.ROLL_READ_LOG_REQUEST).setBody(
                         ByteString.copyFrom(JSONUtils.toJsonString(rollViewLogRequest).getBytes())).build();
         GrpcRequest.Response response = grpcRemotingClient.send(request, host);
