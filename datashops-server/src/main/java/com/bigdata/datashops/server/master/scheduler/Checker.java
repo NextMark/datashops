@@ -2,14 +2,20 @@ package com.bigdata.datashops.server.master.scheduler;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import org.apache.commons.compress.utils.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.common.utils.LocalDateUtils;
 import com.bigdata.datashops.model.enums.RunState;
 import com.bigdata.datashops.model.enums.SchedulingPeriod;
@@ -46,25 +52,44 @@ public class Checker {
         Date bizTime = jobInstance.getBizTime();
         for (JobDependency s : jobDependencies) {
             int preJobId = s.getSourceId();
-            int offset = s.getOffset();
+            int type = s.getType();
+            String offset = s.getOffset();
+            String[] offsetRegion = offset.split(Constants.SEPARATOR_COMMA);
+            List<Integer> offsets = Lists.newArrayList();
+            if (type == 1) {
+                offsets = Arrays.stream(offsetRegion).map(Integer::valueOf).collect(Collectors.toList());
+            } else if (type == 2) {
+                int begin = Integer.parseInt(offsetRegion[0]);
+                int end = Integer.parseInt(offsetRegion[1]);
+                if (begin > end) {
+                    return RunState.WAIT_FOR_DEPENDENCY;
+                }
+                for (int i = begin; i < end; i++) {
+                    offsets.add(i);
+                }
+            } else {
+                return RunState.SUCCESS;
+            }
+
             Date dependencyBizTime;
             StringBuilder sb = new StringBuilder();
             Job preJob = jobService.getJob(preJobId);
-            // TODO
-            int schedulingPeriod = preJob.getSchedulingPeriod();
-            dependencyBizTime = getDependencyBizTime(bizTime, schedulingPeriod, offset);
-            sb.append("jobId=").append(preJobId).append(";");
-            sb.append("bizTime=").append(dependencyBizTime).append(";");
+            for (Integer o : offsets) {
+                int schedulingPeriod = preJob.getSchedulingPeriod();
+                dependencyBizTime = getDependencyBizTime(bizTime, schedulingPeriod, o);
+                sb.append("jobId=").append(preJobId).append(";");
+                sb.append("bizTime=").append(dependencyBizTime).append(";");
 
-            JobInstance relyOn = jobInstanceService.findJobInstance(sb.toString());
-            if (relyOn == null) {
-                return RunState.SUCCESS;
-            }
-            RunState runState = RunState.of(relyOn.getState());
-            if (runState != RunState.SUCCESS) {
-                LOG.info("Dependency not ready, instanceId={}, preJobId={}, offset={}, bizTime={}",
-                        jobInstance.getInstanceId(), preJobId, offset, relyOn.getBizTime());
-                return RunState.WAIT_FOR_DEPENDENCY;
+                JobInstance relyOn = jobInstanceService.findJobInstance(sb.toString());
+                if (relyOn == null) {
+                    return RunState.SUCCESS;
+                }
+                RunState runState = RunState.of(relyOn.getState());
+                if (runState != RunState.SUCCESS) {
+                    LOG.info("Dependency not ready, instanceId={}, preJobId={}, offset={}, bizTime={}",
+                            jobInstance.getInstanceId(), preJobId, offset, relyOn.getBizTime());
+                    return RunState.WAIT_FOR_DEPENDENCY;
+                }
             }
         }
         return RunState.SUCCESS;

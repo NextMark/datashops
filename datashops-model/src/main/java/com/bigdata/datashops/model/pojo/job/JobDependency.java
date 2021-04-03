@@ -21,8 +21,13 @@ public class JobDependency extends BaseModel {
     private Integer targetId;
 
     /**
+     * 依赖类型，1-集合，2-区间
+     */
+    private Integer type;
+
+    /**
      * 依赖作业的偏移，逗号分隔，0，-1，-5
      */
-    private Integer offset;
+    private String offset;
 
 }

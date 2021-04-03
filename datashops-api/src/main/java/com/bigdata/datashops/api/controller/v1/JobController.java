@@ -238,7 +238,7 @@ public class JobController extends BasicController {
         String graphMaskId = params.get("graphMaskId");
         String sourceId = params.get("sourceId");
         String targetId = params.get("targetId");
-        int offset = Integer.parseInt(params.get("offset"));
+        String offset = params.get("offset");
         String filter = String.format("graphMaskId=%s;sourceId=%s;targetId=%s", graphMaskId, sourceId, targetId);
         JobDependency jobDependency = jobDependencyService.getOne(filter);
         jobDependency.setOffset(offset);
