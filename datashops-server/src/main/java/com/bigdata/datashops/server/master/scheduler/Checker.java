@@ -32,9 +32,6 @@ public class Checker {
     private static final Logger LOG = LoggerFactory.getLogger(Checker.class);
 
     @Autowired
-    private JobGraphService jobGraphService;
-
-    @Autowired
     private JobService jobService;
 
     @Autowired
@@ -71,55 +68,66 @@ public class Checker {
                 return RunState.SUCCESS;
             }
 
-            Date dependencyBizTime;
-            StringBuilder sb = new StringBuilder();
+            List<Date> dependencyBizTime;
+            String filter;
             Job preJob = jobService.getJob(preJobId);
             for (Integer o : offsets) {
                 int schedulingPeriod = preJob.getSchedulingPeriod();
-                dependencyBizTime = getDependencyBizTime(bizTime, schedulingPeriod, o);
-                sb.append("jobId=").append(preJobId).append(";");
-                sb.append("bizTime=").append(dependencyBizTime).append(";");
-
-                JobInstance relyOn = jobInstanceService.findJobInstance(sb.toString());
-                if (relyOn == null) {
-                    return RunState.SUCCESS;
-                }
-                RunState runState = RunState.of(relyOn.getState());
-                if (runState != RunState.SUCCESS) {
-                    LOG.info("Dependency not ready, instanceId={}, preJobId={}, offset={}, bizTime={}",
-                            jobInstance.getInstanceId(), preJobId, offset, relyOn.getBizTime());
-                    return RunState.WAIT_FOR_DEPENDENCY;
+                dependencyBizTime = getDependencyBizTime(bizTime, schedulingPeriod, o, preJob.getCronExpression());
+                for (Date date : dependencyBizTime) {
+                    filter = String.format("jobId=%s;bizTime=%s;", preJobId, date);
+                    JobInstance instance = jobInstanceService.findJobInstance(filter);
+                    if (instance == null) {
+                        return RunState.SUCCESS;
+                    }
+                    RunState runState = RunState.of(instance.getState());
+                    if (runState != RunState.SUCCESS) {
+                        LOG.info("Dependency not ready, instanceId={}, preJobId={}, offset={}, bizTime={}",
+                                instance.getInstanceId(), preJobId, offset, instance.getBizTime());
+                        return RunState.WAIT_FOR_DEPENDENCY;
+                    }
                 }
             }
         }
         return RunState.SUCCESS;
     }
 
-    private Date getDependencyBizTime(Date date, int schedulingPeriod, int offset) {
-        if (offset == 0) {
-            return date;
-        }
+    private List<Date> getDependencyBizTime(Date date, int schedulingPeriod, int offset, String weekOrMonthStr) {
+        List<Date> result = Lists.newArrayList();
         LocalDateTime ldt = LocalDateUtils.dateToLocalDateTime(date);
-        LocalDateTime bizTime = ldt;
+        LocalDateTime bizTime;
         switch (SchedulingPeriod.of(schedulingPeriod)) {
             case MINUTE:
                 bizTime = LocalDateUtils.plus(ldt, offset, ChronoUnit.MINUTES);
+                result.add(LocalDateUtils.localDateTimeToDate(bizTime));
                 break;
             case HOUR:
                 bizTime = LocalDateUtils.plus(ldt, offset, ChronoUnit.HOURS);
+                result.add(LocalDateUtils.localDateTimeToDate(bizTime));
                 break;
             case DAY:
                 bizTime = LocalDateUtils.plus(ldt, offset, ChronoUnit.DAYS);
+                result.add(LocalDateUtils.localDateTimeToDate(bizTime));
                 break;
             case WEEK:
                 bizTime = LocalDateUtils.plus(ldt, offset, ChronoUnit.WEEKS);
+                String[] weeks = weekOrMonthStr.split(" ")[5].split(Constants.SEPARATOR_COMMA);
+                for (String week : weeks) {
+                    result.add(LocalDateUtils.parseStringToDate(
+                            LocalDateUtils.getDateOfWeekStr(bizTime, Integer.parseInt(week))));
+                }
                 break;
             case MONTH:
                 bizTime = LocalDateUtils.plus(ldt, offset, ChronoUnit.MONTHS);
+                String[] months = weekOrMonthStr.split(" ")[3].split(Constants.SEPARATOR_COMMA);
+                for (String month : months) {
+                    result.add(LocalDateUtils.parseStringToDate(
+                            LocalDateUtils.getDateOfMonthStr(bizTime, Integer.parseInt(month))));
+                }
                 break;
             default:
                 break;
         }
-        return LocalDateUtils.localDateTimeToDate(bizTime);
+        return result;
     }
 }

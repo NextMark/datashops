@@ -213,6 +213,10 @@ public class LocalDateUtils {
         return LocalDateTime.parse(localDateTimeStr, dateTimeFormatter);
     }
 
+    public static Date parseStringToDate(String ldt) {
+        return localDateTimeToDate(parseLocalDateTime(ldt, DATETIME_PATTERN));
+    }
+
     /**
      * 日期字符串转换为日期(java.time.LocalDate)
      *
@@ -334,6 +338,10 @@ public class LocalDateUtils {
                 pattern);
     }
 
+    public static String getDateOfMonthStr(LocalDateTime localDateTime, int month) {
+        return format(localDateTime.withDayOfMonth(month).withHour(0).withMinute(0).withSecond(0), DATETIME_PATTERN);
+    }
+
     /**
      * 获取本月第一天的日期字符串
      *
@@ -452,6 +460,10 @@ public class LocalDateUtils {
      */
     public static String getLastDayOfWeekStr(LocalDateTime localDateTime, String pattern) {
         return format(localDateTime.with(DayOfWeek.SUNDAY).withHour(23).withMinute(59).withSecond(59), pattern);
+    }
+
+    public static String getDateOfWeekStr(LocalDateTime localDateTime, int week) {
+        return format(localDateTime.with(DayOfWeek.of(week)).withHour(0).withMinute(0).withSecond(0), DATETIME_PATTERN);
     }
 
     /**

@@ -17,13 +17,9 @@ public class JobHelper {
                 bizTime = DateUtils.getStartOfHour(now);
                 break;
             case DAY:
-                bizTime = DateUtils.getStartOfDay(now);
-                break;
-            case WEEK:
-                bizTime = DateUtils.getMonday(now);
-                break;
             case MONTH:
-                bizTime = DateUtils.getFirstDayOfMonth(now);
+            case WEEK:
+                bizTime = DateUtils.getStartOfDay(now);
                 break;
             default:
                 break;
@@ -32,6 +28,10 @@ public class JobHelper {
     }
 
     public static void main(String[] args) {
+        System.out.println(getBizDate(0));
+        System.out.println(getBizDate(1));
+        System.out.println(getBizDate(2));
+        System.out.println(getBizDate(3));
         System.out.println(getBizDate(4));
     }
 }
