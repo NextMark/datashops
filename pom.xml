@@ -54,6 +54,7 @@
         <flink.version>1.12.0</flink.version>
         <aliyun.oss.version>3.11.3</aliyun.oss.version>
         <sqoop.version>1.4.7-cdh6.3.2</sqoop.version>
+        <cronutil.version>9.1.5</cronutil.version>
 
 
         <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>

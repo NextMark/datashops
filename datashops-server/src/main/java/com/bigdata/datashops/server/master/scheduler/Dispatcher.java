@@ -14,13 +14,11 @@ import com.bigdata.datashops.common.utils.JSONUtils;
 import com.bigdata.datashops.common.utils.NetUtils;
 import com.bigdata.datashops.common.utils.PropertyUtils;
 import com.bigdata.datashops.model.enums.HostSelector;
-import com.bigdata.datashops.model.enums.JobType;
 import com.bigdata.datashops.model.enums.RunState;
 import com.bigdata.datashops.model.pojo.job.JobInstance;
 import com.bigdata.datashops.model.pojo.rpc.Host;
 import com.bigdata.datashops.protocol.GrpcRequest;
 import com.bigdata.datashops.remote.rpc.GrpcRemotingClient;
-import com.bigdata.datashops.server.master.parser.SQLParser;
 import com.bigdata.datashops.server.master.selector.AssignSelector;
 import com.bigdata.datashops.server.master.selector.RandomHostSelector;
 import com.bigdata.datashops.server.master.selector.ScoreSelector;
@@ -65,10 +63,10 @@ public class Dispatcher {
         JobInstance instance = jobInstanceService.findOneByQuery("instanceId=" + instanceId);
         jobInstanceService.fillJob(Collections.singletonList(instance));
 
-        JobType jobType = JobType.of(instance.getType());
-        if (jobType == JobType.HIVE || jobType == JobType.MYSQL || jobType == JobType.CLICK_HOUSE) {
-            instance.getJob().setData(SQLParser.parseSQL(instance.getJob().getData()));
-        }
+        //        JobType jobType = JobType.of(instance.getType());
+        //        if (jobType == JobType.HIVE || jobType == JobType.MYSQL || jobType == JobType.CLICK_HOUSE) {
+        //            instance.getJob().setData(SQLParser.parseSQL(instance.getJob().getData()));
+        //        }
 
         // select host
         Host host = new Host();

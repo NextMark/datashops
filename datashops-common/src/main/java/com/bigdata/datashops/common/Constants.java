@@ -74,6 +74,12 @@ public class Constants {
     public static final String DOUBLE_SLASH = "//";
 
     /**
+     * sql marco
+     */
+    public final static String MARCO_TYPE_DATEFORMAT = "dateformat";
+    public final static String MARCO_TYPE_TIMESTAMP = "timestamp";
+
+    /**
      * rpc
      */
     public final static Integer RPC_JOB_SUCCESS = 200;

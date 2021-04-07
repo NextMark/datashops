@@ -1,5 +1,9 @@
 package com.bigdata.datashops.service.utils;
 
+import java.time.ZonedDateTime;
+import java.util.Date;
+import java.util.Objects;
+
 import org.quartz.CronExpression;
 
 import com.bigdata.datashops.common.utils.JSONUtils;
@@ -11,6 +15,12 @@ import com.bigdata.datashops.model.pojo.quartz.Hour;
 import com.bigdata.datashops.model.pojo.quartz.Minute;
 import com.bigdata.datashops.model.pojo.quartz.Month;
 import com.bigdata.datashops.model.pojo.quartz.Week;
+import com.cronutils.model.Cron;
+import com.cronutils.model.CronType;
+import com.cronutils.model.definition.CronDefinition;
+import com.cronutils.model.definition.CronDefinitionBuilder;
+import com.cronutils.model.time.ExecutionTime;
+import com.cronutils.parser.CronParser;
 
 public class CronHelper {
 
@@ -61,5 +71,70 @@ public class CronHelper {
             throw new ValidationException("Can not build cron expression, " + dtoCronExpression.toString());
         }
         return expression;
+    }
+
+    /**
+     * 获取下一次执行时间
+     */
+    public static Date getNextTime(String cronExpr) {
+        Cron cron = validCron(cronExpr);
+        ExecutionTime executionTime = ExecutionTime.forCron(cron);
+        ZonedDateTime nextTime = executionTime.nextExecution(ZonedDateTime.now()).orElse(null);
+        if (Objects.isNull(nextTime)) {
+            throw new RuntimeException("获取下一次执行时间失败");
+        }
+        return Date.from(nextTime.toInstant());
+    }
+
+    /**
+     * 获取下一次执行时间
+     */
+    public static Date getNextTime(Cron cron) {
+        ExecutionTime executionTime = ExecutionTime.forCron(cron);
+        ZonedDateTime nextTime = executionTime.nextExecution(ZonedDateTime.now()).orElse(null);
+        if (Objects.isNull(nextTime)) {
+            throw new RuntimeException("获取下一次执行时间失败");
+        }
+        return Date.from(nextTime.toInstant());
+    }
+
+    /**
+     * 获取上一次执行时间
+     */
+    public static Date getLastTime(String cronExpr) {
+        Cron cron = validCron(cronExpr);
+        ExecutionTime executionTime = ExecutionTime.forCron(cron);
+        ZonedDateTime lastTime = executionTime.lastExecution(ZonedDateTime.now()).orElse(null);
+        if (Objects.isNull(lastTime)) {
+            throw new RuntimeException("获取上一次执行时间失败");
+        }
+        return Date.from(lastTime.toInstant());
+    }
+
+    /**
+     * 获取上一次执行时间
+     */
+    public static Date getLastTime(Cron cron) {
+        ExecutionTime executionTime = ExecutionTime.forCron(cron);
+        ZonedDateTime lastTime = executionTime.lastExecution(ZonedDateTime.now()).orElse(null);
+        if (Objects.isNull(lastTime)) {
+            throw new RuntimeException("获取上一次执行时间失败");
+        }
+        return Date.from(lastTime.toInstant());
+    }
+
+    /**
+     * 验证并返回Cron
+     */
+    public static Cron validCron(String cronExpr) {
+        try {
+            CronDefinition cronDefinition = CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ);
+            CronParser cronParser = new CronParser(cronDefinition);
+            Cron cron = cronParser.parse(cronExpr);
+            cron.validate();
+            return cron;
+        } catch (Exception e) {
+            throw new RuntimeException("cron表达式验证失败");
+        }
     }
 }

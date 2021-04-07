@@ -2,12 +2,16 @@ package com.bigdata.datashops.server.master.parser;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
+import com.bigdata.datashops.common.Constants;
+import com.bigdata.datashops.model.enums.Macro;
 import com.bigdata.datashops.server.utils.MacroUtil;
 
 public class SQLParser {
@@ -16,11 +20,15 @@ public class SQLParser {
 
     private static Pattern pattern = Pattern.compile(MacroPattern);
 
+    private static final String PATTERN_STR = "\\$\\{(^dateformat|^timestamp|.*?)\\}";
+
+    private static Pattern PATTERN = Pattern.compile(PATTERN_STR);
+
     public static String parseSQL(String sql) {
         return parseSQL(null, sql);
     }
 
-    public static String parseSQL(LocalDateTime baseTime, String sql) {
+    public static String parseSQLed(LocalDateTime baseTime, String sql) {
         Assert.notNull(sql, "SQL is null");
         LocalDateTime ldt = LocalDateTime.now();
         if (baseTime != null) {
@@ -96,5 +104,85 @@ public class SQLParser {
             ldt = baseTime == null ? LocalDateTime.now() : baseTime;
         }
         return sql;
+    }
+
+    public static String parseSQL(LocalDateTime baseTime, String sql) {
+        LocalDateTime ldt = LocalDateTime.now();
+        if (!Objects.isNull(baseTime)) {
+            ldt = baseTime;
+        }
+        Matcher m = PATTERN.matcher(sql);
+        while (m.find()) {
+            String matchStr = m.group(1);
+            boolean ts = false, df = false;
+            if (matchStr.startsWith(Constants.MARCO_TYPE_TIMESTAMP)) {
+                ts = true;
+            }
+            if (matchStr.startsWith(Constants.MARCO_TYPE_DATEFORMAT)) {
+                df = true;
+            }
+            matchStr = matchStr.replace(Constants.MARCO_TYPE_DATEFORMAT, "").replace(Constants.MARCO_TYPE_TIMESTAMP, "")
+                               .replace("(", "").replace(")", "");
+            String[] arrs = matchStr.split(Constants.SEPARATOR_COMMA);
+            String res = null;
+            if (arrs.length == 1) {
+                DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(arrs[0]);
+                ldt.format(dateTimeFormatter);
+            } else {
+                DateTimeFormatter dateTimeFormatter = null;
+                String offset;
+                String unit;
+                if (arrs.length == 3) {
+                    dateTimeFormatter = DateTimeFormatter.ofPattern(arrs[0]);
+                    offset = arrs[1];
+                    unit = arrs[2];
+                } else {
+                    offset = arrs[0];
+                    unit = arrs[1];
+                }
+                switch (Macro.valueOf(unit)) {
+                    case YEAR:
+                        ldt = ldt.plusYears(Long.parseLong(org.apache.commons.lang3.StringUtils.trim(offset)));
+                        break;
+                    case MONTH:
+                        ldt = ldt.plusMonths(Long.parseLong(org.apache.commons.lang3.StringUtils.trim(offset)));
+                        break;
+                    case DAY:
+                        ldt = ldt.plusDays(Long.parseLong(org.apache.commons.lang3.StringUtils.trim(offset)));
+                        break;
+                    case HOUR:
+                        ldt = ldt.plusHours(Long.parseLong(org.apache.commons.lang3.StringUtils.trim(offset)));
+                        break;
+                    case MINUTE:
+                        ldt = ldt.plusMinutes(Long.parseLong(org.apache.commons.lang3.StringUtils.trim(offset)));
+                        break;
+                    case SECOND:
+                        ldt = ldt.plusSeconds(Long.parseLong(org.apache.commons.lang3.StringUtils.trim(offset)));
+                        break;
+                }
+                if (ts) {
+                    res = String.valueOf(ldt.toInstant(ZoneOffset.of("+8")).toEpochMilli());
+                } else {
+                    res = ldt.format(dateTimeFormatter);
+                }
+            }
+            String st = "\\$\\{" + matchStr + "\\}";
+            if (ts) {
+                st = String.format("\\$\\{%s\\(%s\\)\\}", Constants.MARCO_TYPE_TIMESTAMP, matchStr);
+            }
+            if (df) {
+                st = String.format("\\$\\{%s\\(%s\\)\\}", Constants.MARCO_TYPE_DATEFORMAT, matchStr);
+            }
+            sql = sql.replaceAll(st, res);
+            ldt = baseTime == null ? LocalDateTime.now() : baseTime;
+        }
+        return sql;
+    }
+
+    public static void main(String[] args) {
+        String sql = "select * from a='${yyyyMMdd,-2,DAY}' and c= ${dateformat(yyyy MMdd,-2,DAY)} and dt=${dateformat"
+                             + "(yyyyMMddHH,-1 ,HOUR)} and"
+                             + " c=${timestamp(-2,DAY)} and a=${yyyyMMdd,-2,DAY} s='${timestamp(-2,DAY)}'";
+        System.out.println(parseSQL(sql));
     }
 }

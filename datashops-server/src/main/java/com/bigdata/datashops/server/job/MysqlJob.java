@@ -5,8 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.bigdata.datashops.common.utils.LocalDateUtils;
 import com.bigdata.datashops.dao.datasource.DataSourceFactory;
 import com.bigdata.datashops.model.enums.DbType;
+import com.bigdata.datashops.server.master.parser.SQLParser;
 
 public class MysqlJob extends AbstractJob {
 
@@ -22,7 +24,8 @@ public class MysqlJob extends AbstractJob {
 
         try {
             Connection connection = creatConnection();
-            PreparedStatement ps = connection.prepareStatement(baseDataSource.getValue());
+            PreparedStatement ps = connection.prepareStatement(SQLParser.parseSQL(
+                    LocalDateUtils.dateToLocalDateTime(jobInstance.getBizTime()), baseDataSource.getValue()));
             LOG.info("Execute mysql: {}", baseDataSource.getValue());
             ResultSet rs = ps.executeQuery();
             resultProcess(rs);
