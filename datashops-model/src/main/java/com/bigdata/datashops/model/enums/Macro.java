@@ -1,5 +1,5 @@
 package com.bigdata.datashops.model.enums;
 
 public enum Macro {
-    YEAR, MONTH, DATE, DAY, HOUR, MINUTE, SECOND
+    YEAR, MONTH, WEEK, DATE, DAY, HOUR, MINUTE, SECOND
 }

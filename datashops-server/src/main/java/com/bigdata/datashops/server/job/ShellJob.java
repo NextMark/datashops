@@ -18,7 +18,6 @@ public class ShellJob extends AbstractJob {
     public void process() {
         try {
             commandResult = shellCommandExecutor.run();
-            success();
         } catch (Exception e) {
             LOG.error(String.format("Job execute error class=%s, name=%s, instanceId=%s", this.getClass(),
                     jobInstance.getName(), jobInstance.getInstanceId()), e);
@@ -28,5 +27,6 @@ public class ShellJob extends AbstractJob {
 
     @Override
     public void after() {
+        commandRpc();
     }
 }

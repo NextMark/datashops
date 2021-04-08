@@ -37,40 +37,39 @@ public abstract class CommandExecutor {
 
     public abstract void buildCommandFile() throws IOException;
 
-    public CommandResult run() throws IOException, InterruptedException {
+    public CommandResult run() {
         CommandResult result = new CommandResult();
         String commandFilePath = buildCommandFilePath();
-        buildCommandFile();
-        //commandToFile(command, commandFilePath);
-        buildProcess(commandFilePath);
+        String log = "Process job end, name=%s instanceId=%s, status=%s, exitValue=%s";
 
-        BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        BufferedReader stdError = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-
-        String s;
-        while ((s = stdInput.readLine()) != null) {
-            LOG.info("Std out {}", s);
+        try {
+            buildCommandFile();
+            buildProcess(commandFilePath);
+            Integer processId = getProcessId(process);
+            LOG.info("Process start, processId={}", processId);
+            result.setProcessId(processId);
+            readInputStream();
+            readErrorStream();
+            boolean status = process.waitFor(jobContext.getJobInstance().getJob().getTimeout(), TimeUnit.SECONDS);
+            if (status) {
+                LOG.info(String.format(log, jobContext.getJobInstance().getName(),
+                        jobContext.getJobInstance().getInstanceId(), true, process.exitValue()));
+                result.setExistCode(Constants.RPC_JOB_SUCCESS);
+            } else {
+                LOG.info(String.format(log, jobContext.getJobInstance().getName(),
+                        jobContext.getJobInstance().getInstanceId(), false, process.exitValue()));
+                result.setExistCode(Constants.RPC_JOB_FAIL);
+            }
+            FileUtils.deleteFile(commandFilePath);
+        } catch (IllegalStateException e) {
+            LOG.error(String.format(log, jobContext.getJobInstance().getName(),
+                    jobContext.getJobInstance().getInstanceId(), false, process.exitValue()), e);
+            result.setExistCode(Constants.RPC_JOB_TIMEOUT_FAIL);
+        } catch (InterruptedException | IOException e) {
+            LOG.error(String.format(log, jobContext.getJobInstance().getName(),
+                    jobContext.getJobInstance().getInstanceId(), false, process.exitValue()), e);
+            result.setExistCode(Constants.RPC_JOB_FAIL);
         }
-        while ((s = stdError.readLine()) != null) {
-            LOG.info("Std err {}", s);
-        }
-        Integer processId = getProcessId(process);
-
-        LOG.info("Process start, process id is={}", processId);
-        boolean status = process.waitFor(jobContext.getJobInstance().getJob().getTimeout(), TimeUnit.MILLISECONDS);
-        result.setProcessId(processId);
-        LOG.info("Process has exited, execute path={}, processId={} ,status={}", jobContext.getExecutePath(), processId,
-                status);
-        if (status) {
-            LOG.info("Process job success, projectId={}, instanceId={}", jobContext.getJobInstance().getProjectId(),
-                    jobContext.getJobInstance().getInstanceId());
-            result.setExistCode(Constants.EXIT_SUCCESS_CODE);
-        } else {
-            LOG.error("Process job failed {}, projectId={}, instanceId={}", process.exitValue(),
-                    jobContext.getJobInstance().getProjectId(), jobContext.getJobInstance().getInstanceId());
-            result.setExistCode(Constants.EXIT_FAIL_CODE);
-        }
-        FileUtils.deleteFile(commandFilePath);
         return result;
     }
 
@@ -79,7 +78,7 @@ public abstract class CommandExecutor {
 
         ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.directory(new File(jobContext.getExecutePath()));
-        processBuilder.redirectErrorStream(true);
+        //processBuilder.redirectErrorStream(true);
 
         if (jobContext.getExecuteUser() != null) {
             command.add("sudo");
@@ -112,6 +111,46 @@ public abstract class CommandExecutor {
         }
 
         return processId;
+    }
+
+    private void readInputStream() {
+        new Thread(() -> {
+            BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line;
+            try {
+                while ((line = in.readLine()) != null) {
+                    LOG.info("std output: {}", line);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    private void readErrorStream() {
+        new Thread(() -> {
+            BufferedReader in = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+            String line;
+            try {
+                while ((line = in.readLine()) != null) {
+                    LOG.error(String.format("script std err: %s", line));
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
 }

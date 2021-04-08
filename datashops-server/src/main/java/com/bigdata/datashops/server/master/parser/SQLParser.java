@@ -124,10 +124,10 @@ public class SQLParser {
             matchStr = matchStr.replace(Constants.MARCO_TYPE_DATEFORMAT, "").replace(Constants.MARCO_TYPE_TIMESTAMP, "")
                                .replace("(", "").replace(")", "");
             String[] arrs = matchStr.split(Constants.SEPARATOR_COMMA);
-            String res = null;
+            String res;
             if (arrs.length == 1) {
                 DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(arrs[0]);
-                ldt.format(dateTimeFormatter);
+                res = ldt.format(dateTimeFormatter);
             } else {
                 DateTimeFormatter dateTimeFormatter = null;
                 String offset;
@@ -146,6 +146,9 @@ public class SQLParser {
                         break;
                     case MONTH:
                         ldt = ldt.plusMonths(Long.parseLong(org.apache.commons.lang3.StringUtils.trim(offset)));
+                        break;
+                    case WEEK:
+                        ldt = ldt.plusWeeks(Long.parseLong(org.apache.commons.lang3.StringUtils.trim(offset)));
                         break;
                     case DAY:
                         ldt = ldt.plusDays(Long.parseLong(org.apache.commons.lang3.StringUtils.trim(offset)));
@@ -180,9 +183,9 @@ public class SQLParser {
     }
 
     public static void main(String[] args) {
-        String sql = "select * from a='${yyyyMMdd,-2,DAY}' and c= ${dateformat(yyyy MMdd,-2,DAY)} and dt=${dateformat"
-                             + "(yyyyMMddHH,-1 ,HOUR)} and"
-                             + " c=${timestamp(-2,DAY)} and a=${yyyyMMdd,-2,DAY} s='${timestamp(-2,DAY)}'";
+        String sql = "select * from default.test where ${timestamp()}  dt='${dateformat(yyyyMMdd)}' and "
+                             + "ctime='${dateformat" + "(yyyy-MM-dd HH:mm:ss,-2,DAY)}' and "
+                             + "hour=${dateformat(HH,-1 ,HOUR)} and" + " utime=${timestamp(-2,DAY)}";
         System.out.println(parseSQL(sql));
     }
 }

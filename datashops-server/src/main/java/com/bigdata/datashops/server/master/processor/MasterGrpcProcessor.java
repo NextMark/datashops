@@ -46,7 +46,11 @@ public class MasterGrpcProcessor implements InitializingBean {
         }
         if (code == Constants.RPC_JOB_FAIL) {
             instance.setEndTime(new Date());
-            instance.setState(RunState.FAILURE.getCode());
+            instance.setState(RunState.FAIL.getCode());
+        }
+        if (code == Constants.RPC_JOB_TIMEOUT_FAIL) {
+            instance.setEndTime(new Date());
+            instance.setState(RunState.TIMEOUT_FAIL.getCode());
         }
         LOG.info("Job name={}, instanceId={} finish, update it", instance.getName(), instance.getInstanceId());
         jobInstanceService.saveEntity(instance);
@@ -63,7 +67,7 @@ public class MasterGrpcProcessor implements InitializingBean {
             instance.setState(RunState.KILL.getCode());
         }
         if (code == Constants.RPC_JOB_FAIL) {
-            instance.setState(RunState.FAILURE.getCode());
+            instance.setState(RunState.FAIL.getCode());
         }
         LOG.info("Job killed, name={}, instanceId={} update it", instance.getName(), instance.getInstanceId());
         jobInstanceService.saveEntity(instance);

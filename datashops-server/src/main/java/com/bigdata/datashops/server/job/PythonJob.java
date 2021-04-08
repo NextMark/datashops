@@ -14,7 +14,6 @@ public class PythonJob extends AbstractJob {
     protected void process() {
         try {
             commandResult = pythonCommandExecutor.run();
-            success();
         } catch (Exception e) {
             LOG.error(String.format("Job execute error class=%s, name=%s, instanceId=%s", this.getClass(),
                     jobInstance.getName(), jobInstance.getInstanceId()), e);
@@ -24,6 +23,6 @@ public class PythonJob extends AbstractJob {
 
     @Override
     protected void after() {
-        success();
+        commandRpc();
     }
 }

@@ -1,5 +1,6 @@
 package com.bigdata.datashops.api.controller.v1;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
@@ -86,6 +87,7 @@ public class JobController extends BasicController {
     public Result addNewJob(@RequestBody Map<String, String> params) {
         String name = params.get("name");
         Job job = new Job();
+        job.setTimeout(86400);
         job.setOwner(params.get("owner"));
         job.setProjectId(Integer.valueOf(params.get("projectId")));
         job.setMaskId(JobUtils.genMaskId("1-" + params.get("projectId") + "-"));
@@ -252,6 +254,13 @@ public class JobController extends BasicController {
         return ok(nodes);
     }
 
+    @RequestMapping(value = "/batchRunJob")
+    public Result batchRunJob(@NotNull Integer id, @NotNull String operator, String startTime, String endTime)
+            throws ParseException {
+        jobInstanceService.buildBatchJobInstance(id, startTime, endTime, operator);
+        return ok();
+    }
+
     @RequestMapping(value = "/runJob")
     public Result runJob(@NotNull Integer id, @NotNull String operator) {
         JobInstance instance = jobInstanceService.createNewJobInstance(id, operator);
@@ -265,6 +274,7 @@ public class JobController extends BasicController {
         instance.setState(RunState.CREATED.getCode());
         instance.setOperator(operator);
         instance.setSubmitTime(new Date());
+        instance.setEndTime(null);
         jobInstanceService.save(instance);
         return ok();
     }
@@ -275,6 +285,7 @@ public class JobController extends BasicController {
         instance.setState(RunState.CANCEL.getCode());
         instance.setOperator(operator);
         instance.setSubmitTime(new Date());
+        instance.setEndTime(null);
         jobInstanceService.save(instance);
         return ok();
     }
