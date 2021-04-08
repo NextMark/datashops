@@ -77,7 +77,8 @@ public class JobInstanceService extends AbstractMysqlPagingAndSortingQueryServic
             if (start.getTime() >= end.getTime()) {
                 break;
             }
-            createNewJobInstance(id, operator, job);
+            JobInstance jobInstance = createNewJobInstance(id, operator, job);
+            saveEntity(jobInstance);
         }
     }
 
