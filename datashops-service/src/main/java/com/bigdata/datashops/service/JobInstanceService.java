@@ -50,8 +50,7 @@ public class JobInstanceService extends AbstractMysqlPagingAndSortingQueryServic
         }
     }
 
-    public JobInstance createNewJobInstance(Integer id, String operator) {
-        Job job = jobService.getJob(id);
+    public JobInstance createNewJobInstance(Integer id, String operator, Job job) {
         Date now = new Date();
         String instanceId = JobUtils.genJobInstanceId();
         Date bizDate = CronHelper.getLastTime(job.getCronExpression());
@@ -78,7 +77,7 @@ public class JobInstanceService extends AbstractMysqlPagingAndSortingQueryServic
             if (start.getTime() >= end.getTime()) {
                 break;
             }
-            createNewJobInstance(id, operator);
+            createNewJobInstance(id, operator, job);
         }
     }
 

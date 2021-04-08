@@ -263,7 +263,8 @@ public class JobController extends BasicController {
 
     @RequestMapping(value = "/runJob")
     public Result runJob(@NotNull Integer id, @NotNull String operator) {
-        JobInstance instance = jobInstanceService.createNewJobInstance(id, operator);
+        Job job = jobService.getJob(id);
+        JobInstance instance = jobInstanceService.createNewJobInstance(id, operator, job);
         jobInstanceService.save(instance);
         return ok();
     }
