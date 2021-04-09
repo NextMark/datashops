@@ -43,6 +43,13 @@ public class JobDependencyController extends BasicController {
         return ok();
     }
 
+    @PostMapping(value = "/deleteJobDependency")
+    public Result deleteJobDependency(@RequestBody Map<String, Integer> params) {
+        Integer id = params.get("id");
+        jobDependencyService.deleteById(id);
+        return ok();
+    }
+
     @RequestMapping(value = "/preview")
     public Result preview(@NotNull Integer id) {
         Job job = jobService.getJob(id);
@@ -52,7 +59,7 @@ public class JobDependencyController extends BasicController {
         List<Edge> edges = Lists.newArrayList();
         List<Node> nodes = Lists.newArrayList();
         Node node = new Node();
-        node.setLabel(job.getName());
+        node.setLabel(job.getName() + "\n" + DateUtils.format(date, Constants.YYYY_MM_DD_HH_MM_SS));
         node.setId(id.toString());
         nodes.add(node);
 
@@ -77,14 +84,14 @@ public class JobDependencyController extends BasicController {
             for (Integer o : offsets) {
                 Date sourceDate = CronHelper.getOffsetTriggerTime(sourceJob.getCronExpression(), date, o);
                 Node source = new Node();
-                source.setLabel(sourceJob.getName());
+                source.setLabel(sourceJob.getName() +"\n\n"+ DateUtils.format(sourceDate, Constants.YYYY_MM_DD_HH_MM_SS));
                 source.setId(sourceDate.toString());
                 nodes.add(source);
 
                 Edge edge = new Edge();
                 edge.setFrom(sourceDate.toString());
                 edge.setTo(id.toString());
-                edge.setLabel(DateUtils.format(sourceDate, Constants.YYYY_MM_DD_HH_MM_SS));
+                //edge.setLabel("1");
                 edges.add(edge);
             }
         }

@@ -6,6 +6,8 @@ import lombok.Data;
 @Data
 @Builder
 public class VoJobDependency {
+    private Integer id;
+
     private String name;
 
     private Integer sourceId;

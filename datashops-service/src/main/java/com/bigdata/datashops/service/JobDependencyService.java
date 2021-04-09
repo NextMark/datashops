@@ -33,9 +33,10 @@ public class JobDependencyService extends AbstractMysqlPagingAndSortingQueryServ
         for (JobDependency dependency : dependencies) {
             Job job = jobService.getJob(dependency.getSourceId());
             VoJobDependency v =
-                    VoJobDependency.builder().name(job.getName()).offset(dependency.getOffset()).owner(job.getOwner())
-                            .schedulingPeriod(job.getSchedulingPeriod()).type(dependency.getType())
-                            .jobType(job.getType()).sourceId(dependency.getSourceId()).build();
+                    VoJobDependency.builder().id(dependency.getId()).name(job.getName()).offset(dependency.getOffset())
+                            .owner(job.getOwner()).schedulingPeriod(job.getSchedulingPeriod())
+                            .type(dependency.getType()).jobType(job.getType()).sourceId(dependency.getSourceId())
+                            .build();
             vo.add(v);
         }
         return vo;
@@ -74,6 +75,9 @@ public class JobDependencyService extends AbstractMysqlPagingAndSortingQueryServ
                 edge.setLabel(
                         String.format("%s: [%s]", dependency.getType() == 1 ? "集合" : "区间", dependency.getOffset()));
                 edges.add(edge);
+                if (id.equals(dependency.getSourceId())) {
+                    continue;
+                }
                 findPre(dependency.getSourceId(), edges, nodes);
             }
         }
@@ -95,6 +99,9 @@ public class JobDependencyService extends AbstractMysqlPagingAndSortingQueryServ
                 edge.setLabel(
                         String.format("%s: [%s]", dependency.getType() == 1 ? "集合" : "区间", dependency.getOffset()));
                 edges.add(edge);
+                if (id.equals(dependency.getTargetId())) {
+                    continue;
+                }
                 findPost(dependency.getTargetId(), edges, nodes);
             }
         }
