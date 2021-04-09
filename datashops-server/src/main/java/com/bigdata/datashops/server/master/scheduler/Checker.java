@@ -3,11 +3,9 @@ package com.bigdata.datashops.server.master.scheduler;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.apache.commons.compress.utils.Lists;
 import org.slf4j.Logger;
@@ -23,9 +21,9 @@ import com.bigdata.datashops.model.pojo.job.Job;
 import com.bigdata.datashops.model.pojo.job.JobDependency;
 import com.bigdata.datashops.model.pojo.job.JobInstance;
 import com.bigdata.datashops.service.JobDependencyService;
-import com.bigdata.datashops.service.JobGraphService;
 import com.bigdata.datashops.service.JobInstanceService;
 import com.bigdata.datashops.service.JobService;
+import com.bigdata.datashops.service.utils.CronHelper;
 
 @Service
 public class Checker {
@@ -78,7 +76,7 @@ public class Checker {
                     filter = String.format("jobId=%s;bizTime=%s;", preJobId, date);
                     JobInstance instance = jobInstanceService.findJobInstance(filter);
                     if (instance == null) {
-                        return RunState.SUCCESS;
+                        return RunState.WAIT_FOR_DEPENDENCY;
                     }
                     RunState runState = RunState.of(instance.getState());
                     if (runState != RunState.SUCCESS) {
@@ -98,16 +96,9 @@ public class Checker {
         LocalDateTime bizTime;
         switch (SchedulingPeriod.of(schedulingPeriod)) {
             case MINUTE:
-                bizTime = LocalDateUtils.plus(ldt, offset, ChronoUnit.MINUTES);
-                result.add(LocalDateUtils.localDateTimeToDate(bizTime));
-                break;
             case HOUR:
-                bizTime = LocalDateUtils.plus(ldt, offset, ChronoUnit.HOURS);
-                result.add(LocalDateUtils.localDateTimeToDate(bizTime));
-                break;
             case DAY:
-                bizTime = LocalDateUtils.plus(ldt, offset, ChronoUnit.DAYS);
-                result.add(LocalDateUtils.localDateTimeToDate(bizTime));
+                result.add(CronHelper.getOffsetTriggerTime(weekOrMonthStr, date, offset));
                 break;
             case WEEK:
                 bizTime = LocalDateUtils.plus(ldt, offset, ChronoUnit.WEEKS);

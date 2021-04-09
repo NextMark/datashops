@@ -34,8 +34,8 @@ public class JobDependencyService extends AbstractMysqlPagingAndSortingQueryServ
             Job job = jobService.getJob(dependency.getSourceId());
             VoJobDependency v =
                     VoJobDependency.builder().name(job.getName()).offset(dependency.getOffset()).owner(job.getOwner())
-                            .type(dependency.getType()).jobType(job.getType()).sourceId(dependency.getSourceId())
-                            .build();
+                            .schedulingPeriod(job.getSchedulingPeriod()).type(dependency.getType())
+                            .jobType(job.getType()).sourceId(dependency.getSourceId()).build();
             vo.add(v);
         }
         return vo;
@@ -71,8 +71,8 @@ public class JobDependencyService extends AbstractMysqlPagingAndSortingQueryServ
                 Edge edge = new Edge();
                 edge.setFrom(dependency.getSourceId().toString());
                 edge.setTo(dependency.getTargetId().toString());
-                edge.setLabel(String.format("%s: [%s]", dependency.getType() == 1 ? "集合" : "区间",
-                        dependency.getOffset()));
+                edge.setLabel(
+                        String.format("%s: [%s]", dependency.getType() == 1 ? "集合" : "区间", dependency.getOffset()));
                 edges.add(edge);
                 findPre(dependency.getSourceId(), edges, nodes);
             }
@@ -92,8 +92,8 @@ public class JobDependencyService extends AbstractMysqlPagingAndSortingQueryServ
                 Edge edge = new Edge();
                 edge.setFrom(dependency.getSourceId().toString());
                 edge.setTo(dependency.getTargetId().toString());
-                edge.setLabel(String.format("%s: [%s]", dependency.getType() == 1 ? "集合" : "区间",
-                        dependency.getOffset()));
+                edge.setLabel(
+                        String.format("%s: [%s]", dependency.getType() == 1 ? "集合" : "区间", dependency.getOffset()));
                 edges.add(edge);
                 findPost(dependency.getTargetId(), edges, nodes);
             }

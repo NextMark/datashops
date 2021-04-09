@@ -1,5 +1,7 @@
 package com.bigdata.datashops.service.utils;
 
+import java.text.ParseException;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Objects;
@@ -96,6 +98,38 @@ public class CronHelper {
             throw new RuntimeException("获取下一次执行时间失败");
         }
         return Date.from(nextTime.toInstant());
+    }
+
+    public static ZonedDateTime toZonedDateTime(Date utilDate) {
+        if (utilDate == null) {
+            return null;
+        }
+        final ZoneId systemDefault = ZoneId.systemDefault();
+        return ZonedDateTime.ofInstant(utilDate.toInstant(), systemDefault);
+    }
+
+    public static Date getLastTime(String cronExpr, Date date) {
+        Cron cron = validCron(cronExpr);
+        ExecutionTime executionTime = ExecutionTime.forCron(cron);
+        ZonedDateTime lastTime = executionTime.lastExecution(toZonedDateTime(date)).orElse(null);
+        if (Objects.isNull(lastTime)) {
+            throw new RuntimeException("获取上一次执行时间失败");
+        }
+        return Date.from(lastTime.toInstant());
+    }
+
+    public static Date getOffsetTriggerTime(String cron, Date date, int offset) {
+        CronExpression expression = null;
+        try {
+            expression = new CronExpression(cron);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        date = expression.getNextValidTimeAfter(date);
+        for (int i = offset; i <= 0; i++) {
+            date = getLastTime(cron, date);
+        }
+        return date;
     }
 
     /**

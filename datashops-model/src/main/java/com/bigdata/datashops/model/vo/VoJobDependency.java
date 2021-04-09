@@ -17,4 +17,6 @@ public class VoJobDependency {
     private int type;
 
     private int jobType;
+
+    private int schedulingPeriod;
 }

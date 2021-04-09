@@ -40,7 +40,7 @@ public abstract class CommandExecutor {
     public CommandResult run() {
         CommandResult result = new CommandResult();
         String commandFilePath = buildCommandFilePath();
-        String log = "Process job end, name=%s instanceId=%s, status=%s, exitValue=%s";
+        String log = "Process job end, name=%s, instanceId=%s, status=%s, exitValue=%s";
 
         try {
             buildCommandFile();

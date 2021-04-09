@@ -137,7 +137,7 @@ public abstract class AbstractJob {
 
     protected void commandRpc() {
         if (!Objects.isNull(commandResult)) {
-            if (commandResult.getExistCode() == Constants.EXIT_SUCCESS_CODE) {
+            if (commandResult.getExistCode().equals(Constants.RPC_JOB_SUCCESS)) {
                 success();
             } else {
                 fail();

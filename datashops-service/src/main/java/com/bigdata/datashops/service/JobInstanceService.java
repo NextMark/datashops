@@ -51,9 +51,13 @@ public class JobInstanceService extends AbstractMysqlPagingAndSortingQueryServic
     }
 
     public JobInstance createNewJobInstance(Integer id, String operator, Job job) {
+        return createNewJobInstance(id, operator, job, CronHelper.getLastTime(job.getCronExpression()));
+    }
+
+    public JobInstance createNewJobInstance(Integer id, String operator, Job job, Date bizDate) {
         Date now = new Date();
         String instanceId = JobUtils.genJobInstanceId();
-        Date bizDate = CronHelper.getLastTime(job.getCronExpression());
+        //Date bizDate = CronHelper.getLastTime(job.getCronExpression());
         JobInstance jobInstance = jobInstanceService.findJobInstance(String.format("jobId=%d;bizTime=%s", id, bizDate));
         if (!Objects.isNull(jobInstance)) {
             jobInstance.setOperator(operator);
@@ -77,7 +81,7 @@ public class JobInstanceService extends AbstractMysqlPagingAndSortingQueryServic
             if (start.getTime() >= end.getTime()) {
                 break;
             }
-            JobInstance jobInstance = createNewJobInstance(id, operator, job);
+            JobInstance jobInstance = createNewJobInstance(id, operator, job, start);
             saveEntity(jobInstance);
         }
     }
@@ -90,10 +94,33 @@ public class JobInstanceService extends AbstractMysqlPagingAndSortingQueryServic
         CronExpression expression = new CronExpression("00 */10 04-23 * * ?");
         for (; start.getTime() <= end.getTime(); ) {
             start = expression.getNextValidTimeAfter(start);
-            System.out.println(start);
+            //System.out.println(start);
             if (start.getTime() >= end.getTime()) {
                 break;
             }
+        }
+        try {
+            Date date = DateUtils.stringToDate("2021-04-09 10:15:00");
+            System.out.println(CronHelper.getOffsetTriggerTime("00 */5 13-14 * * ?", date, 0));
+            System.out.println(CronHelper.getOffsetTriggerTime("00 */5 10-14 * * ?", date, 0));
+
+            System.out.println(CronHelper.getOffsetTriggerTime("00 */5 13-14 * * ?", date, -2));
+
+            System.out.println(CronHelper.getOffsetTriggerTime("00 */5 13-14 * * ?", date, -14));
+            System.out.println(CronHelper.getOffsetTriggerTime("00 10 23 * * ?", date, -2));
+            System.out.println(CronHelper.getOffsetTriggerTime("00 */10 04-23 * * ?", date, 0));
+            System.out.println(CronHelper.getOffsetTriggerTime("00 */10 04-23 * * ?", date, 3));
+
+            //            Date nextValidTime = expression.getNextValidTimeAfter(new Date());
+            //            Date subsequentNextValidTime = expression.getNextValidTimeAfter(nextValidTime);
+            //            System.out.println(expression.getTimeBefore(new Date()));
+            //            System.out.println(expression.getTimeAfter(new Date()));
+            //            System.out.println(expression.getExpressionSummary());
+            //
+            //            long interval = subsequentNextValidTime.getTime() - nextValidTime.getTime();
+            //            System.out.println(new Date(nextValidTime.getTime() - interval));
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Unsupported cron or date", e);
         }
     }
 

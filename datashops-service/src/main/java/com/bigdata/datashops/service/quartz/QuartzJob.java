@@ -30,7 +30,8 @@ public class QuartzJob implements Job {
         int jobId = jobDataMap.getInt("jobId");
         LOG.info("Run job, projectId={}, jobId={}", projectId, jobId);
         com.bigdata.datashops.model.pojo.job.Job job = jobService.getJob(jobId);
-        JobInstance instance = jobInstanceService.createNewJobInstance(jobId, Constants.JOB_DEFAULT_OPERATOR, job);
+        JobInstance instance = jobInstanceService.createNewJobInstance(jobId, Constants.JOB_DEFAULT_OPERATOR, job,
+                jobExecutionContext.getTrigger().getPreviousFireTime());
         jobInstanceService.save(instance);
     }
 }

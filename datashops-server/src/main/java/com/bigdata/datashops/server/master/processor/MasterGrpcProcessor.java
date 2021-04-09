@@ -39,7 +39,8 @@ public class MasterGrpcProcessor implements InitializingBean {
         int code = request.getCode();
         JobResult result = JSONUtils.parseObject(body, JobResult.class);
         JobInstance instance = jobInstanceService.findJobInstance("instanceId=" + result.getInstanceId());
-        LOG.info("Receive worker finish rpc, name={}, instanceId={}", instance.getName(), result.getInstanceId());
+        LOG.info("Receive worker finish rpc code={}, name={}, instanceId={}", code, instance.getName(),
+                result.getInstanceId());
         if (code == Constants.RPC_JOB_SUCCESS) {
             instance.setEndTime(new Date());
             instance.setState(RunState.SUCCESS.getCode());
