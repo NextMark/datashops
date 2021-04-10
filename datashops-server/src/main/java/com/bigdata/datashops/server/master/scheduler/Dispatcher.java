@@ -43,13 +43,18 @@ public class Dispatcher {
 
     public void dispatch(String instanceId) {
         LOG.info("Dispatch instance {}", instanceId);
+        JobInstance instance = jobInstanceService.findOneByQuery("instanceId=" + instanceId);
         boolean workerExist = zookeeperOperator.isExisted(ZKUtils.getWorkerRegistryPath());
         if (!workerExist) {
+            instance.setState(RunState.WAIT_FOR_RESOURCE.getCode());
+            jobInstanceService.saveEntity(instance);
             return;
         }
         List<String> hostsStr = zookeeperOperator.getChildrenKeys(ZKUtils.getWorkerRegistryPath());
         if (hostsStr.size() == 0) {
             LOG.warn("No active worker in {}", ZKUtils.getWorkerRegistryPath());
+            instance.setState(RunState.WAIT_FOR_RESOURCE.getCode());
+            jobInstanceService.saveEntity(instance);
             return;
         }
         List<Host> hosts = Lists.newArrayList();
@@ -60,7 +65,6 @@ public class Dispatcher {
             h.setPort(Integer.parseInt(hostInfo[1]));
             hosts.add(h);
         }
-        JobInstance instance = jobInstanceService.findOneByQuery("instanceId=" + instanceId);
         jobInstanceService.fillJob(Collections.singletonList(instance));
 
         //        JobType jobType = JobType.of(instance.getType());

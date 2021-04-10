@@ -64,6 +64,22 @@ public class JobDependencyService extends AbstractMysqlPagingAndSortingQueryServ
         if (pre.size() > 0) {
             for (JobDependency dependency : pre) {
                 Job job = jobService.getJob(dependency.getSourceId());
+
+                if (dependency.getTargetId().equals(dependency.getSourceId())) {
+                    Node node = new Node();
+                    node.setId(dependency.getSourceId().toString() + dependency.getOffset());
+                    node.setLabel(job.getName());
+                    nodes.add(node);
+
+                    Edge edge = new Edge();
+                    edge.setFrom(dependency.getSourceId().toString() + dependency.getOffset());
+                    edge.setTo(dependency.getTargetId().toString());
+                    edge.setLabel(
+                            String.format("%s: [%s]", dependency.getType() == 1 ? "集合" : "区间", dependency.getOffset()));
+                    edges.add(edge);
+                    continue;
+                }
+
                 Node node = new Node();
                 node.setId(dependency.getSourceId().toString());
                 node.setLabel(job.getName());
@@ -75,9 +91,7 @@ public class JobDependencyService extends AbstractMysqlPagingAndSortingQueryServ
                 edge.setLabel(
                         String.format("%s: [%s]", dependency.getType() == 1 ? "集合" : "区间", dependency.getOffset()));
                 edges.add(edge);
-                if (id.equals(dependency.getSourceId())) {
-                    continue;
-                }
+
                 findPre(dependency.getSourceId(), edges, nodes);
             }
         }
@@ -87,6 +101,9 @@ public class JobDependencyService extends AbstractMysqlPagingAndSortingQueryServ
         List<JobDependency> pre = getJobDependency("sourceId=" + id);
         if (pre.size() > 0) {
             for (JobDependency dependency : pre) {
+                if (dependency.getSourceId().equals(dependency.getTargetId())) {
+                    continue;
+                }
                 Job job = jobService.getJob(dependency.getTargetId());
                 Node node = new Node();
                 node.setId(dependency.getTargetId().toString());
@@ -99,9 +116,7 @@ public class JobDependencyService extends AbstractMysqlPagingAndSortingQueryServ
                 edge.setLabel(
                         String.format("%s: [%s]", dependency.getType() == 1 ? "集合" : "区间", dependency.getOffset()));
                 edges.add(edge);
-                if (id.equals(dependency.getTargetId())) {
-                    continue;
-                }
+
                 findPost(dependency.getTargetId(), edges, nodes);
             }
         }

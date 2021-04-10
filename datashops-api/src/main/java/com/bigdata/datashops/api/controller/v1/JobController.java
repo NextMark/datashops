@@ -76,7 +76,7 @@ public class JobController extends BasicController {
                                                    .config(dtoJob.getTimeConfig()).build();
         String cron = CronHelper.buildCronExpression(cronExpression);
         job.setCronExpression(cron);
-        if (dtoJob.getData() != null) {
+        if (StringUtils.isNotEmpty(dtoJob.getData())) {
             job.setData(JobUtils.buildJobData(dtoJob.getType(), dtoJob.getData()));
         }
         jobService.modifyJob(job);
