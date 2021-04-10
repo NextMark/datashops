@@ -3,10 +3,12 @@ package com.bigdata.datashops.service;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bigdata.datashops.dao.data.service.AbstractMysqlPagingAndSortingQueryService;
+import com.bigdata.datashops.model.enums.JobType;
 import com.bigdata.datashops.model.pojo.job.Edge;
 import com.bigdata.datashops.model.pojo.job.Job;
 import com.bigdata.datashops.model.pojo.job.JobDependency;
@@ -48,8 +50,9 @@ public class JobDependencyService extends AbstractMysqlPagingAndSortingQueryServ
         List<Node> nodes = Lists.newArrayList();
         Job job = jobService.getJob(id);
         Node node = new Node();
-        node.setLabel(job.getName());
+        node.setLabel(job.getName() + "\n" + StringUtils.lowerCase(JobType.of(job.getType()).name()));
         node.setId(id.toString());
+        node.setClassName("type-normal");
         nodes.add(node);
 
         findPre(id, edges, nodes);
@@ -68,7 +71,8 @@ public class JobDependencyService extends AbstractMysqlPagingAndSortingQueryServ
                 if (dependency.getTargetId().equals(dependency.getSourceId())) {
                     Node node = new Node();
                     node.setId(dependency.getSourceId().toString() + dependency.getOffset());
-                    node.setLabel(job.getName());
+                    node.setLabel(job.getName() + "\n" + StringUtils.lowerCase(JobType.of(job.getType()).name()));
+                    node.setClassName("type-normal");
                     nodes.add(node);
 
                     Edge edge = new Edge();
@@ -82,7 +86,8 @@ public class JobDependencyService extends AbstractMysqlPagingAndSortingQueryServ
 
                 Node node = new Node();
                 node.setId(dependency.getSourceId().toString());
-                node.setLabel(job.getName());
+                node.setLabel(job.getName() + "\n" + StringUtils.lowerCase(JobType.of(job.getType()).name()));
+                node.setClassName("type-normal");
                 nodes.add(node);
 
                 Edge edge = new Edge();
@@ -107,7 +112,8 @@ public class JobDependencyService extends AbstractMysqlPagingAndSortingQueryServ
                 Job job = jobService.getJob(dependency.getTargetId());
                 Node node = new Node();
                 node.setId(dependency.getTargetId().toString());
-                node.setLabel(job.getName());
+                node.setLabel(job.getName() + "\n" + StringUtils.lowerCase(JobType.of(job.getType()).name()));
+                node.setClassName("type-normal");
                 nodes.add(node);
 
                 Edge edge = new Edge();

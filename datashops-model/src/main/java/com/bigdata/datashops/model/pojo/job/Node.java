@@ -8,4 +8,6 @@ public class Node {
 
     private String label;
 
+    private String className;
+
 }

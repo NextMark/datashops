@@ -93,6 +93,7 @@ public class JobController extends BasicController {
         job.setMaskId(JobUtils.genMaskId("1-" + params.get("projectId") + "-"));
         job.setHostSelector(Integer.valueOf(params.get("hostSelector")));
         job.setName(name);
+        job.setCronExpression("00 10 12 * * ?");
         // 初始化调度时间
         job.setSchedulingPeriod(SchedulingPeriod.DAY.getCode());
         Map<String, String> timeConfig = Maps.newHashMap();
