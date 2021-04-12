@@ -1,10 +1,12 @@
 package com.bigdata.datashops.api.controller.v1;
 
 import java.util.Map;
+import java.util.Objects;
 
 import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.StringUtils;
+import org.quartz.SchedulerException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +19,7 @@ import com.bigdata.datashops.api.controller.BasicController;
 import com.bigdata.datashops.api.response.Result;
 import com.bigdata.datashops.dao.data.domain.PageRequest;
 import com.bigdata.datashops.model.dto.DtoPageQuery;
+import com.bigdata.datashops.model.pojo.job.Job;
 import com.bigdata.datashops.model.pojo.job.TemporaryQuery;
 
 @RestController
@@ -52,5 +55,16 @@ public class TemporaryQueryController extends BasicController {
     public Result getTmpQueryById(@NotNull Integer id) {
         TemporaryQuery temporaryQuery = temporaryQueryService.findById(id);
         return ok(temporaryQuery);
+    }
+
+    @PostMapping(value = "/update")
+    public Result update(@RequestBody Map<String, String> params) {
+        String value = params.get("value");
+        TemporaryQuery temporaryQuery = temporaryQueryService.findById(Integer.valueOf(params.get("id")));
+        if (!Objects.isNull(temporaryQuery)) {
+            temporaryQuery.setValue(value);
+            temporaryQueryService.save(temporaryQuery);
+        }
+        return ok();
     }
 }
