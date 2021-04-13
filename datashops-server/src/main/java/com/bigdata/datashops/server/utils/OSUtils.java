@@ -2,6 +2,7 @@ package com.bigdata.datashops.server.utils;
 
 import java.text.DecimalFormat;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import com.google.common.collect.Maps;
 
@@ -45,7 +46,11 @@ public class OSUtils {
 
     public static Map<String, Object> getCpuInfo() {
         long[] prevTicks = processor.getSystemCpuLoadTicks();
-
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         long[] ticks = processor.getSystemCpuLoadTicks();
         long nice =
                 ticks[CentralProcessor.TickType.NICE.getIndex()] - prevTicks[CentralProcessor.TickType.NICE.getIndex()];
