@@ -34,6 +34,7 @@ import com.bigdata.datashops.service.SysOperationService;
 import com.bigdata.datashops.service.TemporaryQueryService;
 import com.bigdata.datashops.service.UserService;
 import com.bigdata.datashops.service.YarnQueueService;
+import com.bigdata.datashops.service.zookeeper.ZookeeperOperator;
 
 /**
  * Created by qinshiwei on 2018/1/30.
@@ -101,6 +102,9 @@ public class BasicController {
 
     @Autowired
     protected TemporaryQueryService temporaryQueryService;
+
+    @Autowired
+    protected ZookeeperOperator zookeeperOperator;
 
     private static final Map<String, Boolean> HAS_FACADE_METHOD = new ConcurrentHashMap<>();
     private static final Map<String, Method> FACADE_METHOD_CACHE = new ConcurrentHashMap<>();

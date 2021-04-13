@@ -17,6 +17,8 @@ public class TemporaryQuery extends BaseModel {
 
     private Integer type;
 
+    private Integer uid;
+
     private String owner;
 
     private String value;
