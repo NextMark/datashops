@@ -43,6 +43,9 @@ public class FlinkAppModeJob extends AbstractJob {
     @Override
     protected void process() {
         try {
+            String[] args = new String[] {"--kafkaServer", "192.168.1.150:9092,192.168.1.148:9092,192.168.1.149:9092",
+                    "--jobName", "ds_test", "--groupId", "test", "--checkpointInterval", "2", "--topic",
+                    "server_standard_final_log", "--path /tmp/ds/data" + "--ts", "sts"};
             YarnClient yarnClient = YarnClient.createYarnClient();
             YarnConfiguration yarnConfiguration = new YarnConfiguration();
             yarnConfiguration.addResource(
@@ -51,6 +54,8 @@ public class FlinkAppModeJob extends AbstractJob {
                     new Path(String.format("%s/conf/%s", System.getProperty("user.dir"), "hdfs-site.xml")));
             yarnConfiguration.addResource(
                     new Path(String.format("%s/conf/%s", System.getProperty("user.dir"), "core-site.xml")));
+
+            String flinkDistJar = "hdfs://nameservice1/tmp/ds/flink/libs/flink-yarn_2.12-1.12.0.jar";
 
             yarnClient.init(yarnConfiguration);
             yarnClient.start();
@@ -67,7 +72,7 @@ public class FlinkAppModeJob extends AbstractJob {
             flinkConfiguration
                     .set(YarnConfigOptions.PROVIDED_LIB_DIRS, Collections.singletonList(remoteLib.toString()));
 
-            //flinkConfiguration.set(YarnConfigOptions.FLINK_DIST_JAR, flinkDistJar);
+            flinkConfiguration.set(YarnConfigOptions.FLINK_DIST_JAR, flinkDistJar);
             flinkConfiguration.set(DeploymentOptions.TARGET, YarnDeploymentTarget.APPLICATION.getName());
             flinkConfiguration.set(YarnConfigOptions.APPLICATION_NAME, flinkData.getYarnAppName());
 
@@ -91,11 +96,11 @@ public class FlinkAppModeJob extends AbstractJob {
 
             ClusterSpecification clusterSpecification =
                     new ClusterSpecification.ClusterSpecificationBuilder().createClusterSpecification();
-            ApplicationConfiguration appConfig = new ApplicationConfiguration(null, flinkData.getClassName());
+            ApplicationConfiguration appConfig = new ApplicationConfiguration(args, flinkData.getClassName());
             YarnClusterDescriptor yarnClusterDescriptor =
                     new YarnClusterDescriptor(flinkConfiguration, yarnConfiguration, yarnClient,
                             clusterInformationRetriever, true);
-            ClusterClientProvider<ApplicationId> clusterClientProvider = null;
+            ClusterClientProvider<ApplicationId> clusterClientProvider;
 
             clusterClientProvider = yarnClusterDescriptor.deployApplicationCluster(clusterSpecification, appConfig);
 

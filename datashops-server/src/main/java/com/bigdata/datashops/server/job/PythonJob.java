@@ -1,6 +1,6 @@
 package com.bigdata.datashops.server.job;
 
-import com.bigdata.datashops.server.job.excutor.PythonCommandExecutor;
+import com.bigdata.datashops.server.job.executor.PythonCommandExecutor;
 
 public class PythonJob extends AbstractJob {
     public PythonJob(JobContext jobContext) {

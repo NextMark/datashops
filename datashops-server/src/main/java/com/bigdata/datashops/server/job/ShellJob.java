@@ -1,6 +1,6 @@
 package com.bigdata.datashops.server.job;
 
-import com.bigdata.datashops.server.job.excutor.ShellCommandExecutor;
+import com.bigdata.datashops.server.job.executor.ShellCommandExecutor;
 
 public class ShellJob extends AbstractJob {
     public ShellJob(JobContext jobContext) {

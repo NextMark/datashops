@@ -1,4 +1,4 @@
-package com.bigdata.datashops.server.job.excutor;
+package com.bigdata.datashops.server.job.executor;
 
 import java.io.IOException;
 import java.util.List;

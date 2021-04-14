@@ -1,6 +1,6 @@
 package com.bigdata.datashops.server.job;
 
-import com.bigdata.datashops.server.job.excutor.FlinkCommandExecutor;
+import com.bigdata.datashops.server.job.executor.FlinkCommandExecutor;
 
 public class FlinkPerJob extends AbstractJob {
 
