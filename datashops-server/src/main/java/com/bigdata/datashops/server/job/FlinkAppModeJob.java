@@ -66,7 +66,8 @@ public class FlinkAppModeJob extends AbstractJob {
             Configuration flinkConfiguration = GlobalConfiguration.loadConfiguration(
                     String.format("%s%s", System.getProperty("user.dir"), "/conf/flink"));
             flinkConfiguration.set(CheckpointingOptions.INCREMENTAL_CHECKPOINTS, true);
-            flinkConfiguration.set(PipelineOptions.JARS, Collections.singletonList(flinkData.getUrl()));
+            flinkConfiguration.set(PipelineOptions.JARS,
+                    Collections.singletonList("hdfs://nameservice1/tmp/ds/user_jars/datashops-flink-0.0.1.jar"));
 
             Path remoteLib = new Path(PropertyUtils.getString(Constants.FLINK_LIBS_PATH));
             flinkConfiguration
