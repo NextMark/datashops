@@ -13,6 +13,7 @@ import java.util.Objects;
 import java.util.Properties;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.common.utils.JSONUtils;
@@ -34,11 +35,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Lists;
 import com.google.protobuf.ByteString;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 public abstract class AbstractJob {
-    protected Logger logger;
+    protected Logger logger = LoggerFactory.getLogger(AbstractJob.class);
     protected Logger LOG;
 
     protected JobInstance jobInstance;
