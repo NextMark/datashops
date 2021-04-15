@@ -15,7 +15,7 @@ public class FlinkData {
 
     private String version;
 
-    private String yarnAppName;
+    private String name;
 
     private String className;
 
@@ -33,15 +33,29 @@ public class FlinkData {
 
     private String url;
 
+    private String kafkaServer;
+
+    private String topic;
+
+    private String groupId;
+
+    private String checkpointPath;
+
+    private String checkpointInterval;
+
+    private String hdfsPath;
+
+    private String ts;
+
     public List<String> buildArgs() {
         List<String> args = Lists.newArrayList();
         args.add("run");
         args.add("-m");
         args.add("yarn-cluster");
         args.add("-d");
-        if (StringUtils.isNotEmpty(yarnAppName)) {
+        if (StringUtils.isNotEmpty(name)) {
             args.add("-ynm");
-            args.add(yarnAppName);
+            args.add(name);
         }
         if (StringUtils.isNotEmpty(yarnQueue)) {
             args.add("-yq");
@@ -71,6 +85,43 @@ public class FlinkData {
             args.add(extension);
         }
         args.add("-j");
+        return args;
+    }
+
+    public List<String> buildKafka2HdfsArgs() {
+        List<String> args = Lists.newArrayList();
+        if (StringUtils.isNotEmpty(kafkaServer)) {
+            args.add("--kafkaServer");
+            args.add(kafkaServer);
+        }
+        if (StringUtils.isNotEmpty(name)) {
+            args.add("--jobName");
+            args.add(name);
+        }
+        if (StringUtils.isNotEmpty(groupId)) {
+            args.add("--groupId");
+            args.add(groupId);
+        }
+        if (StringUtils.isNotEmpty(checkpointPath)) {
+            args.add("--checkpointPath");
+            args.add(checkpointPath);
+        }
+        if (!Objects.isNull(checkpointInterval)) {
+            args.add("--checkpointInterval");
+            args.add(checkpointInterval);
+        }
+        if (StringUtils.isNotEmpty(topic)) {
+            args.add("--topic");
+            args.add(topic);
+        }
+        if (!Objects.isNull(hdfsPath)) {
+            args.add("--path");
+            args.add(String.valueOf(hdfsPath));
+        }
+        if (StringUtils.isNotEmpty(ts)) {
+            args.add("--ts");
+            args.add(ts);
+        }
         return args;
     }
 

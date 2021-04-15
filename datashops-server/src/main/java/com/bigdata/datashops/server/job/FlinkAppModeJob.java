@@ -1,9 +1,11 @@
 package com.bigdata.datashops.server.job;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.flink.client.deployment.ClusterDeploymentException;
 import org.apache.flink.client.deployment.ClusterSpecification;
 import org.apache.flink.client.deployment.application.ApplicationConfiguration;
 import org.apache.flink.client.program.ClusterClient;
@@ -30,6 +32,7 @@ import org.apache.hadoop.yarn.conf.YarnConfiguration;
 import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.common.utils.JSONUtils;
 import com.bigdata.datashops.common.utils.PropertyUtils;
+import com.bigdata.datashops.model.enums.JobType;
 import com.bigdata.datashops.model.pojo.job.data.FlinkData;
 
 public class FlinkAppModeJob extends AbstractJob {
@@ -43,10 +46,19 @@ public class FlinkAppModeJob extends AbstractJob {
     @Override
     protected void process() {
         try {
-            String[] args = new String[] {"--kafkaServer", "192.168.1.150:9092,192.168.1.148:9092,192.168.1.149:9092",
-                    "--jobName", "ds_test", "--groupId", "test", "--checkpointPath", "hdfs:///tmp/ds/checkpoint",
-                    "--checkpointInterval", "2", "--topic", "server_standard_final_log", "--path", "/tmp/ds/data",
-                    "--ts", "sts"};
+            String[] args = new String[0];
+            if (jobInstance.getType() == JobType.KAFKA_2_HDFS.getCode()) {
+                List<String> params = flinkData.buildKafka2HdfsArgs();
+                args = params.toArray(new String[0]);
+            }
+            //            args = new String[] {"--kafkaServer", "192.168.1.150:9092,192.168.1.148:9092,192.168.1
+            //            .149:9092",
+            //                    "--jobName", "ds_test", "--groupId", "test", "--checkpointPath",
+            //                    "hdfs:///tmp/ds/checkpoint",
+            //                    "--checkpointInterval", "2", "--topic", "server_standard_final_log", "--path",
+            //                    "/tmp/ds/data",
+            //                    "--ts", "sts"};
+
             YarnClient yarnClient = YarnClient.createYarnClient();
             YarnConfiguration yarnConfiguration = new YarnConfiguration();
             yarnConfiguration.addResource(
@@ -76,7 +88,7 @@ public class FlinkAppModeJob extends AbstractJob {
 
             flinkConfiguration.set(YarnConfigOptions.FLINK_DIST_JAR, flinkDistJar);
             flinkConfiguration.set(DeploymentOptions.TARGET, YarnDeploymentTarget.APPLICATION.getName());
-            flinkConfiguration.set(YarnConfigOptions.APPLICATION_NAME, flinkData.getYarnAppName());
+            flinkConfiguration.set(YarnConfigOptions.APPLICATION_NAME, flinkData.getName());
 
             if (StringUtils.isNotEmpty(flinkData.getJobManagerMemory())) {
                 flinkConfiguration
@@ -102,9 +114,14 @@ public class FlinkAppModeJob extends AbstractJob {
             YarnClusterDescriptor yarnClusterDescriptor =
                     new YarnClusterDescriptor(flinkConfiguration, yarnConfiguration, yarnClient,
                             clusterInformationRetriever, true);
-            ClusterClientProvider<ApplicationId> clusterClientProvider;
+            ClusterClientProvider<ApplicationId> clusterClientProvider = null;
+            try {
+                clusterClientProvider = yarnClusterDescriptor.deployApplicationCluster(clusterSpecification, appConfig);
+            } catch (ClusterDeploymentException e) {
+                LOG.error("Flink submit error", e);
 
-            clusterClientProvider = yarnClusterDescriptor.deployApplicationCluster(clusterSpecification, appConfig);
+                e.printStackTrace();
+            }
 
             ClusterClient<ApplicationId> clusterClient = clusterClientProvider.getClusterClient();
             ApplicationId applicationId = clusterClient.getClusterId();
@@ -118,6 +135,6 @@ public class FlinkAppModeJob extends AbstractJob {
 
     @Override
     public void after() {
-        success();
+        //success();
     }
 }

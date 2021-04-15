@@ -39,6 +39,7 @@ public class JobManager {
             case SPARK:
                 return new SparkJob(jobContext);
             case FLINK:
+            case KAFKA_2_HDFS:
                 return new FlinkAppModeJob(jobContext);
             case CLICK_HOUSE:
                 return new ClickHouseJob(jobContext);
