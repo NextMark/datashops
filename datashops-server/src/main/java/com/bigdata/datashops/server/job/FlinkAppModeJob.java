@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.flink.client.deployment.ClusterDeploymentException;
 import org.apache.flink.client.deployment.ClusterSpecification;
 import org.apache.flink.client.deployment.application.ApplicationConfiguration;
 import org.apache.flink.client.program.ClusterClient;
@@ -50,6 +49,7 @@ public class FlinkAppModeJob extends AbstractJob {
             if (jobInstance.getType() == JobType.KAFKA_2_HDFS.getCode()) {
                 List<String> params = flinkData.buildKafka2HdfsArgs();
                 args = params.toArray(new String[0]);
+                LOG.info("Flink job user params {}", StringUtils.join(args, " "));
             }
             //            args = new String[] {"--kafkaServer", "192.168.1.150:9092,192.168.1.148:9092,192.168.1
             //            .149:9092",
@@ -114,14 +114,8 @@ public class FlinkAppModeJob extends AbstractJob {
             YarnClusterDescriptor yarnClusterDescriptor =
                     new YarnClusterDescriptor(flinkConfiguration, yarnConfiguration, yarnClient,
                             clusterInformationRetriever, true);
-            ClusterClientProvider<ApplicationId> clusterClientProvider = null;
-            try {
-                clusterClientProvider = yarnClusterDescriptor.deployApplicationCluster(clusterSpecification, appConfig);
-            } catch (ClusterDeploymentException e) {
-                LOG.error("Flink submit error", e);
-
-                e.printStackTrace();
-            }
+            ClusterClientProvider<ApplicationId> clusterClientProvider =
+                    yarnClusterDescriptor.deployApplicationCluster(clusterSpecification, appConfig);
 
             ClusterClient<ApplicationId> clusterClient = clusterClientProvider.getClusterClient();
             ApplicationId applicationId = clusterClient.getClusterId();

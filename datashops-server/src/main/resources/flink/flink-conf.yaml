@@ -41,14 +41,14 @@ jobmanager.rpc.port: 6123
 #
 # Note this accounts for all memory usage within the JobManager process, including JVM metaspace and other overhead.
 
-jobmanager.memory.process.size: 1600m
+jobmanager.memory.process.size: 2048m
 
 
 # The total process memory size for the TaskManager.
 #
 # Note this accounts for all memory usage within the TaskManager process, including JVM metaspace and other overhead.
 
-taskmanager.memory.process.size: 1728m
+taskmanager.memory.process.size: 1024m
 
 # To exclude JVM metaspace and overhead, please, use total Flink memory size instead of 'taskmanager.memory.process.size'.
 # It is not recommended to set both 'taskmanager.memory.process.size' and Flink memory.
