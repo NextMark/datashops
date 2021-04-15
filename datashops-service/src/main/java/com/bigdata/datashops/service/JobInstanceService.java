@@ -14,6 +14,7 @@ import com.bigdata.datashops.common.utils.DateUtils;
 import com.bigdata.datashops.common.utils.JobUtils;
 import com.bigdata.datashops.dao.data.domain.PageRequest;
 import com.bigdata.datashops.dao.data.service.AbstractMysqlPagingAndSortingQueryService;
+import com.bigdata.datashops.model.enums.JobType;
 import com.bigdata.datashops.model.enums.RunState;
 import com.bigdata.datashops.model.pojo.job.Job;
 import com.bigdata.datashops.model.pojo.job.JobInstance;
@@ -51,6 +52,9 @@ public class JobInstanceService extends AbstractMysqlPagingAndSortingQueryServic
     }
 
     public JobInstance createNewJobInstance(Integer id, String operator, Job job) {
+        if (job.getType() == JobType.FLINK.getCode() || job.getType() == JobType.KAFKA_2_HDFS.getCode()) {
+            return createNewJobInstance(id, operator, job, new Date());
+        }
         return createNewJobInstance(id, operator, job, CronHelper.getLastTime(job.getCronExpression()));
     }
 
