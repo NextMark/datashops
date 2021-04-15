@@ -49,15 +49,10 @@ public class FlinkAppModeJob extends AbstractJob {
             if (jobInstance.getType() == JobType.KAFKA_2_HDFS.getCode()) {
                 List<String> params = flinkData.buildKafka2HdfsArgs();
                 args = params.toArray(new String[0]);
-                logger.info("Flink job user params {}", StringUtils.join(args, " "));
+                logger.info("Flink job user params = {}", StringUtils.join(args, " "));
             } else {
-
-                args = new String[] {"--kafkaServer", "192.168.1.150:9092,192.168.1.148:9092,192.168.1.149:9092",
-                        "--jobName", "ds_test", "--groupId", "test", "--checkpointPath", "hdfs:///tmp/ds/checkpoint",
-                        "--checkpointInterval", "2", "--topic", "server_standard_final_log", "--path", "/tmp/ds/data",
-                        "--ts", "sts"};
-                logger.info("Flink job user params {}", StringUtils.join(args, " "));
-
+                args = flinkData.getExtension().split(" ");
+                logger.info("Flink job user params = {}", StringUtils.join(args, " "));
             }
 
             YarnClient yarnClient = YarnClient.createYarnClient();
