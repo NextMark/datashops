@@ -59,7 +59,6 @@ public class MasterGrpcProcessor implements InitializingBean {
             instance.setEndTime(new Date());
             instance.setState(RunState.TIMEOUT_FAIL.getCode());
         }
-        LOG.info("Job name={}, instanceId={} finish, update it", instance.getJob().getName(), instance.getInstanceId());
         jobInstanceService.saveEntity(instance);
     }
 
