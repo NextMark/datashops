@@ -85,6 +85,7 @@ public class Constants {
     public final static Integer RPC_JOB_SUCCESS = 200;
     public final static Integer RPC_JOB_FAIL = 201;
     public final static Integer RPC_JOB_TIMEOUT_FAIL = 202;
+    public final static Integer RPC_JOB_APP_ID = 203;
 
     /**
      * jwt

@@ -147,27 +147,19 @@ public abstract class AbstractJob {
     }
 
     protected void success() {
-        try {
-            request = GrpcRequest.Request.newBuilder().setIp(NetUtils.getLocalAddress())
-                              .setPort(PropertyUtils.getInt(Constants.WORKER_GRPC_SERVER_PORT))
-                              .setRequestId(jobInstance.getInstanceId())
-                              .setRequestType(GrpcRequest.RequestType.JOB_EXECUTE_RESPONSE)
-                              .setCode(Constants.RPC_JOB_SUCCESS)
-                              .setBody(ByteString.copyFrom(JSONUtils.toJsonString(result).getBytes())).build();
-            grpcRemotingClient.send(request, selectHost());
-        } catch (Exception e) {
-            LOG.error(String.format("Report end status error, name=%s, instanceId=%s", jobInstance.getJob().getName(),
-                    jobInstance.getInstanceId()), e);
-        }
+        rpc(Constants.RPC_JOB_SUCCESS);
     }
 
     protected void fail() {
+        rpc(Constants.RPC_JOB_FAIL);
+    }
+
+    protected void rpc(int code) {
         try {
             request = GrpcRequest.Request.newBuilder().setIp(NetUtils.getLocalAddress())
                               .setPort(PropertyUtils.getInt(Constants.WORKER_GRPC_SERVER_PORT))
                               .setRequestId(jobInstance.getInstanceId())
-                              .setRequestType(GrpcRequest.RequestType.JOB_EXECUTE_RESPONSE)
-                              .setCode(Constants.RPC_JOB_FAIL)
+                              .setRequestType(GrpcRequest.RequestType.JOB_EXECUTE_RESPONSE).setCode(code)
                               .setBody(ByteString.copyFrom(JSONUtils.toJsonString(result).getBytes())).build();
             grpcRemotingClient.send(request, selectHost());
         } catch (Exception e) {

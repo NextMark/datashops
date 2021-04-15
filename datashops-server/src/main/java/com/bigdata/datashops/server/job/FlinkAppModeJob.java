@@ -117,6 +117,7 @@ public class FlinkAppModeJob extends AbstractJob {
             ApplicationId applicationId = clusterClient.getClusterId();
             result.setData(applicationId.toString());
             LOG.info("Flink submit app, id = {}", applicationId);
+            rpc(Constants.RPC_JOB_APP_ID);
         } catch (Exception e) {
             LOG.error(String.format("Job execute error class=%s, name=%s, instanceId=%s", this.getClass(),
                     jobInstance.getJob().getName(), jobInstance.getInstanceId()), e);
