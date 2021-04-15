@@ -38,6 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public abstract class AbstractJob {
+    protected Logger logger;
     protected Logger LOG;
 
     protected JobInstance jobInstance;

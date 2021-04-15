@@ -49,7 +49,7 @@ public class FlinkAppModeJob extends AbstractJob {
             if (jobInstance.getType() == JobType.KAFKA_2_HDFS.getCode()) {
                 List<String> params = flinkData.buildKafka2HdfsArgs();
                 args = params.toArray(new String[0]);
-                LOG.info("Flink job user params {}", StringUtils.join(args, " "));
+                logger.info("Flink job user params {}", StringUtils.join(args, " "));
             }
             //            args = new String[] {"--kafkaServer", "192.168.1.150:9092,192.168.1.148:9092,192.168.1
             //            .149:9092",
