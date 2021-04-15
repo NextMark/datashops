@@ -65,12 +65,12 @@ public abstract class AbstractJob {
     }
 
     public void execute() throws Exception {
-        LOG.info("Job {} begin, name={}, instanceId={}", this.getClass(), jobInstance.getName(),
+        LOG.info("Job {} begin, name={}, instanceId={}", this.getClass(), jobInstance.getJob().getName(),
                 jobInstance.getInstanceId());
         before();
         process();
         after();
-        LOG.info("Job {} end, name={}, instanceId={}", this.getClass(), jobInstance.getName(),
+        LOG.info("Job {} end, name={}, instanceId={}", this.getClass(), jobInstance.getJob().getName(),
                 jobInstance.getInstanceId());
     }
 
@@ -156,7 +156,7 @@ public abstract class AbstractJob {
                               .setBody(ByteString.copyFrom(JSONUtils.toJsonString(result).getBytes())).build();
             grpcRemotingClient.send(request, selectHost());
         } catch (Exception e) {
-            LOG.error(String.format("Report end status error, name=%s, instanceId=%s", jobInstance.getName(),
+            LOG.error(String.format("Report end status error, name=%s, instanceId=%s", jobInstance.getJob().getName(),
                     jobInstance.getInstanceId()), e);
         }
     }
@@ -171,7 +171,7 @@ public abstract class AbstractJob {
                               .setBody(ByteString.copyFrom(JSONUtils.toJsonString(result).getBytes())).build();
             grpcRemotingClient.send(request, selectHost());
         } catch (Exception e) {
-            LOG.error(String.format("Report end status error, name=%s, instanceId=%s", jobInstance.getName(),
+            LOG.error(String.format("Report end status error, name=%s, instanceId=%s", jobInstance.getJob().getName(),
                     jobInstance.getInstanceId()), e);
         }
     }

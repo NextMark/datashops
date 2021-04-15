@@ -1,5 +1,6 @@
 package com.bigdata.datashops.server.master.processor;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.concurrent.ExecutorService;
 
@@ -39,7 +40,8 @@ public class MasterGrpcProcessor implements InitializingBean {
         int code = request.getCode();
         JobResult result = JSONUtils.parseObject(body, JobResult.class);
         JobInstance instance = jobInstanceService.findJobInstance("instanceId=" + result.getInstanceId());
-        LOG.info("Receive worker finish rpc code={}, name={}, instanceId={}", code, instance.getName(),
+        jobInstanceService.fillJob(Collections.singletonList(instance));
+        LOG.info("Receive worker finish rpc code={}, name={}, instanceId={}", code, instance.getJob().getName(),
                 result.getInstanceId());
         if (code == Constants.RPC_JOB_SUCCESS) {
             instance.setEndTime(new Date());
@@ -53,7 +55,7 @@ public class MasterGrpcProcessor implements InitializingBean {
             instance.setEndTime(new Date());
             instance.setState(RunState.TIMEOUT_FAIL.getCode());
         }
-        LOG.info("Job name={}, instanceId={} finish, update it", instance.getName(), instance.getInstanceId());
+        LOG.info("Job name={}, instanceId={} finish, update it", instance.getJob().getName(), instance.getInstanceId());
         jobInstanceService.saveEntity(instance);
     }
 
@@ -62,7 +64,9 @@ public class MasterGrpcProcessor implements InitializingBean {
         int code = request.getCode();
         JobResult result = JSONUtils.parseObject(body, JobResult.class);
         JobInstance instance = jobInstanceService.findJobInstance("instanceId=" + result.getInstanceId());
-        LOG.info("Receive job kill response, name={}, instanceId={}", instance.getName(), result.getInstanceId());
+        jobInstanceService.fillJob(Collections.singletonList(instance));
+        LOG.info("Receive job kill response, name={}, instanceId={}", instance.getJob().getName(),
+                result.getInstanceId());
         if (code == Constants.RPC_JOB_SUCCESS) {
             instance.setEndTime(new Date());
             instance.setState(RunState.KILL.getCode());
@@ -70,7 +74,7 @@ public class MasterGrpcProcessor implements InitializingBean {
         if (code == Constants.RPC_JOB_FAIL) {
             instance.setState(RunState.FAIL.getCode());
         }
-        LOG.info("Job killed, name={}, instanceId={} update it", instance.getName(), instance.getInstanceId());
+        LOG.info("Job killed, name={}, instanceId={} update it", instance.getJob().getName(), instance.getInstanceId());
         jobInstanceService.saveEntity(instance);
     }
 

@@ -18,7 +18,7 @@ public class FlinkPerJob extends AbstractJob {
             success();
         } catch (Exception e) {
             LOG.error(String.format("Job execute error class=%s, name=%s, instanceId=%s", this.getClass(),
-                    jobInstance.getName(), jobInstance.getInstanceId()), e);
+                    jobInstance.getJob().getName(), jobInstance.getInstanceId()), e);
             fail();
         }
     }

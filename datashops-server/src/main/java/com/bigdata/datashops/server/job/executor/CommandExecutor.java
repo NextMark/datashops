@@ -52,21 +52,21 @@ public abstract class CommandExecutor {
             readErrorStream();
             boolean status = process.waitFor(jobContext.getJobInstance().getJob().getTimeout(), TimeUnit.SECONDS);
             if (status) {
-                LOG.info(String.format(log, jobContext.getJobInstance().getName(),
+                LOG.info(String.format(log, jobContext.getJobInstance().getJob().getName(),
                         jobContext.getJobInstance().getInstanceId(), true, process.exitValue()));
                 result.setExistCode(Constants.RPC_JOB_SUCCESS);
             } else {
-                LOG.info(String.format(log, jobContext.getJobInstance().getName(),
+                LOG.info(String.format(log, jobContext.getJobInstance().getJob().getName(),
                         jobContext.getJobInstance().getInstanceId(), false, process.exitValue()));
                 result.setExistCode(Constants.RPC_JOB_FAIL);
             }
             FileUtils.deleteFile(commandFilePath);
         } catch (IllegalStateException e) {
-            LOG.error(String.format(log, jobContext.getJobInstance().getName(),
+            LOG.error(String.format(log, jobContext.getJobInstance().getJob().getName(),
                     jobContext.getJobInstance().getInstanceId(), false, process.exitValue()), e);
             result.setExistCode(Constants.RPC_JOB_TIMEOUT_FAIL);
         } catch (InterruptedException | IOException e) {
-            LOG.error(String.format(log, jobContext.getJobInstance().getName(),
+            LOG.error(String.format(log, jobContext.getJobInstance().getJob().getName(),
                     jobContext.getJobInstance().getInstanceId(), false, process.exitValue()), e);
             result.setExistCode(Constants.RPC_JOB_FAIL);
         }

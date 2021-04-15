@@ -66,8 +66,8 @@ public class JobInstanceService extends AbstractMysqlPagingAndSortingQueryServic
             return jobInstance;
         }
         return JobInstance.builder().maskId(job.getMaskId()).instanceId(instanceId).submitTime(now).status(1).jobId(id)
-                       .name(job.getName()).projectId(job.getProjectId()).state(RunState.CREATED.getCode())
-                       .type(job.getType()).operator(operator).bizTime(bizDate).build();
+                       .projectId(job.getProjectId()).state(RunState.CREATED.getCode()).type(job.getType())
+                       .operator(operator).bizTime(bizDate).build();
     }
 
     public void buildBatchJobInstance(Integer id, String startTime, String endTime, String operator)

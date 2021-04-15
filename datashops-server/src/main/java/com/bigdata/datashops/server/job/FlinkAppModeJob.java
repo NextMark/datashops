@@ -122,7 +122,7 @@ public class FlinkAppModeJob extends AbstractJob {
             LOG.info("Flink submit app, id={}", applicationId);
         } catch (Exception e) {
             LOG.error(String.format("Job execute error class=%s, name=%s, instanceId=%s", this.getClass(),
-                    jobInstance.getName(), jobInstance.getInstanceId()), e);
+                    jobInstance.getJob().getName(), jobInstance.getInstanceId()), e);
             fail();
         }
     }

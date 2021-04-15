@@ -16,7 +16,7 @@ public class PythonJob extends AbstractJob {
             commandResult = pythonCommandExecutor.run();
         } catch (Exception e) {
             LOG.error(String.format("Job execute error class=%s, name=%s, instanceId=%s", this.getClass(),
-                    jobInstance.getName(), jobInstance.getInstanceId()), e);
+                    jobInstance.getJob().getName(), jobInstance.getInstanceId()), e);
             fail();
         }
     }

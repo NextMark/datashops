@@ -38,7 +38,7 @@ public class HiveJob extends AbstractJob {
             success();
         } catch (SQLException e) {
             LOG.error(String.format("Job execute error class=%s, name=%s, instanceId=%s", this.getClass(),
-                    jobInstance.getName(), jobInstance.getInstanceId()), e);
+                    jobInstance.getJob().getName(), jobInstance.getInstanceId()), e);
             fail();
         }
     }
