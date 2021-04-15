@@ -56,6 +56,8 @@ public class FlinkAppModeJob extends AbstractJob {
                         "--jobName", "ds_test", "--groupId", "test", "--checkpointPath", "hdfs:///tmp/ds/checkpoint",
                         "--checkpointInterval", "2", "--topic", "server_standard_final_log", "--path", "/tmp/ds/data",
                         "--ts", "sts"};
+                logger.info("Flink job user params {}", StringUtils.join(args, " "));
+
             }
 
             YarnClient yarnClient = YarnClient.createYarnClient();
