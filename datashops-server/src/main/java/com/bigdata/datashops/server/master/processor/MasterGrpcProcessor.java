@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.common.utils.JSONUtils;
 import com.bigdata.datashops.common.utils.PropertyUtils;
+import com.bigdata.datashops.model.enums.JobType;
 import com.bigdata.datashops.model.enums.RunState;
 import com.bigdata.datashops.model.pojo.job.JobInstance;
 import com.bigdata.datashops.protocol.GrpcRequest;
@@ -43,6 +44,9 @@ public class MasterGrpcProcessor implements InitializingBean {
         jobInstanceService.fillJob(Collections.singletonList(instance));
         LOG.info("Receive worker finish rpc code={}, name={}, instanceId={}", code, instance.getJob().getName(),
                 result.getInstanceId());
+        if (instance.getType() == JobType.KAFKA_2_HDFS.getCode() || instance.getType() == JobType.FLINK.getCode()) {
+            instance.setAppId(result.getData());
+        }
         if (code == Constants.RPC_JOB_SUCCESS) {
             instance.setEndTime(new Date());
             instance.setState(RunState.SUCCESS.getCode());

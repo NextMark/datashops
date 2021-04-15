@@ -95,6 +95,8 @@ public class JobInstance extends BaseModel implements Comparable<JobInstance> {
 
     private String host;
 
+    private String appId;
+
     @Transient
     private Job job;
 
