@@ -1,5 +1,7 @@
 package com.bigdata.datashops.api.controller.v1;
 
+import java.io.IOException;
+
 import javax.validation.constraints.NotNull;
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,5 +27,12 @@ public class LogController extends BasicController {
         String filePath = String.format("%s%s%s", FileUtils.getJobExecLogDir(), instanceId, ".log");
         String content = logRequestProcessor.rollReadLog(filePath, skipLines, limit, host);
         return ok(content);
+    }
+
+    @RequestMapping(value = "/readYarnLog")
+    public Result readYarnLog(@NotNull String instanceId, @NotNull Integer skipLines, @NotNull Integer limit)
+            throws IOException {
+        hadoopService.readLog("application_1614320942413_698804");
+        return ok();
     }
 }

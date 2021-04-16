@@ -284,6 +284,9 @@ public class JobController extends BasicController {
     @RequestMapping(value = "/cancelJob")
     public Result cancelJob(@NotNull Integer id, @NotNull String operator) {
         JobInstance instance = jobInstanceService.findById(id);
+        if (JobType.yarnJobType().contains(instance.getType())) {
+            hadoopService.cancelApplication(instance.getAppId());
+        }
         instance.setState(RunState.CANCEL.getCode());
         instance.setOperator(operator);
         instance.setSubmitTime(new Date());

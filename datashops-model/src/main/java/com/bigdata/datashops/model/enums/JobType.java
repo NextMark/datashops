@@ -1,6 +1,9 @@
 package com.bigdata.datashops.model.enums;
 
 import java.util.HashMap;
+import java.util.List;
+
+import com.google.common.collect.Lists;
 
 public enum JobType {
     HIVE(0, "hive"), SHELL(1, "bash"), SPARK(2, "spark"), FLINK(3, "flink"), CLICK_HOUSE(4, "clickhouse"),
@@ -38,5 +41,17 @@ public enum JobType {
             return JOB_TYPE_MAP.get(type);
         }
         throw new IllegalArgumentException("Invalid type : " + type);
+    }
+
+    public static List<Integer> yarnJobType() {
+        List<Integer> ids = Lists.newArrayList();
+        ids.add(HIVE.code);
+        ids.add(SPARK.code);
+        ids.add(FLINK.code);
+        ids.add(FSQL.code);
+        ids.add(SQOOP.code);
+        ids.add(KAFKA_2_HDFS.code);
+        ids.add(KAFKA_2_HIVE.code);
+        return ids;
     }
 }

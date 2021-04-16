@@ -118,6 +118,11 @@ public class Constants {
     public static final String YARN_APPLICATION_STATUS_ADDRESS = "yarn.application.status.address";
 
     /**
+     * yarn.application.status.address
+     */
+    public static final String YARN_APPLICATION_CANCEL_ADDRESS = "yarn.application.cancel.address";
+
+    /**
      * yarn.job.history.status.address
      */
     public static final String YARN_JOB_HISTORY_STATUS_ADDRESS = "yarn.job.history.status.address";
