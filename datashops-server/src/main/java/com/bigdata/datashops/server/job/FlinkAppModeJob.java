@@ -1,5 +1,6 @@
 package com.bigdata.datashops.server.job;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -42,6 +43,17 @@ public class FlinkAppModeJob extends AbstractJob {
 
     private FlinkData flinkData;
 
+    private YarnConfiguration yarnConfiguration = new YarnConfiguration();
+
+    {
+        yarnConfiguration
+                .addResource(new Path(String.format("%s/conf/%s", System.getProperty("user.dir"), "yarn-site.xml")));
+        yarnConfiguration
+                .addResource(new Path(String.format("%s/conf/%s", System.getProperty("user.dir"), "hdfs-site.xml")));
+        yarnConfiguration
+                .addResource(new Path(String.format("%s/conf/%s", System.getProperty("user.dir"), "core-site.xml")));
+    }
+
     @Override
     protected void process() {
         try {
@@ -56,16 +68,6 @@ public class FlinkAppModeJob extends AbstractJob {
             }
 
             YarnClient yarnClient = YarnClient.createYarnClient();
-            YarnConfiguration yarnConfiguration = new YarnConfiguration();
-            yarnConfiguration.addResource(
-                    new Path(String.format("%s/conf/%s", System.getProperty("user.dir"), "yarn-site.xml")));
-            yarnConfiguration.addResource(
-                    new Path(String.format("%s/conf/%s", System.getProperty("user.dir"), "hdfs-site.xml")));
-            yarnConfiguration.addResource(
-                    new Path(String.format("%s/conf/%s", System.getProperty("user.dir"), "core-site.xml")));
-
-            String flinkDistJar = "hdfs://nameservice1/tmp/ds/flink/libs/flink-yarn_2.12-1.12.0.jar";
-
             yarnClient.init(yarnConfiguration);
             yarnClient.start();
 
@@ -73,16 +75,18 @@ public class FlinkAppModeJob extends AbstractJob {
                     YarnClientYarnClusterInformationRetriever.create(yarnClient);
 
             Configuration flinkConfiguration = GlobalConfiguration.loadConfiguration(
-                    String.format("%s%s", System.getProperty("user.dir"), "/conf/flink"));
+                    String.format("%s/%s", System.getProperty("user.dir"), "conf/flink"));
             flinkConfiguration.set(CheckpointingOptions.INCREMENTAL_CHECKPOINTS, true);
-            flinkConfiguration.set(PipelineOptions.JARS,
-                    Collections.singletonList("hdfs://nameservice1/tmp/ds/user_jars/datashops-flink-0.0.1.jar"));
+            flinkConfiguration.set(PipelineOptions.JARS, Collections.singletonList(
+                    PropertyUtils.getString(Constants.FLINK_USER_JAR_PATH) + File.separator + PropertyUtils.getString(
+                            Constants.FLINK_INTEGRATION_JAR)));
 
             Path remoteLib = new Path(PropertyUtils.getString(Constants.FLINK_LIBS_PATH));
             flinkConfiguration
                     .set(YarnConfigOptions.PROVIDED_LIB_DIRS, Collections.singletonList(remoteLib.toString()));
 
-            flinkConfiguration.set(YarnConfigOptions.FLINK_DIST_JAR, flinkDistJar);
+            flinkConfiguration
+                    .set(YarnConfigOptions.FLINK_DIST_JAR, PropertyUtils.getString(Constants.FLINK_DIST_JAR_PATH));
             flinkConfiguration.set(DeploymentOptions.TARGET, YarnDeploymentTarget.APPLICATION.getName());
             flinkConfiguration.set(YarnConfigOptions.APPLICATION_NAME, flinkData.getName());
 

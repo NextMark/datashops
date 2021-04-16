@@ -226,6 +226,8 @@ public class Constants {
 
     public static final String FLINK_DIST_JAR_PATH = "flink.dist.jar.path";
 
+    public static final String FLINK_INTEGRATION_JAR = "flink.integration.jar";
+
     public static final String MASTER_GRPC_SERVER_PORT = "master.grpc.server.port";
 
     public static final String WORKER_GRPC_SERVER_PORT = "worker.grpc.server.port";
