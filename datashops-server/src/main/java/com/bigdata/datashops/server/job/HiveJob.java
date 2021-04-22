@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.hive.jdbc.HiveStatement;
 
 import com.bigdata.datashops.common.Constants;
@@ -46,6 +47,9 @@ public class HiveJob extends AbstractJob {
             new GetLogThread().start();
             String[] sqls = baseDataSource.getValue().split(Constants.SEPARATOR_SEMICOLON);
             for (String sql : sqls) {
+                if (StringUtils.isBlank(sql)) {
+                    continue;
+                }
                 LOG.info("Execute hive\n{}", sql);
                 rs = stmt.executeQuery(
                         SQLParser.parseSQL(LocalDateUtils.dateToLocalDateTime(jobInstance.getBizTime()), sql));
