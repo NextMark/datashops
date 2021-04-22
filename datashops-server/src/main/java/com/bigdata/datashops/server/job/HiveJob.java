@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 
 import org.apache.hive.jdbc.HiveStatement;
 
+import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.common.utils.LocalDateUtils;
 import com.bigdata.datashops.dao.datasource.DataSourceFactory;
 import com.bigdata.datashops.model.enums.DbType;
@@ -42,12 +43,15 @@ public class HiveJob extends AbstractJob {
             DataSourceFactory.loadClass(baseDataSource.dbType());
             connection = creatConnection();
             stmt = (HiveStatement) connection.createStatement();
-            LOG.info("Execute hive\n{}", baseDataSource.getValue());
             new GetLogThread().start();
-            rs = stmt.executeQuery(SQLParser.parseSQL(LocalDateUtils.dateToLocalDateTime(jobInstance.getBizTime()),
-                    baseDataSource.getValue()));
-            resultProcess(rs);
-            LOG.info("Hive job submit");
+            String[] sqls = baseDataSource.getValue().split(Constants.SEPARATOR_SEMICOLON);
+            for (String sql : sqls) {
+                LOG.info("Execute hive\n{}", sql);
+                rs = stmt.executeQuery(
+                        SQLParser.parseSQL(LocalDateUtils.dateToLocalDateTime(jobInstance.getBizTime()), sql));
+                resultProcess(rs);
+                LOG.info("Hive job submit");
+            }
             success();
         } catch (SQLException e) {
             LOG.error(String.format("Job execute error class=%s, name=%s, instanceId=%s", this.getClass(),
