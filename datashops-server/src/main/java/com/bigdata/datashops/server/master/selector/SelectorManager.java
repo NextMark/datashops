@@ -23,10 +23,10 @@ public class SelectorManager {
                     return new LowerWeightSelector();
                 }
                 return new AssignSelector(instance);
-            case WEIGHT:
-                return new LowerWeightSelector();
-            default:
+            case RANDOM:
                 return new RandomSelector();
+            default:
+                return new LowerWeightSelector();
         }
     }
 }
