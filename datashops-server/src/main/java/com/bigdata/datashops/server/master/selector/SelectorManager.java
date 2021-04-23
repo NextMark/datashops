@@ -20,7 +20,7 @@ public class SelectorManager {
                 host.setIp(instance.getJob().getHost());
                 host.setPort(PropertyUtils.getInt(Constants.WORKER_GRPC_SERVER_PORT));
                 if (!hosts.contains(host)) {
-                    return new RandomSelector();
+                    return new LowerWeightSelector();
                 }
                 return new AssignSelector(instance);
             case WEIGHT:
