@@ -9,7 +9,7 @@ public class HostWeight {
 
     private final int MEMORY_FACTOR = 20;
 
-    private final int LOAD_AVERAGE_FACTOR = 70;
+    private final int LOAD_AVERAGE_FACTOR = 80;
 
     private final Host host;
 

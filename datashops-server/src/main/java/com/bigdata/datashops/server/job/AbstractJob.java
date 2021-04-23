@@ -23,7 +23,7 @@ import com.bigdata.datashops.model.pojo.job.JobInstance;
 import com.bigdata.datashops.model.pojo.rpc.Host;
 import com.bigdata.datashops.protocol.GrpcRequest;
 import com.bigdata.datashops.remote.rpc.GrpcRemotingClient;
-import com.bigdata.datashops.server.master.selector.RandomHostSelector;
+import com.bigdata.datashops.server.master.selector.RandomSelector;
 import com.bigdata.datashops.server.master.selector.Selector;
 import com.bigdata.datashops.server.utils.ZKUtils;
 import com.bigdata.datashops.service.zookeeper.ZookeeperOperator;
@@ -113,7 +113,7 @@ public abstract class AbstractJob {
             h.setPort(Integer.parseInt(hostInfo[1]));
             hosts.add(h);
         }
-        Selector<Host> selector = new RandomHostSelector();
+        Selector<Host> selector = new RandomSelector();
         Host host = selector.select(hosts);
         LOG.info("Select {}", host.toString());
         return host;

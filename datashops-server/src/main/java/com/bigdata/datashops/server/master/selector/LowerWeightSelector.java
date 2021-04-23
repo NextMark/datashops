@@ -7,7 +7,7 @@ import java.util.List;
 import com.bigdata.datashops.model.pojo.rpc.Host;
 import com.google.common.collect.Lists;
 
-public class WeightSelector extends AbstractSelector<Host> {
+public class LowerWeightSelector extends AbstractSelector<Host> {
 
     @Override
     protected Host doSelect(Collection<Host> hosts) {

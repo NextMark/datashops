@@ -7,7 +7,7 @@ import java.util.Random;
 
 import com.bigdata.datashops.model.pojo.rpc.Host;
 
-public class RandomHostSelector extends AbstractSelector<Host> {
+public class RandomSelector extends AbstractSelector<Host> {
 
     @Override
     protected Host doSelect(Collection<Host> hosts) {
