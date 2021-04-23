@@ -1,5 +1,6 @@
 package com.bigdata.datashops.server.utils;
 
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -8,6 +9,7 @@ import com.google.common.collect.Maps;
 
 import oshi.SystemInfo;
 import oshi.hardware.CentralProcessor;
+import oshi.hardware.GlobalMemory;
 import oshi.hardware.HardwareAbstractionLayer;
 import oshi.software.os.OperatingSystem;
 
@@ -76,5 +78,26 @@ public class OSUtils {
         cpuInfo.put("iowait", new DecimalFormat("#.##%").format(iowait * 1.0 / totalCpu));
         cpuInfo.put("current", new DecimalFormat("#.##%").format(1.0 - (idle * 1.0 / totalCpu)));
         return cpuInfo;
+    }
+
+    public static double memoryUsage() {
+        GlobalMemory memory = hal.getMemory();
+        double memoryUsage = (memory.getTotal() - memory.getAvailable() - memory.getVirtualMemory().getSwapUsed()) * 0.1
+                                     / memory.getTotal() * 10;
+
+        DecimalFormat df = new DecimalFormat("0.00");
+        df.setRoundingMode(RoundingMode.HALF_UP);
+        return Double.parseDouble(df.format(memoryUsage));
+    }
+
+    public static double loadAverage() {
+        double loadAverage = hal.getProcessor().getSystemCpuLoadBetweenTicks(processor.getSystemCpuLoadTicks()) * 100;
+        if (Double.isNaN(loadAverage)) {
+            return -1;
+        }
+
+        DecimalFormat df = new DecimalFormat("0.00");
+        df.setRoundingMode(RoundingMode.HALF_UP);
+        return Double.parseDouble(df.format(loadAverage));
     }
 }

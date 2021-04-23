@@ -24,7 +24,6 @@ public class WorkerHeartBeat implements Runnable {
     @Override
     public void run() {
         String address = NetUtils.getLocalAddress();
-        log.info("Worker heartbeat {}", address);
         // TODO 计算权重
         OSInfo osInfo = new OSInfo();
         osInfo.setType("worker");
@@ -35,6 +34,8 @@ public class WorkerHeartBeat implements Runnable {
         osInfo.setName(OSUtils.getName());
         osInfo.setVersion(OSUtils.getVersion());
         osInfo.setCpuInfo(JSONUtils.toJsonString(OSUtils.getCpuInfo()));
+        osInfo.setMemoryUsage(OSUtils.memoryUsage());
+        osInfo.setLoadAverage(OSUtils.loadAverage());
 
         zookeeperOperator.persistEphemeral(String.format("%s/%s_%s", ZKUtils.getWorkerRegistryPath(), address,
                 PropertyUtils.getInt(Constants.WORKER_GRPC_SERVER_PORT)), JSONUtils.toJsonString(osInfo));

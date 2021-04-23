@@ -7,7 +7,6 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
@@ -20,14 +19,12 @@ import com.bigdata.datashops.common.utils.JSONUtils;
 import com.bigdata.datashops.common.utils.NetUtils;
 import com.bigdata.datashops.common.utils.PropertyUtils;
 import com.bigdata.datashops.dao.datasource.BaseDataSource;
-import com.bigdata.datashops.model.enums.HostSelector;
 import com.bigdata.datashops.model.pojo.job.JobInstance;
 import com.bigdata.datashops.model.pojo.rpc.Host;
 import com.bigdata.datashops.protocol.GrpcRequest;
 import com.bigdata.datashops.remote.rpc.GrpcRemotingClient;
-import com.bigdata.datashops.server.master.selector.AssignSelector;
 import com.bigdata.datashops.server.master.selector.RandomHostSelector;
-import com.bigdata.datashops.server.master.selector.ScoreSelector;
+import com.bigdata.datashops.server.master.selector.Selector;
 import com.bigdata.datashops.server.utils.ZKUtils;
 import com.bigdata.datashops.service.zookeeper.ZookeeperOperator;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -116,20 +113,8 @@ public abstract class AbstractJob {
             h.setPort(Integer.parseInt(hostInfo[1]));
             hosts.add(h);
         }
-        Host host = new Host();
-        HostSelector selector = HostSelector.of(jobInstance.getJob().getHostSelector());
-        switch (selector) {
-            case ASSIGN:
-                host.setIp(jobInstance.getJob().getHost());
-                host.setPort(PropertyUtils.getInt(Constants.WORKER_GRPC_SERVER_PORT));
-                host = new AssignSelector().select(Collections.singleton(host));
-                break;
-            case SCORE:
-                host = new ScoreSelector().select(hosts);
-                break;
-            default:
-                host = new RandomHostSelector().select(hosts);
-        }
+        Selector<Host> selector = new RandomHostSelector();
+        Host host = selector.select(hosts);
         LOG.info("Select {}", host.toString());
         return host;
     }

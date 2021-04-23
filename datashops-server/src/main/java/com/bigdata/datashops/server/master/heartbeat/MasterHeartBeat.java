@@ -24,7 +24,6 @@ public class MasterHeartBeat implements Runnable {
     @Override
     public void run() {
         String address = NetUtils.getLocalAddress();
-        log.info("Master heartbeat {}", address);
         // TODO 计算权重
         OSInfo osInfo = new OSInfo();
         osInfo.setType("master");
@@ -35,6 +34,8 @@ public class MasterHeartBeat implements Runnable {
         osInfo.setName(OSUtils.getName());
         osInfo.setVersion(OSUtils.getVersion());
         osInfo.setCpuInfo(JSONUtils.toJsonString(OSUtils.getCpuInfo()));
+        osInfo.setMemoryUsage(OSUtils.memoryUsage());
+        osInfo.setLoadAverage(OSUtils.loadAverage());
 
         zookeeperOperator.persistEphemeral(String.format("%s/%s_%s", ZKUtils.getMasterRegistryPath(), address,
                 PropertyUtils.getInt(Constants.MASTER_GRPC_SERVER_PORT)), JSONUtils.toJsonString(osInfo));

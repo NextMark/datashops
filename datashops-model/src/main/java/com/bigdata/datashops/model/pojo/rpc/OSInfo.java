@@ -16,4 +16,8 @@ public class OSInfo {
     private String totalMem;
 
     private String cpuInfo;
+
+    private Double memoryUsage;
+
+    private Double loadAverage;
 }

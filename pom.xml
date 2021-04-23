@@ -46,7 +46,7 @@
         <grpc.version>1.33.1</grpc.version>
         <jackson.version>2.11.0</jackson.version>
         <lombok.version>1.18.16</lombok.version>
-        <oshi.version>5.3.7</oshi.version>
+        <oshi.version>5.7.1</oshi.version>
         <postgresql.version>42.2.19</postgresql.version>
         <clickhouse.jdbc.version>0.2.6</clickhouse.jdbc.version>
         <hadoop.version>3.0.0</hadoop.version>

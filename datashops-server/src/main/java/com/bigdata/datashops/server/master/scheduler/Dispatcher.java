@@ -13,15 +13,14 @@ import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.common.utils.JSONUtils;
 import com.bigdata.datashops.common.utils.NetUtils;
 import com.bigdata.datashops.common.utils.PropertyUtils;
-import com.bigdata.datashops.model.enums.HostSelector;
 import com.bigdata.datashops.model.enums.RunState;
 import com.bigdata.datashops.model.pojo.job.JobInstance;
 import com.bigdata.datashops.model.pojo.rpc.Host;
+import com.bigdata.datashops.model.pojo.rpc.OSInfo;
 import com.bigdata.datashops.protocol.GrpcRequest;
 import com.bigdata.datashops.remote.rpc.GrpcRemotingClient;
-import com.bigdata.datashops.server.master.selector.AssignSelector;
-import com.bigdata.datashops.server.master.selector.RandomHostSelector;
-import com.bigdata.datashops.server.master.selector.ScoreSelector;
+import com.bigdata.datashops.server.master.selector.Selector;
+import com.bigdata.datashops.server.master.selector.SelectorManager;
 import com.bigdata.datashops.server.utils.ZKUtils;
 import com.bigdata.datashops.service.JobInstanceService;
 import com.bigdata.datashops.service.zookeeper.ZookeeperOperator;
@@ -40,6 +39,9 @@ public class Dispatcher {
 
     @Autowired
     private GrpcRemotingClient grpcRemotingClient;
+
+    @Autowired
+    private SelectorManager selectorManager;
 
     public void dispatch(String instanceId) {
         LOG.info("Dispatch instance {}", instanceId);
@@ -60,33 +62,19 @@ public class Dispatcher {
         List<Host> hosts = Lists.newArrayList();
         for (String host : hostsStr) {
             String[] hostInfo = host.split(Constants.SEPARATOR_UNDERLINE);
+            String value = zookeeperOperator.get(ZKUtils.getWorkerRegistryPath() + "/" + host);
+            OSInfo osInfo = JSONUtils.parseObject(value, OSInfo.class);
             Host h = new Host();
             h.setIp(hostInfo[0]);
             h.setPort(Integer.parseInt(hostInfo[1]));
+            h.setOsInfo(osInfo);
             hosts.add(h);
         }
         jobInstanceService.fillJob(Collections.singletonList(instance));
 
-        //        JobType jobType = JobType.of(instance.getType());
-        //        if (jobType == JobType.HIVE || jobType == JobType.MYSQL || jobType == JobType.CLICK_HOUSE) {
-        //            instance.getJob().setData(SQLParser.parseSQL(instance.getJob().getData()));
-        //        }
+        Selector<Host> selector = selectorManager.create(instance, hosts);
+        Host host = selector.select(hosts);
 
-        // select host
-        Host host = new Host();
-        HostSelector selector = HostSelector.of(instance.getJob().getHostSelector());
-        switch (selector) {
-            case ASSIGN:
-                host.setIp(instance.getJob().getHost());
-                host.setPort(PropertyUtils.getInt(Constants.WORKER_GRPC_SERVER_PORT));
-                host = new AssignSelector().select(Collections.singleton(host));
-                break;
-            case SCORE:
-                host = new ScoreSelector().select(hosts);
-                break;
-            default:
-                host = new RandomHostSelector().select(hosts);
-        }
         instance.setHost(host.getIp());
         instance.setState(RunState.RUNNING.getCode());
         instance.setStartTime(new Date());

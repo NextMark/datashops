@@ -12,6 +12,8 @@ public class Host {
 
     private int port;
 
+    private OSInfo osInfo;
+
     private String getAddress() {
         return this.ip + ":" + this.port;
     }

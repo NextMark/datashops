@@ -3,7 +3,7 @@ package com.bigdata.datashops.model.enums;
 import java.util.HashMap;
 
 public enum HostSelector {
-    RANDOM(0, "random"), SCORE(1, "score"), ASSIGN(2, "assign");
+    RANDOM(0, "random"), WEIGHT(1, "weight"), ASSIGN(2, "assign");
 
     HostSelector(int code, String name) {
         this.code = code;

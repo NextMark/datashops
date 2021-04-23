@@ -4,20 +4,18 @@ import java.util.Collection;
 
 import org.apache.commons.collections.CollectionUtils;
 
-/**
- * AbstractSelector
- */
+import com.bigdata.datashops.model.pojo.job.JobInstance;
+
 public abstract class AbstractSelector<T> implements Selector<T> {
+    protected JobInstance jobInstance;
+
     @Override
     public T select(Collection<T> hosts) {
 
         if (CollectionUtils.isEmpty(hosts)) {
-            throw new IllegalArgumentException("Empty source.");
+            throw new IllegalArgumentException("Worker empty.");
         }
 
-        /**
-         * if only one , return directly
-         */
         if (hosts.size() == 1) {
             return (T) hosts.toArray()[0];
         }
