@@ -285,7 +285,7 @@ public class JobController extends BasicController {
     public Result cancelJob(@NotNull Integer id, @NotNull String operator) {
         JobInstance instance = jobInstanceService.findById(id);
         if (JobType.yarnJobType().contains(instance.getType())) {
-            hadoopService.cancelApplication(instance.getAppId());
+            //hadoopService.cancelApplication(instance.getAppId());
         }
         instance.setState(RunState.CANCEL.getCode());
         instance.setOperator(operator);
