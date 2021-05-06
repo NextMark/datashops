@@ -65,6 +65,7 @@ public class Constants {
     /**
      * separator
      */
+    public final static String SEPARATOR_WHITE_SPACE = " ";
     public final static String SEPARATOR_COMMA = ",";
     public final static String SEPARATOR_HYPHEN = "-";
     public final static String SEPARATOR_UNDERLINE = "_";

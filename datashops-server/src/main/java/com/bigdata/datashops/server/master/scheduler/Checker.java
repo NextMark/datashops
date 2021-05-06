@@ -102,7 +102,8 @@ public class Checker {
                 break;
             case WEEK:
                 bizTime = LocalDateUtils.plus(ldt, offset, ChronoUnit.WEEKS);
-                String[] weeks = weekOrMonthStr.split(" ")[5].split(Constants.SEPARATOR_COMMA);
+                String[] weeks =
+                        weekOrMonthStr.split(Constants.SEPARATOR_WHITE_SPACE)[5].split(Constants.SEPARATOR_COMMA);
                 for (String week : weeks) {
                     result.add(LocalDateUtils.parseStringToDate(
                             LocalDateUtils.getDateOfWeekStr(bizTime, Integer.parseInt(week))));
@@ -110,7 +111,8 @@ public class Checker {
                 break;
             case MONTH:
                 bizTime = LocalDateUtils.plus(ldt, offset, ChronoUnit.MONTHS);
-                String[] months = weekOrMonthStr.split(" ")[3].split(Constants.SEPARATOR_COMMA);
+                String[] months =
+                        weekOrMonthStr.split(Constants.SEPARATOR_WHITE_SPACE)[3].split(Constants.SEPARATOR_COMMA);
                 for (String month : months) {
                     result.add(LocalDateUtils.parseStringToDate(
                             LocalDateUtils.getDateOfMonthStr(bizTime, Integer.parseInt(month))));

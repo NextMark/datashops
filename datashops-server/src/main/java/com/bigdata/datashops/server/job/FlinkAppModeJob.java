@@ -63,7 +63,7 @@ public class FlinkAppModeJob extends AbstractJob {
                 args = params.toArray(new String[0]);
                 logger.info("Flink job user params = {}", StringUtils.join(args, " "));
             } else {
-                args = flinkData.getExtension().split(" ");
+                args = flinkData.getExtension().split(Constants.SEPARATOR_WHITE_SPACE);
                 logger.info("Flink job user params = {}", StringUtils.join(args, " "));
             }
 
