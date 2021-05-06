@@ -25,7 +25,6 @@ public class JobManager {
         jobContext.setZookeeperOperator(zookeeperOperator);
         jobContext.setJobInstance(instance);
         jobContext.setLogger(logger);
-        //        jobContext.setExecuteUser("root");
         jobContext.setExecutePath(FileUtils.getProcessExecDir(instance.getProjectId(), instance.getJob().getId()));
         switch (jobType) {
             case HIVE:
@@ -44,7 +43,6 @@ public class JobManager {
             case CLICK_HOUSE:
                 return new ClickHouseJob(jobContext);
             case HIVE_2_MYSQL:
-                return new SqoopJob(jobContext);
             case MYSQL_2_HIVE:
                 return new SqoopJob(jobContext);
             case FSQL:
