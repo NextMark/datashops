@@ -35,7 +35,7 @@ import com.bigdata.datashops.common.utils.PropertyUtils;
 import com.bigdata.datashops.model.enums.JobType;
 import com.bigdata.datashops.model.pojo.job.data.FlinkData;
 
-public class FlinkAppModeJob extends AbstractJob {
+public class FlinkAppModeJob extends AbstractYarnJob {
     public FlinkAppModeJob(JobContext jobContext) {
         super(jobContext);
         flinkData = JSONUtils.parseObject(jobContext.getJobInstance().getJob().getData(), FlinkData.class);

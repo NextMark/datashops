@@ -2,7 +2,7 @@ package com.bigdata.datashops.server.job;
 
 import com.bigdata.datashops.server.job.executor.SparkCommandExecutor;
 
-public class SparkJob extends AbstractJob {
+public class SparkJob extends AbstractYarnJob {
     private SparkCommandExecutor sparkCommandExecutor;
 
     public SparkJob(JobContext jobContext) {

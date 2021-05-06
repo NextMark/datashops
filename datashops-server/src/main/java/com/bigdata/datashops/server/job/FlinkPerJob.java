@@ -2,7 +2,7 @@ package com.bigdata.datashops.server.job;
 
 import com.bigdata.datashops.server.job.executor.FlinkCommandExecutor;
 
-public class FlinkPerJob extends AbstractJob {
+public class FlinkPerJob extends AbstractYarnJob {
 
     private FlinkCommandExecutor flinkCommandExecutor;
 
@@ -12,7 +12,7 @@ public class FlinkPerJob extends AbstractJob {
     }
 
     @Override
-    protected void process() throws Exception {
+    protected void process() {
         try {
             commandResult = flinkCommandExecutor.run();
             success();

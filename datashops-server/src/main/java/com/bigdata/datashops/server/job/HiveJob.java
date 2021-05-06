@@ -18,7 +18,7 @@ import com.bigdata.datashops.server.master.parser.SQLParser;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class HiveJob extends AbstractJob {
+public class HiveJob extends AbstractYarnJob {
 
     public HiveJob(JobContext jobContext) {
         super(jobContext);
