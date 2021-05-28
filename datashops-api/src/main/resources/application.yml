@@ -1,0 +1,49 @@
+spring:
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/datashops?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: datashops
+    password: datashops
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000t
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+  jackson:
+    serialization:
+      indent_output: true
+  mail:
+    host: smtp.mxhichina.com
+    protocol: smtp
+    port: 465
+    username: xxx
+    password: xxx
+
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+#热部署组件
+devtools:
+  livereload:
+    enabled: true #是否支持livereload
+    port: 8666
+  restart:
+    enabled: true #是否支持热部署
+
+server:
+  port: 8666

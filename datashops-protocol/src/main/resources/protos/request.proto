@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+option java_package = "com.bigdata.datashops.protocol";
+
+option java_outer_classname = "GrpcRequest";
+
+enum RequestType {
+
+    JOB_EXECUTE_REQUEST = 0;
+
+    JOB_EXECUTE_RESPONSE = 1;
+
+    JOB_KILL_REQUEST = 2;
+
+    JOB_KILL_RESPONSE = 3;
+
+    ROLL_READ_LOG_REQUEST = 4;
+
+    ROLL_READ_LOG_RESPONSE = 5;
+
+    DELETE_LOG_REQUEST = 6;
+
+    DELETE_LOG_RESPONSE = 7;
+
+    HEART_BEAT = 8;
+
+    READ_WHOLE_LOG_REQUEST = 9;
+
+    READ_WHOLE_LOG_RESPONSE = 10;
+}
+
+message Request {
+
+    string requestId = 1;
+
+    string ip = 2;
+
+    int32 port = 3;
+
+    RequestType requestType = 4;
+
+    bytes body = 5;
+
+    int32 code = 6;
+}
+
+message Response {
+
+    string requestId = 1;
+
+    string ip = 2;
+
+    int32 port = 3;
+
+    RequestType requestType = 4;
+
+    bytes body = 5;
+
+    int32 code = 6;
+}
+
+service RequestService {
+    rpc send(Request) returns (Response) {}
+}
+
