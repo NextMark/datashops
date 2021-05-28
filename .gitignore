@@ -32,3 +32,6 @@ build/
 
 logs/
 output/
+
+.git
+.DS_Store
