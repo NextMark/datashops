@@ -44,6 +44,7 @@
             <directory>${basedir}/../datashops-service/src/main/resources</directory>
             <includes>
                 <include>**/*.properties</include>
+                <include>**/*.sql</include>
             </includes>
             <outputDirectory>conf</outputDirectory>
         </fileSet>
