@@ -23,23 +23,28 @@ public class JobUtils {
             case 0:
                 result.put("dbType", 0);
                 result.put("user", "develop");
-                result.put("password", "3NOPvVw9HLt0akfh");
-                result.put("address", "jdbc:hive2://192.168.1.124:10000/default");
+                result.put("password", "xxx");
+                result.put("address", "jdbc:hive2://192.168.1.111:10000/default");
                 result.put("database", "default");
                 break;
             case 4:
                 result.put("dbType", 4);
                 result.put("user", "develop");
-                result.put("password", "3NOPvVw9HLt0akfh");
-                result.put("address", "jdbc:hive2://192.168.1.124:10000/default");
+                result.put("password", "xxx");
+                result.put("address", "jdbc:hive2://192.168.1.111:10000/default");
                 result.put("database", "default");
+                break;
+            case 5:
+                result.put("className", "com.bigdata.datashops.processor.Processor.runner.FlinkSQLRunner");
                 break;
             case 6:
                 result.put("dbType", 6);
                 result.put("user", "develop");
-                result.put("password", "3NOPvVw9HLt0akfh");
-                result.put("address", "jdbc:hive2://192.168.1.124:10000/default");
+                result.put("password", "xxx");
+                result.put("address", "jdbc:hive2://192.168.1.111:10000/default");
                 result.put("database", "default");
+            case 8:
+                result.put("className", "com.bigdata.datashops.processor.Processor.runner.Kafka2HdfsRunner");
                 break;
         }
 

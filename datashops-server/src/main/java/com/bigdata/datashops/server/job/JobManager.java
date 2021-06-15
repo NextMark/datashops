@@ -39,14 +39,13 @@ public class JobManager {
                 return new SparkJob(jobContext);
             case FLINK:
             case KAFKA_2_HDFS:
+            case FSQL:
                 return new FlinkAppModeJob(jobContext);
             case CLICK_HOUSE:
                 return new ClickHouseJob(jobContext);
             case HIVE_2_MYSQL:
             case MYSQL_2_HIVE:
                 return new SqoopJob(jobContext);
-            case FSQL:
-                return new FlinkSQLJob(jobContext);
             default:
                 throw new IllegalArgumentException();
         }

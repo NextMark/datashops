@@ -130,8 +130,15 @@ public class FlinkData {
     public List<String> buildFSQLArgs() {
         List<String> args = Lists.newArrayList();
         if (StringUtils.isNotEmpty(sql)) {
+            StringBuilder stmt = new StringBuilder();
+            for (String line : sql.split("\n")) {
+                if (line.startsWith("--")) {
+                    continue;
+                }
+                stmt.append(line).append("\n");
+            }
             args.add("--sql");
-            args.add(sql);
+            args.add(stmt.toString());
         }
         return args;
     }

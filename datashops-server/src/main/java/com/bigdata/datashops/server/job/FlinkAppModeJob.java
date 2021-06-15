@@ -81,9 +81,14 @@ public class FlinkAppModeJob extends AbstractYarnJob {
             Configuration flinkConfiguration = GlobalConfiguration.loadConfiguration(
                     String.format("%s/%s", System.getProperty("user.dir"), "conf/flink"));
             flinkConfiguration.set(CheckpointingOptions.INCREMENTAL_CHECKPOINTS, true);
-            flinkConfiguration.set(PipelineOptions.JARS, Collections.singletonList(
-                    PropertyUtils.getString(Constants.FLINK_USER_JAR_PATH) + File.separator + PropertyUtils.getString(
-                            Constants.FLINK_INTEGRATION_JAR)));
+            if (jobInstance.getType() == JobType.FLINK.getCode()) {
+                flinkConfiguration.set(PipelineOptions.JARS, Collections.singletonList(flinkData.getUrl()));
+            } else {
+                flinkConfiguration.set(PipelineOptions.JARS, Collections.singletonList(
+                        PropertyUtils.getString(Constants.FLINK_USER_JAR_PATH) + File.separator + PropertyUtils
+                                                                                                          .getString(
+                                                                                                                  Constants.FLINK_INTEGRATION_JAR)));
+            }
 
             Path remoteLib = new Path(PropertyUtils.getString(Constants.FLINK_LIBS_PATH));
             flinkConfiguration
