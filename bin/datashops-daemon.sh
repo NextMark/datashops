@@ -52,7 +52,7 @@ elif [ "$command" = "api" ]; then
   HEAP_INITIAL_SIZE=300m
   HEAP_MAX_SIZE=300m
   HEAP_NEW_GENERATION__SIZE=128m
-  LOG_FILE="-Dlogging.config=classpath:logback.xml"
+  LOG_FILE="-Dlogging.config=classpath:logback-api.xml"
   CLASS=com.bigdata.datashops.api.ApiApplication
 fi
 
