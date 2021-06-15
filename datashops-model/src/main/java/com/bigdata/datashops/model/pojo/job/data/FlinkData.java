@@ -47,6 +47,8 @@ public class FlinkData {
 
     private String ts;
 
+    private String sql;
+
     public List<String> buildArgs() {
         List<String> args = Lists.newArrayList();
         args.add("run");
@@ -121,6 +123,15 @@ public class FlinkData {
         if (StringUtils.isNotEmpty(ts)) {
             args.add("--ts");
             args.add(ts);
+        }
+        return args;
+    }
+
+    public List<String> buildFSQLArgs() {
+        List<String> args = Lists.newArrayList();
+        if (StringUtils.isNotEmpty(sql)) {
+            args.add("--sql");
+            args.add(sql);
         }
         return args;
     }

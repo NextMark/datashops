@@ -61,7 +61,11 @@ public class FlinkAppModeJob extends AbstractYarnJob {
             if (jobInstance.getType() == JobType.KAFKA_2_HDFS.getCode()) {
                 List<String> params = flinkData.buildKafka2HdfsArgs();
                 args = params.toArray(new String[0]);
-                logger.info("Flink job user params = {}", StringUtils.join(args, " "));
+                logger.info("Flink job params = {}", StringUtils.join(args, " "));
+            } else if (jobInstance.getType() == JobType.FSQL.getCode()) {
+                List<String> params = flinkData.buildFSQLArgs();
+                args = params.toArray(new String[0]);
+                logger.info("Flink sql params = {}", StringUtils.join(args, " "));
             } else {
                 args = flinkData.getExtension().split(Constants.SEPARATOR_WHITE_SPACE);
                 logger.info("Flink job user params = {}", StringUtils.join(args, " "));
