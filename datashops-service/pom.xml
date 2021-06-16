@@ -19,11 +19,6 @@
             <artifactId>datashops-common</artifactId>
         </dependency>
 
-        <!-- Junit -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-quartz</artifactId>
@@ -32,14 +27,14 @@
             <groupId>org.quartz-scheduler</groupId>
             <artifactId>quartz</artifactId>
             <exclusions>
-<!--                <exclusion>-->
-<!--                    <groupId>com.mchange</groupId>-->
-<!--                    <artifactId>c3p0</artifactId>-->
-<!--                </exclusion>-->
-<!--                <exclusion>-->
-<!--                    <groupId>com.mchange</groupId>-->
-<!--                    <artifactId>mchange-commons-java</artifactId>-->
-<!--                </exclusion>-->
+                <!--                <exclusion>-->
+                <!--                    <groupId>com.mchange</groupId>-->
+                <!--                    <artifactId>c3p0</artifactId>-->
+                <!--                </exclusion>-->
+                <!--                <exclusion>-->
+                <!--                    <groupId>com.mchange</groupId>-->
+                <!--                    <artifactId>mchange-commons-java</artifactId>-->
+                <!--                </exclusion>-->
                 <exclusion>
                     <groupId>com.zaxxer</groupId>
                     <artifactId>HikariCP-java6</artifactId>
@@ -51,11 +46,6 @@
             <artifactId>spring-context-support</artifactId>
             <version>5.3.3</version>
             <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.aliyun.oss</groupId>
-            <artifactId>aliyun-sdk-oss</artifactId>
-            <version>${aliyun.oss.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.curator</groupId>
@@ -82,29 +72,10 @@
             <artifactId>flink-core</artifactId>
             <version>${flink.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.flink</groupId>
-            <artifactId>flink-runtime_${scala.binary.version}</artifactId>
-            <version>${flink.version}</version>
-        </dependency>
+
         <dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-clients_${scala.binary.version}</artifactId>
-            <version>${flink.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.flink</groupId>
-            <artifactId>flink-table-planner_${scala.binary.version}</artifactId>
-            <version>${flink.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.flink</groupId>
-            <artifactId>flink-table-planner-blink_${scala.binary.version}</artifactId>
-            <version>${flink.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.flink</groupId>
-            <artifactId>flink-table-api-java-bridge_${scala.binary.version}</artifactId>
             <version>${flink.version}</version>
         </dependency>
         <dependency>

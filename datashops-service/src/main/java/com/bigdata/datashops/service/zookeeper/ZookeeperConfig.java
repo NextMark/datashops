@@ -1,14 +1,13 @@
 package com.bigdata.datashops.service.zookeeper;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import lombok.Data;
 
 @Component
 @Data
-@PropertySource("classpath:zookeeper.properties")
+//@PropertySource("classpath:zookeeper.properties")
 public class ZookeeperConfig {
 
     @Value("${zookeeper.quorum}")
@@ -29,7 +28,7 @@ public class ZookeeperConfig {
     @Value("${zookeeper.connection.timeout:30000}")
     private int connectionTimeoutMs;
 
-    @Value("${zookeeper.connection.digest: }")
+    @Value("${zookeeper.connection.digest}")
     private String digest;
 
     @Value("${zookeeper.max.wait.time:10000}")

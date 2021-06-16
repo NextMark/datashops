@@ -18,6 +18,9 @@ spring:
       max-file-size: 100MB
       max-request-size: 100MB
 
+  main:
+    allow-bean-definition-overriding: true
+
 #热部署组件
 devtools:
   livereload:

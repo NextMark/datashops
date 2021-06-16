@@ -17,9 +17,7 @@
         <fileSet>
             <directory>${basedir}/../datashops-server/src/main/resources</directory>
             <includes>
-                <include>**/*.properties</include>
                 <include>**/*.xml</include>
-                <include>**/*.json</include>
                 <include>**/*.yaml</include>
             </includes>
             <outputDirectory>conf</outputDirectory>
@@ -29,7 +27,6 @@
             <includes>
                 <include>**/*.properties</include>
                 <include>**/*.xml</include>
-                <include>**/*.json</include>
             </includes>
             <outputDirectory>conf</outputDirectory>
         </fileSet>
@@ -41,12 +38,11 @@
             <outputDirectory>conf</outputDirectory>
         </fileSet>
         <fileSet>
-            <directory>${basedir}/../datashops-service/src/main/resources</directory>
+            <directory>${basedir}/../sql</directory>
             <includes>
-                <include>**/*.properties</include>
                 <include>**/*.sql</include>
             </includes>
-            <outputDirectory>conf</outputDirectory>
+            <outputDirectory>conf/sql</outputDirectory>
         </fileSet>
 
         <fileSet>
