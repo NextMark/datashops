@@ -55,6 +55,7 @@ public class Constants {
     public final static String ZK_REGISTRY = "/registry";
     public final static String ZK_JOB_QUEUE = "/queue";
     public final static String ZK_FINDER_LOCK = "/lock/finder";
+    public final static String ZK_RUNNING_CHECKER_LOCK = "/lock/running_checker";
     public final static String ZK_JOB_QUEUE_PREFIX = "qn-";
 
     /**
@@ -192,6 +193,10 @@ public class Constants {
      */
     public static final String SUCCEEDED = "SUCCEEDED";
     /**
+     * SUCCEEDED
+     */
+    public static final String FINISHED = "FINISHED";
+    /**
      * NEW
      */
     public static final String NEW = "NEW";
@@ -242,6 +247,8 @@ public class Constants {
     public static final String MASTER_RPC_PROCESS_THREADS = "master.rpc.process.threads";
 
     public static final String MASTER_FINDER_INTERVAL = "master.finder.interval";
+
+    public static final String MASTER_STATUS_CHECKER_INTERVAL = "master.status.checker.interval";
 
     public static final String HDFS_DEFAULT_NAME = "fs.default.name";
 

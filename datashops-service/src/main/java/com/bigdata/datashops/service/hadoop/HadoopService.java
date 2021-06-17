@@ -62,24 +62,28 @@ public class HadoopService {
         restTemplate.put(url, entity);
     }
 
-    public RunState getApplicationStatus(String appId) {
-        String url = String.format(PropertyUtils.getString(Constants.YARN_APPLICATION_CANCEL_ADDRESS), appId);
-        String resp = restTemplate.getForObject(url, String.class);
-        Map<String, String> result = JSONUtils.toMap(resp);
-        String state = result.get("state");
-        switch (state) {
-            case Constants.SUCCEEDED:
-                return RunState.SUCCESS;
-            case Constants.NEW:
-            case Constants.NEW_SAVING:
-            case Constants.SUBMITTED:
-            case Constants.FAILED:
-                return RunState.FAIL;
-            case Constants.KILLED:
-                return RunState.KILL;
-            case Constants.RUNNING:
-            default:
-                return RunState.RUNNING;
+    public RunState getApplicationStatus(String appId) throws Exception {
+        try {
+            String url = String.format(PropertyUtils.getString(Constants.YARN_APPLICATION_CANCEL_ADDRESS), appId);
+            String resp = restTemplate.getForObject(url, String.class);
+            Map<String, String> result = JSONUtils.toMap(resp);
+            String state = result.get("state");
+            switch (state) {
+                case Constants.SUCCEEDED:
+                case Constants.FINISHED:
+                    return RunState.SUCCESS;
+                case Constants.NEW:
+                case Constants.NEW_SAVING:
+                case Constants.FAILED:
+                    return RunState.FAIL;
+                case Constants.KILLED:
+                    return RunState.KILL;
+                case Constants.RUNNING:
+                default:
+                    return RunState.RUNNING;
+            }
+        } catch (Exception e) {
+            throw new Exception();
         }
     }
 

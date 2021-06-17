@@ -25,6 +25,7 @@ import com.bigdata.datashops.remote.rpc.GrpcRemotingServer;
 import com.bigdata.datashops.server.master.heartbeat.MasterHeartBeat;
 import com.bigdata.datashops.server.master.registry.MasterRegistry;
 import com.bigdata.datashops.server.master.scheduler.Finder;
+import com.bigdata.datashops.server.master.scheduler.RunningChecker;
 import com.bigdata.datashops.server.queue.JobQueue;
 import com.bigdata.datashops.server.rpc.MasterRequestServiceGrpcImpl;
 import com.bigdata.datashops.server.thread.ThreadUtil;
@@ -56,6 +57,9 @@ public class MasterServer {
     private Finder finder;
 
     @Autowired
+    private RunningChecker runningChecker;
+
+    @Autowired
     private JobQueue jobQueue;
 
     @Autowired
@@ -85,6 +89,9 @@ public class MasterServer {
 
         // 扫描作业实例
         ThreadUtil.scheduleAtFixedRate(finder, PropertyUtils.getInt(Constants.MASTER_FINDER_INTERVAL));
+
+        // 检查运行中yarn任务状态
+        ThreadUtil.scheduleAtFixedRate(runningChecker, PropertyUtils.getInt(Constants.MASTER_STATUS_CHECKER_INTERVAL));
 
         grpcRemotingServer.start(PropertyUtils.getInt(Constants.MASTER_GRPC_SERVER_PORT), requestServiceGrpc);
         grpcRemotingServer.blockUntilShutdown();

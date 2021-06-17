@@ -34,4 +34,8 @@ public class ZKUtils {
     public static String getFinderLockPath() {
         return getRootPath() + Constants.ZK_FINDER_LOCK;
     }
+
+    public static String getRunningCheckerLockPath() {
+        return getRootPath() + Constants.ZK_RUNNING_CHECKER_LOCK;
+    }
 }

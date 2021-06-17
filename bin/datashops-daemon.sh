@@ -37,14 +37,14 @@ pid=$DATASHOPS_PID_DIR/datashops-$command.pid
 cd $DATASHOPS_HOME
 
 if [ "$command" = "master" ]; then
-  PORT=8666
+  PORT=8667
   HEAP_INITIAL_SIZE=1g
   HEAP_MAX_SIZE=1g
   HEAP_NEW_GENERATION__SIZE=512m
   LOG_FILE="-Dlogging.config=classpath:logback-master.xml"
   CLASS=com.bigdata.datashops.server.master.MasterServer
 elif [ "$command" = "worker" ]; then
-  PORT=8667
+  PORT=8668
   HEAP_INITIAL_SIZE=1g
   HEAP_MAX_SIZE=1g
   HEAP_NEW_GENERATION__SIZE=512m
@@ -53,7 +53,7 @@ elif [ "$command" = "worker" ]; then
 elif [ "$command" = "api" ]; then
   HEAP_INITIAL_SIZE=300m
   HEAP_MAX_SIZE=300m
-  PORT=8668
+  PORT=8666
   HEAP_NEW_GENERATION__SIZE=128m
   LOG_FILE="-Dlogging.config=classpath:logback-api.xml"
   CLASS=com.bigdata.datashops.api.ApiApplication
