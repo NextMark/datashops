@@ -35,7 +35,7 @@ public class JobUtils {
                 result.put("database", "default");
                 break;
             case 5:
-                result.put("className", "com.bigdata.datashops.processor.Processor.runner.FlinkSQLRunner");
+                result.put("className", "com.bigdata.datashops.processor.runner.FlinkSQLRunner");
                 break;
             case 6:
                 result.put("dbType", 6);
@@ -44,7 +44,7 @@ public class JobUtils {
                 result.put("address", "jdbc:hive2://192.168.1.111:10000/default");
                 result.put("database", "default");
             case 8:
-                result.put("className", "com.bigdata.datashops.processor.Processor.runner.Kafka2HdfsRunner");
+                result.put("className", "com.bigdata.datashops.processor.runner.Kafka2HdfsRunner");
                 break;
         }
 

@@ -135,7 +135,7 @@ public class FlinkData {
                 if (line.startsWith("--")) {
                     continue;
                 }
-                stmt.append(line).append("\n");
+                stmt.append(line).append(" ");
             }
             args.add("--sql");
             args.add(stmt.toString());

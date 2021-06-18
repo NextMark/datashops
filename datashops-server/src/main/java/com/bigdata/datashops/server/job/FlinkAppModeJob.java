@@ -1,6 +1,5 @@
 package com.bigdata.datashops.server.job;
 
-import java.io.File;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -85,9 +84,8 @@ public class FlinkAppModeJob extends AbstractYarnJob {
                 flinkConfiguration.set(PipelineOptions.JARS, Collections.singletonList(flinkData.getUrl()));
             } else {
                 flinkConfiguration.set(PipelineOptions.JARS, Collections.singletonList(
-                        PropertyUtils.getString(Constants.FLINK_USER_JAR_PATH) + File.separator + PropertyUtils
-                                                                                                          .getString(
-                                                                                                                  Constants.FLINK_INTEGRATION_JAR)));
+                        PropertyUtils.getString(Constants.FLINK_USER_JAR_PATH) + PropertyUtils.getString(
+                                Constants.FLINK_INTEGRATION_JAR)));
             }
 
             Path remoteLib = new Path(PropertyUtils.getString(Constants.FLINK_LIBS_PATH));
