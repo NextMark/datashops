@@ -32,6 +32,7 @@ build/
 
 logs/
 output/
+conf/
 
 .git
 .DS_Store

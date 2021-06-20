@@ -83,7 +83,7 @@ public class HadoopService {
                     return RunState.RUNNING;
             }
         } catch (Exception e) {
-            throw new Exception();
+            throw new Exception(e);
         }
     }
 

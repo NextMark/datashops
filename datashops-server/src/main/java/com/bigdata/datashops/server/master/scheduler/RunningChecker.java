@@ -50,7 +50,8 @@ public class RunningChecker implements Runnable {
                         }
                         instance.setState(state.getCode());
                         jobInstanceService.saveEntity(instance);
-                    } catch (Exception ignored) {
+                    } catch (Exception e) {
+                        throw new RuntimeException("check error", e);
                     }
                 }
             }

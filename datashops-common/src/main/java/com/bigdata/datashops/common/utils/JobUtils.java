@@ -35,7 +35,7 @@ public class JobUtils {
                 result.put("database", "default");
                 break;
             case 5:
-                result.put("className", "com.bigdata.datashops.processor.runner.FlinkSQLRunner");
+                result.put("className", "com.bigdata.datashops.processor.sqlsubmit.SqlSubmit");
                 break;
             case 6:
                 result.put("dbType", 6);

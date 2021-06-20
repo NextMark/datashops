@@ -132,10 +132,10 @@ public class FlinkData {
         if (StringUtils.isNotEmpty(sql)) {
             StringBuilder stmt = new StringBuilder();
             for (String line : sql.split("\n")) {
-                if (line.startsWith("--")) {
+                if (line.startsWith("--") || StringUtils.isBlank(line)) {
                     continue;
                 }
-                stmt.append(line).append(" ");
+                stmt.append(line.trim()).append(" ");
             }
             args.add("--sql");
             args.add(stmt.toString());
