@@ -9,6 +9,7 @@ import com.bigdata.datashops.common.utils.JSONUtils;
 import com.bigdata.datashops.model.pojo.job.data.SparkData;
 import com.bigdata.datashops.server.job.JobContext;
 
+@Deprecated
 public class SparkCommandExecutor extends CommandExecutor {
     public SparkCommandExecutor(JobContext jobContext) {
         super(jobContext);

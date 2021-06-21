@@ -56,13 +56,13 @@
         <dependency>
             <groupId>com.bigdata.datashops</groupId>
             <artifactId>datashops-server</artifactId>
-            <version>0.0.1</version>
+            <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.bigdata.datashops</groupId>
             <artifactId>datashops-remote</artifactId>
-            <version>0.0.1</version>
+            <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
 

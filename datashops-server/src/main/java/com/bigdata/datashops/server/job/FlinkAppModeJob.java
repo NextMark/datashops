@@ -56,6 +56,7 @@ public class FlinkAppModeJob extends AbstractYarnJob {
     @Override
     protected void process() {
         try {
+            System.setProperty("HADOOP_USER_NAME", "hdfs");
             String[] args;
             if (jobInstance.getType() == JobType.KAFKA_2_HDFS.getCode()) {
                 List<String> params = flinkData.buildKafka2HdfsArgs();

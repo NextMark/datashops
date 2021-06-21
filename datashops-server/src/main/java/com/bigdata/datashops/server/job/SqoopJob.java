@@ -2,6 +2,8 @@ package com.bigdata.datashops.server.job;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.yarn.conf.YarnConfiguration;
 import org.apache.sqoop.Sqoop;
 import org.apache.sqoop.tool.SqoopTool;
 import org.apache.sqoop.util.OptionsFileUtil;
@@ -18,6 +20,19 @@ public class SqoopJob extends AbstractYarnJob {
     }
 
     private SqoopData sqoopData;
+
+    private Configuration configuration = new YarnConfiguration();
+
+    {
+        configuration.set("fs.default.name", PropertyUtils.getString(Constants.HDFS_DEFAULT_NAME));
+        configuration.set("mapreduce.framework.name", "yarn");
+        configuration
+                .addResource(new Path(String.format("%s/conf/%s", System.getProperty("user.dir"), "yarn-site.xml")));
+        configuration
+                .addResource(new Path(String.format("%s/conf/%s", System.getProperty("user.dir"), "hdfs-site.xml")));
+        configuration
+                .addResource(new Path(String.format("%s/conf/%s", System.getProperty("user.dir"), "core-site.xml")));
+    }
 
     @Override
     protected void process() {
@@ -42,9 +57,7 @@ public class SqoopJob extends AbstractYarnJob {
             LOG.info("Sqoop hive to mysql command, {}", StringUtils.join(" ", args));
             String[] expandArgs = OptionsFileUtil.expandArguments(args);
             SqoopTool tool = SqoopTool.getTool("export");
-            Configuration conf = new Configuration();
-            conf.set("fs.default.name", PropertyUtils.getString(Constants.HDFS_DEFAULT_NAME));
-            Configuration loadPlugins = SqoopTool.loadPlugins(conf);
+            Configuration loadPlugins = SqoopTool.loadPlugins(configuration);
             Sqoop sqoop = new Sqoop(tool, loadPlugins);
             Sqoop.runSqoop(sqoop, expandArgs);
         } catch (Exception e) {
@@ -58,9 +71,7 @@ public class SqoopJob extends AbstractYarnJob {
             LOG.info("Sqoop mysql to hive command\n{}", StringUtils.join(" ", args));
             String[] expandArguments = OptionsFileUtil.expandArguments(args);
             SqoopTool tool = SqoopTool.getTool("import");
-            Configuration conf = new Configuration();
-            conf.set("fs.default.name", PropertyUtils.getString(Constants.HDFS_DEFAULT_NAME));
-            Configuration loadPlugins = SqoopTool.loadPlugins(conf);
+            Configuration loadPlugins = SqoopTool.loadPlugins(configuration);
             Sqoop sqoop = new Sqoop(tool, loadPlugins);
             Sqoop.runSqoop(sqoop, expandArguments);
         } catch (Exception e) {

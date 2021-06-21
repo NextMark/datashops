@@ -3,6 +3,7 @@ package com.bigdata.datashops.model.pojo.job.data;
 import java.util.List;
 import java.util.Objects;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.Lists;
@@ -130,15 +131,8 @@ public class FlinkData {
     public List<String> buildFSQLArgs() {
         List<String> args = Lists.newArrayList();
         if (StringUtils.isNotEmpty(sql)) {
-            StringBuilder stmt = new StringBuilder();
-            for (String line : sql.split("\n")) {
-                if (line.startsWith("--") || StringUtils.isBlank(line)) {
-                    continue;
-                }
-                stmt.append(line.trim()).append(" ");
-            }
             args.add("--sql");
-            args.add(stmt.toString());
+            args.add(Base64.encodeBase64String(sql.getBytes()));
         }
         return args;
     }

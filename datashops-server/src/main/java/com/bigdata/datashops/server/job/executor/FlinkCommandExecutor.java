@@ -11,6 +11,7 @@ import com.bigdata.datashops.common.utils.PropertyUtils;
 import com.bigdata.datashops.model.pojo.job.data.FlinkData;
 import com.bigdata.datashops.server.job.JobContext;
 
+@Deprecated
 public class FlinkCommandExecutor extends CommandExecutor {
     public FlinkCommandExecutor(JobContext jobContext) {
         super(jobContext);

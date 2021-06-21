@@ -84,8 +84,13 @@
         <dependency>
             <groupId>com.bigdata.datashops</groupId>
             <artifactId>datashops-remote</artifactId>
-            <version>0.0.1</version>
+            <version>${project.version}</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-core_2.12</artifactId>
+            <version>${spark.version}</version>
         </dependency>
 
     </dependencies>
