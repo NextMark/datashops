@@ -24,7 +24,7 @@ public class LogController extends BasicController {
         Host host = new Host();
         host.setIp(instance.getHost());
         host.setPort(PropertyUtils.getInt(Constants.WORKER_GRPC_SERVER_PORT));
-        String filePath = String.format("%s%s%s", FileUtils.getJobExecLogDir(), instanceId, ".log");
+        String filePath = String.format("%s%s.log", FileUtils.getJobExecLogDir(), instanceId);
         String content = logRequestProcessor.rollReadLog(filePath, skipLines, limit, host);
         return ok(content);
     }

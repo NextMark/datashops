@@ -6,7 +6,7 @@ DataShops - 数据工厂是一个企业级PaaS平台，为企业提供工作流�
 [演示地址](https://demo.datashops.cn)
 
 ## 功能
-* 全面托管的调度
+* 一站式调度、开发
   * DataShops提供强大的调度功能
     * 支持根据时间、依赖关系，进行任务触发的机制
     * 支持每日千万级别的任务，根据DAG关系准确、准时地运行。
@@ -36,10 +36,15 @@ DataShops - 数据工厂是一个企业级PaaS平台，为企业提供工作流�
   * 您可以方便地配置各类报警方式，任务发生错误可及时通知相关人员，保证业务正常运行。
 
 ## 架构设计
-DataShops是一个分布式系统，分为master、worker、api三大组件，内部通过grpc通信，多个master做load balance
+DataShops是一个分布式调度系统，分为master、worker、api三大组件，内部通过grpc通信，多个master做load balance
+## 部署文档
+[部署文档](https://github.com/NextMark/datashops/wiki/%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3)
 ## 联系方式
-在使用中有任何问题，欢迎反馈给我，可以用以下联系方式跟我交流
+版本更新及相关信息会在公众号及时同步。
+
+在使用中有任何问题，欢迎反馈给我，可以用以下联系方式交流：
 
 * shiwei138@163.com
-* qq：420794644
 * 公众号：大数据前线
+
+![qr-code](https://github.com/NextMark/datashops/raw/master/docs/gzh_qrcode.jpg)

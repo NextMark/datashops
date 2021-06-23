@@ -62,7 +62,7 @@ public class Finder implements Runnable {
                 }
             }
         } catch (Exception e) {
-            LOG.error("find instance exception", e);
+            LOG.error("Find instance exception", e);
         } finally {
             zookeeperOperator.releaseMutex(mutex);
         }
