@@ -27,7 +27,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <java.version>1.8</java.version>
-        <spring.boot.version>2.4.2</spring.boot.version>
+        <spring.boot.version>2.5.2</spring.boot.version>
 
         <junit.version>4.13.1</junit.version>
         <slf4j.version>1.7.29</slf4j.version>
@@ -51,7 +51,7 @@
         <clickhouse.jdbc.version>0.2.6</clickhouse.jdbc.version>
         <hadoop.version>3.0.0</hadoop.version>
         <scala.binary.version>2.11</scala.binary.version>
-        <flink.version>1.12.0</flink.version>
+        <flink.version>1.13.1</flink.version>
         <aliyun.oss.version>3.11.3</aliyun.oss.version>
         <sqoop.version>1.4.7-cdh6.3.2</sqoop.version>
         <cronutil.version>9.1.5</cronutil.version>
