@@ -224,7 +224,6 @@ public class Constants {
     /**
      * common.properties
      */
-    public static final String FLINK_BASE_PATH = "flink.base.path";
 
     public static final String FLINK_LIBS_PATH = "flink.libs.path";
 
