@@ -5,7 +5,7 @@ DataShops is an enterprise-level PaaS platform that provides enterprises with a 
  as workflow scheduling, data development, data integration and data services. One-stop development and management interface helps reduce the cost of big data development and maintenance. Enterprises focus on the mining and exploration of data value
 ## Demo
 * [demo](https://demo.datashops.cn)
-* [中文文档](https://github.com/NextMark/datashops/raw/master/docs/README-zh.md)
+* [中文文档](https://github.com/NextMark/datashops/blob/master/docs/README-zh.md)
 
 
 ## Features
