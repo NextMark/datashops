@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.common.utils.DateUtils;
 import com.bigdata.datashops.common.utils.JobUtils;
 import com.bigdata.datashops.dao.data.domain.PageRequest;
@@ -76,8 +77,8 @@ public class JobInstanceService extends AbstractMysqlPagingAndSortingQueryServic
 
     public void buildBatchJobInstance(Integer id, String startTime, String endTime, String operator)
             throws ParseException {
-        Date start = DateUtils.parse(startTime, "yyyyMMddHH");
-        Date end = DateUtils.parse(endTime, "yyyyMMddHH");
+        Date start = DateUtils.parse(startTime, Constants.YYYYMMDDHH);
+        Date end = DateUtils.parse(endTime, Constants.YYYYMMDDHH);
         Job job = jobService.getJob(id);
         CronExpression expression = new CronExpression(job.getCronExpression());
         for (; start.getTime() <= end.getTime(); ) {

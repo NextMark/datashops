@@ -14,6 +14,11 @@ public class Constants {
     /**
      * date format of yyyyMMddHHmmss
      */
+    public static final String YYYYMMDDHH = "yyyyMMddHH";
+
+    /**
+     * date format of yyyyMMddHHmmss
+     */
     public static final String YYYYMMDDHHMMSS = "yyyyMMddHHmmss";
 
     /**
