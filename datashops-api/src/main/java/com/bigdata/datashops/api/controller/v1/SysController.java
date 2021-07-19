@@ -40,21 +40,24 @@ public class SysController extends BasicController {
 
     @PostMapping(value = "/getServerInfo")
     public Object getServerInfo() {
-        List<String> masters = zookeeperOperator.getChildrenKeys(ZKUtils.getMasterRegistryPath());
-        List<String> workers = zookeeperOperator.getChildrenKeys(ZKUtils.getWorkerRegistryPath());
-        List<OSInfo> nodes = Lists.newArrayList();
+        try {
+            List<String> masters = zookeeperOperator.getChildrenKeys(ZKUtils.getMasterRegistryPath());
+            List<String> workers = zookeeperOperator.getChildrenKeys(ZKUtils.getWorkerRegistryPath());
+            List<OSInfo> nodes = Lists.newArrayList();
 
-        for (String node : masters) {
-            String value = zookeeperOperator.get(ZKUtils.getMasterRegistryPath() + "/" + node);
-            OSInfo osInfo = JSONUtils.parseObject(value, OSInfo.class);
-            nodes.add(osInfo);
+            for (String node : masters) {
+                String value = zookeeperOperator.get(ZKUtils.getMasterRegistryPath() + "/" + node);
+                OSInfo osInfo = JSONUtils.parseObject(value, OSInfo.class);
+                nodes.add(osInfo);
+            }
+            for (String node : workers) {
+                String value = zookeeperOperator.get(ZKUtils.getWorkerRegistryPath() + "/" + node);
+                OSInfo osInfo = JSONUtils.parseObject(value, OSInfo.class);
+                nodes.add(osInfo);
+            }
+            return ok(nodes);
+        } catch (Exception e) {
+            return ok();
         }
-        for (String node : workers) {
-            String value = zookeeperOperator.get(ZKUtils.getWorkerRegistryPath() + "/" + node);
-            OSInfo osInfo = JSONUtils.parseObject(value, OSInfo.class);
-            nodes.add(osInfo);
-        }
-        return ok(nodes);
-
     }
 }
