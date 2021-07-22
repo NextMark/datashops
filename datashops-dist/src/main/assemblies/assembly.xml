@@ -63,13 +63,6 @@
             </includes>
             <outputDirectory>conf</outputDirectory>
         </fileSet>
-        <!--        <fileSet>-->
-        <!--            <directory>${basedir}/../datashops-plugin/target</directory>-->
-        <!--            <includes>-->
-        <!--                <include>**/*.jar</include>-->
-        <!--            </includes>-->
-        <!--            <outputDirectory>plugins/selector</outputDirectory>-->
-        <!--        </fileSet>-->
         <fileSet>
             <directory>${basedir}/../sql</directory>
             <includes>
