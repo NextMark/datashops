@@ -269,4 +269,9 @@ public class Constants {
 
     public static final String ALIYUN_OSS_BUCKET_NAME = "aliyun.oss.bucket.name";
 
+    /**
+     * plugin
+     */
+    public static final String WORKER_SELECTOR = "worker.selector";
+
 }

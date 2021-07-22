@@ -20,7 +20,20 @@
         <module>datashops-protocol</module>
         <module>datashops-dist</module>
         <module>datashops-remote</module>
+        <module>datashops-plugin</module>
     </modules>
+
+    <repositories>
+        <repository>
+            <id>nexus-aliyun</id>
+            <name>Nexus aliyun</name>
+            <url>http://maven.aliyun.com/nexus/content/groups/public</url>
+        </repository>
+        <repository>
+            <id>cloudera</id>
+            <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
+        </repository>
+    </repositories>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -56,6 +69,7 @@
         <sqoop.version>1.4.7-cdh6.3.2</sqoop.version>
         <cronutil.version>9.1.5</cronutil.version>
         <spark.version>2.4.0</spark.version>
+        <dubbo.version>3.0.1</dubbo.version>
 
 
         <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
@@ -394,7 +408,7 @@
     </dependencyManagement>
 
     <build>
-        <finalName>datashops-${project.version}</finalName>
+<!--        <finalName>datashops-${project.version}</finalName>-->
 
         <pluginManagement>
             <plugins>
@@ -445,20 +459,6 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>${maven-assembly-plugin.version}</version>
             </plugin>
@@ -504,15 +504,4 @@
         </plugins>
 
     </build>
-    <repositories>
-        <repository>
-            <id>nexus-aliyun</id>
-            <name>Nexus aliyun</name>
-            <url>http://maven.aliyun.com/nexus/content/groups/public</url>
-        </repository>
-        <repository>
-            <id>cloudera</id>
-            <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
-        </repository>
-    </repositories>
 </project>

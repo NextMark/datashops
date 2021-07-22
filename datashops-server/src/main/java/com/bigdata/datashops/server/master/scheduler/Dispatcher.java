@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.dubbo.common.extension.ExtensionLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +18,9 @@ import com.bigdata.datashops.model.enums.RunState;
 import com.bigdata.datashops.model.pojo.job.JobInstance;
 import com.bigdata.datashops.model.pojo.rpc.Host;
 import com.bigdata.datashops.model.pojo.rpc.OSInfo;
+import com.bigdata.datashops.plugin.selector.WorkerSelector;
 import com.bigdata.datashops.protocol.GrpcRequest;
 import com.bigdata.datashops.remote.rpc.GrpcRemotingClient;
-import com.bigdata.datashops.server.master.selector.Selector;
-import com.bigdata.datashops.server.master.selector.SelectorManager;
 import com.bigdata.datashops.server.utils.ZKUtils;
 import com.bigdata.datashops.service.JobInstanceService;
 import com.bigdata.datashops.service.zookeeper.ZookeeperOperator;
@@ -40,9 +40,6 @@ public class Dispatcher {
     @Autowired
     private GrpcRemotingClient grpcRemotingClient;
 
-    @Autowired
-    private SelectorManager selectorManager;
-
     public void dispatch(String instanceId) {
         LOG.info("Dispatch instance {}", instanceId);
         JobInstance instance = jobInstanceService.findOneByQuery("instanceId=" + instanceId);
@@ -59,21 +56,35 @@ public class Dispatcher {
             jobInstanceService.saveEntity(instance);
             return;
         }
-        List<Host> hosts = Lists.newArrayList();
-        for (String host : hostsStr) {
-            String[] hostInfo = host.split(Constants.SEPARATOR_UNDERLINE);
-            String value = zookeeperOperator.get(ZKUtils.getWorkerRegistryPath() + "/" + host);
-            OSInfo osInfo = JSONUtils.parseObject(value, OSInfo.class);
-            Host h = new Host();
-            h.setIp(hostInfo[0]);
-            h.setPort(Integer.parseInt(hostInfo[1]));
-            h.setOsInfo(osInfo);
-            hosts.add(h);
-        }
         jobInstanceService.fillJob(Collections.singletonList(instance));
 
-        Selector<Host> selector = selectorManager.create(instance, hosts);
-        Host host = selector.select(hosts);
+        String selector = PropertyUtils.getString(Constants.WORKER_SELECTOR);
+        String jobSelector = instance.getJob().getHostSelector();
+        if (jobSelector != null) {
+            selector = jobSelector;
+        }
+
+        List<Host> hosts = Lists.newArrayList();
+        if (selector.equals("assign")) {
+            Host host = new Host();
+            host.setIp(instance.getJob().getHost());
+            host.setPort(PropertyUtils.getInt(Constants.WORKER_GRPC_SERVER_PORT));
+            hosts.add(host);
+        } else {
+            for (String host : hostsStr) {
+                String[] hostInfo = host.split(Constants.SEPARATOR_UNDERLINE);
+                String value = zookeeperOperator.get(ZKUtils.getWorkerRegistryPath() + "/" + host);
+                OSInfo osInfo = JSONUtils.parseObject(value, OSInfo.class);
+                Host h = new Host();
+                h.setIp(hostInfo[0]);
+                h.setPort(Integer.parseInt(hostInfo[1]));
+                h.setOsInfo(osInfo);
+                hosts.add(h);
+            }
+        }
+
+        ExtensionLoader<WorkerSelector> loader = ExtensionLoader.getExtensionLoader(WorkerSelector.class);
+        Host host = (Host) loader.getExtension(selector).select(hosts);
 
         instance.setHost(host.getIp());
         instance.setState(RunState.RUNNING.getCode());

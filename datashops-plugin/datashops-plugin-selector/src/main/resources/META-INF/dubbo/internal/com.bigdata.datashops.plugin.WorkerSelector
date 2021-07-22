@@ -1,0 +1,3 @@
+random=com.bigdata.datashops.plugin.selector.RandomSelector
+weight=com.bigdata.datashops.plugin.selector.LowerWeightSelector
+assign=com.bigdata.datashops.plugin.selector.AssignSelector

@@ -1,6 +1,4 @@
-package com.bigdata.datashops.server.master.selector;
-
-import com.bigdata.datashops.model.pojo.rpc.Host;
+package com.bigdata.datashops.model.pojo.rpc;
 
 import lombok.Data;
 

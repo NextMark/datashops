@@ -1,18 +1,44 @@
-<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.0.0"
-          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.0.0 http://maven.apache.org/xsd/assembly-2.0.0.xsd">
-    <id>bin</id>
+<assembly
+        xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
+    <id>assembly</id>
     <formats>
-        <format>tar.gz</format>
+        <format>dir</format>
     </formats>
 
     <includeBaseDirectory>true</includeBaseDirectory>
     <baseDirectory>${project.build.finalName}-bin</baseDirectory>
 
+    <dependencySets>
+        <!-- 项目的依赖包 -->
+        <dependencySet>
+            <outputDirectory>lib</outputDirectory>
+            <unpack>false</unpack>
+            <useProjectArtifact>false</useProjectArtifact>
+            <useProjectAttachments>false</useProjectAttachments>
+            <useTransitiveDependencies>true</useTransitiveDependencies>
+            <useTransitiveFiltering>true</useTransitiveFiltering> <!-- 当前项目构件是否包含在这个依赖集合里 -->
+        </dependencySet>
+    </dependencySets>
+
     <fileSets>
         <fileSet>
             <directory>${basedir}/target/lib</directory>
             <outputDirectory>lib</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}</directory>
+            <outputDirectory>logs</outputDirectory>
+            <fileMode>0644</fileMode>
+            <excludes>
+                <exclude>**/*</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>src/main/datashops-bin/plugins</directory>
+            <outputDirectory>plugins</outputDirectory>
+            <fileMode>0755</fileMode>
         </fileSet>
         <fileSet>
             <directory>${basedir}/../datashops-server/src/main/resources</directory>
@@ -37,6 +63,13 @@
             </includes>
             <outputDirectory>conf</outputDirectory>
         </fileSet>
+        <!--        <fileSet>-->
+        <!--            <directory>${basedir}/../datashops-plugin/target</directory>-->
+        <!--            <includes>-->
+        <!--                <include>**/*.jar</include>-->
+        <!--            </includes>-->
+        <!--            <outputDirectory>plugins/selector</outputDirectory>-->
+        <!--        </fileSet>-->
         <fileSet>
             <directory>${basedir}/../sql</directory>
             <includes>
@@ -57,11 +90,4 @@
 
     </fileSets>
 
-    <dependencySets>
-        <!-- 项目的依赖包 -->
-        <dependencySet>
-            <outputDirectory>lib</outputDirectory><!-- 依赖jar包放置目录-->
-            <useProjectArtifact>true</useProjectArtifact> <!-- 当前项目构件是否包含在这个依赖集合里 -->
-        </dependencySet>
-    </dependencySets>
 </assembly>

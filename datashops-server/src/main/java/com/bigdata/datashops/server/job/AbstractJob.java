@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
 
+import org.apache.dubbo.common.extension.ExtensionLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,10 +22,9 @@ import com.bigdata.datashops.common.utils.PropertyUtils;
 import com.bigdata.datashops.dao.datasource.BaseDataSource;
 import com.bigdata.datashops.model.pojo.job.JobInstance;
 import com.bigdata.datashops.model.pojo.rpc.Host;
+import com.bigdata.datashops.plugin.selector.WorkerSelector;
 import com.bigdata.datashops.protocol.GrpcRequest;
 import com.bigdata.datashops.remote.rpc.GrpcRemotingClient;
-import com.bigdata.datashops.server.master.selector.RandomSelector;
-import com.bigdata.datashops.server.master.selector.Selector;
 import com.bigdata.datashops.server.utils.ZKUtils;
 import com.bigdata.datashops.service.zookeeper.ZookeeperOperator;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -113,8 +113,8 @@ public abstract class AbstractJob {
             h.setPort(Integer.parseInt(hostInfo[1]));
             hosts.add(h);
         }
-        Selector<Host> selector = new RandomSelector();
-        Host host = selector.select(hosts);
+        ExtensionLoader<WorkerSelector> loader = ExtensionLoader.getExtensionLoader(WorkerSelector.class);
+        Host host = (Host) loader.getExtension("random").select(hosts);
         LOG.info("Select {}", host.toString());
         return host;
     }

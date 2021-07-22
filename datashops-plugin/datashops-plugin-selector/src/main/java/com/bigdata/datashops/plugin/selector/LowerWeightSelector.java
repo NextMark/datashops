@@ -1,16 +1,17 @@
-package com.bigdata.datashops.server.master.selector;
+package com.bigdata.datashops.plugin.selector;
 
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 
 import com.bigdata.datashops.model.pojo.rpc.Host;
+import com.bigdata.datashops.model.pojo.rpc.HostWeight;
 import com.google.common.collect.Lists;
 
-public class LowerWeightSelector extends AbstractSelector<Host> {
+public class LowerWeightSelector implements WorkerSelector<Host> {
 
     @Override
-    protected Host doSelect(Collection<Host> hosts) {
+    public Host select(Collection<Host> hosts) {
         List<HostWeight> hostWeightList = Lists.newArrayList();
         for (Host host : hosts) {
             HostWeight hostWeight =
