@@ -22,7 +22,7 @@ import com.bigdata.datashops.common.utils.PropertyUtils;
 import com.bigdata.datashops.dao.datasource.BaseDataSource;
 import com.bigdata.datashops.model.pojo.job.JobInstance;
 import com.bigdata.datashops.model.pojo.rpc.Host;
-import com.bigdata.datashops.plugin.selector.WorkerSelector;
+import com.bigdata.datashops.plugin.selector.Selector;
 import com.bigdata.datashops.protocol.GrpcRequest;
 import com.bigdata.datashops.remote.rpc.GrpcRemotingClient;
 import com.bigdata.datashops.server.utils.ZKUtils;
@@ -113,7 +113,7 @@ public abstract class AbstractJob {
             h.setPort(Integer.parseInt(hostInfo[1]));
             hosts.add(h);
         }
-        ExtensionLoader<WorkerSelector> loader = ExtensionLoader.getExtensionLoader(WorkerSelector.class);
+        ExtensionLoader<Selector> loader = ExtensionLoader.getExtensionLoader(Selector.class);
         Host host = (Host) loader.getExtension("random").select(hosts);
         LOG.info("Select {}", host.toString());
         return host;

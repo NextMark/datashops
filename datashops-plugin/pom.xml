@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>datashops-plugin-selector</module>
+        <module>datashops-plugin-datasouce</module>
     </modules>
 
     <dependencies>

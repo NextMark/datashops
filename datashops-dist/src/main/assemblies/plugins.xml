@@ -15,7 +15,7 @@
             <source>
                 ../datashops-plugin/datashops-plugin-selector/target/datashops-plugin-selector-${project.version}.jar
             </source>
-            <outputDirectory>plugins/worker-selector/</outputDirectory>
+            <outputDirectory>plugins/selector/</outputDirectory>
             <destName>datashops-plugin-selector-${project.version}.jar</destName>
             <fileMode>0644</fileMode>
         </file>

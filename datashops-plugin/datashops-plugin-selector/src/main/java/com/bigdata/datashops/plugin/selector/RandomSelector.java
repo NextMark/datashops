@@ -6,7 +6,7 @@ import java.util.Random;
 import com.bigdata.datashops.model.pojo.rpc.Host;
 import com.google.common.collect.Iterables;
 
-public class RandomSelector implements WorkerSelector<Host> {
+public class RandomSelector implements Selector<Host> {
 
     @Override
     public Host select(Collection<Host> hosts) {

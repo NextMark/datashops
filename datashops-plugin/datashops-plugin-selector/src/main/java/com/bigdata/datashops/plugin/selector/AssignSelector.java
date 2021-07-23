@@ -5,7 +5,7 @@ import java.util.Collection;
 import com.bigdata.datashops.model.pojo.rpc.Host;
 import com.google.common.collect.Iterables;
 
-public class AssignSelector implements WorkerSelector<Host> {
+public class AssignSelector implements Selector<Host> {
 
     @Override
     public Host select(Collection<Host> hosts) {

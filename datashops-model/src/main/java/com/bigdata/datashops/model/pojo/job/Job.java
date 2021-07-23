@@ -95,7 +95,7 @@ public class Job extends BaseModel {
 
     private Integer retryInterval;
 
-    private String hostSelector;
+    private Integer hostSelector;
 
     private String host;
 

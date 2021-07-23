@@ -272,6 +272,6 @@ public class Constants {
     /**
      * plugin
      */
-    public static final String WORKER_SELECTOR = "worker.selector";
+    public static final String SELECTOR_TYPE = "selector.type";
 
 }

@@ -91,7 +91,7 @@ public class JobController extends BasicController {
         job.setOwner(params.get("owner"));
         job.setProjectId(Integer.valueOf(params.get("projectId")));
         job.setMaskId(JobUtils.genMaskId("1-" + params.get("projectId") + "-"));
-        job.setHostSelector(params.get("hostSelector"));
+        job.setHostSelector(Integer.valueOf(params.get("hostSelector")));
         job.setName(name);
         job.setCronExpression("00 10 12 * * ?");
         // 初始化调度时间

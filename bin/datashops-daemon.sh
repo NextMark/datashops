@@ -1,6 +1,7 @@
-#!/bin/sh
+#!/bin/bash
 
-# if no args specified, show usage
+usage="Usage: datashops-daemon.sh (start|stop) <api|master|worker> "
+
 if [ $# -le 0 ]; then
   echo $usage
   exit 1
@@ -24,6 +25,8 @@ export DATASHOPS_PID_DIR=$DATASHOPS_HOME/pid
 export DATASHOPS_LOG_DIR=$DATASHOPS_HOME/logs
 export DATASHOPS_CONF_DIR=$DATASHOPS_HOME/conf
 export DATASHOPS_LIB_JARS=$DATASHOPS_HOME/lib/*
+export DATASHOPS_PLUGINS_JARS=$DATASHOPS_HOME/plugins/*
+export EXT="$JAVA_HOME/jre/lib/ext:$DATASHOPS_PLUGINS_JARS"
 
 export STOP_TIMEOUT=5
 
@@ -59,7 +62,7 @@ elif [ "$command" = "api" ]; then
   CLASS=com.bigdata.datashops.api.ApiApplication
 fi
 
-export DATASHOPS_OPTS="-server -Xms$HEAP_INITIAL_SIZE -Xmx$HEAP_MAX_SIZE -Xmn$HEAP_NEW_GENERATION__SIZE -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m  -Xss512k -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:+CMSParallelRemarkEnabled -XX:LargePageSizeInBytes=128m -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=70 -XX:+PrintGCDetails -Xloggc:${DATASHOPS_LOG_DIR}/gc-$command.log -XX:+HeapDumpOnOutOfMemoryError  -XX:HeapDumpPath=dump.hprof"
+export DATASHOPS_OPTS="-server -Xms$HEAP_INITIAL_SIZE -Xmx$HEAP_MAX_SIZE -Xmn$HEAP_NEW_GENERATION__SIZE -Djava.ext.dirs=$EXT -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m  -Xss512k -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:+CMSParallelRemarkEnabled -XX:LargePageSizeInBytes=128m -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=70 -XX:+PrintGCDetails -Xloggc:${DATASHOPS_LOG_DIR}/gc-$command.log -XX:+HeapDumpOnOutOfMemoryError  -XX:HeapDumpPath=dump.hprof"
 
 exec_command="$LOG_FILE $DATASHOPS_OPTS -classpath $DATASHOPS_CONF_DIR:$DATASHOPS_LIB_JARS $CLASS --server.port=$PORT"
 

@@ -14,11 +14,12 @@ import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.common.utils.JSONUtils;
 import com.bigdata.datashops.common.utils.NetUtils;
 import com.bigdata.datashops.common.utils.PropertyUtils;
+import com.bigdata.datashops.model.enums.HostSelector;
 import com.bigdata.datashops.model.enums.RunState;
 import com.bigdata.datashops.model.pojo.job.JobInstance;
 import com.bigdata.datashops.model.pojo.rpc.Host;
 import com.bigdata.datashops.model.pojo.rpc.OSInfo;
-import com.bigdata.datashops.plugin.selector.WorkerSelector;
+import com.bigdata.datashops.plugin.selector.Selector;
 import com.bigdata.datashops.protocol.GrpcRequest;
 import com.bigdata.datashops.remote.rpc.GrpcRemotingClient;
 import com.bigdata.datashops.server.utils.ZKUtils;
@@ -58,14 +59,15 @@ public class Dispatcher {
         }
         jobInstanceService.fillJob(Collections.singletonList(instance));
 
-        String selector = PropertyUtils.getString(Constants.WORKER_SELECTOR);
-        String jobSelector = instance.getJob().getHostSelector();
+        String selector = PropertyUtils.getString(Constants.SELECTOR_TYPE);
+        HostSelector hostSelector = HostSelector.valueOf(selector.toUpperCase());
+        Integer jobSelector = instance.getJob().getHostSelector();
         if (jobSelector != null) {
-            selector = jobSelector;
+            hostSelector = HostSelector.of(jobSelector);
         }
 
         List<Host> hosts = Lists.newArrayList();
-        if (selector.equals("assign")) {
+        if (hostSelector == HostSelector.ASSIGN) {
             Host host = new Host();
             host.setIp(instance.getJob().getHost());
             host.setPort(PropertyUtils.getInt(Constants.WORKER_GRPC_SERVER_PORT));
@@ -82,9 +84,8 @@ public class Dispatcher {
                 hosts.add(h);
             }
         }
-
-        ExtensionLoader<WorkerSelector> loader = ExtensionLoader.getExtensionLoader(WorkerSelector.class);
-        Host host = (Host) loader.getExtension(selector).select(hosts);
+        ExtensionLoader<Selector> loader = ExtensionLoader.getExtensionLoader(Selector.class);
+        Host host = (Host) loader.getExtension(hostSelector.getName()).select(hosts);
 
         instance.setHost(host.getIp());
         instance.setState(RunState.RUNNING.getCode());

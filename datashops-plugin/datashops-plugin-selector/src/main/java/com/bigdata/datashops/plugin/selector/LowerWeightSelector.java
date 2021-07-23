@@ -8,7 +8,7 @@ import com.bigdata.datashops.model.pojo.rpc.Host;
 import com.bigdata.datashops.model.pojo.rpc.HostWeight;
 import com.google.common.collect.Lists;
 
-public class LowerWeightSelector implements WorkerSelector<Host> {
+public class LowerWeightSelector implements Selector<Host> {
 
     @Override
     public Host select(Collection<Host> hosts) {
