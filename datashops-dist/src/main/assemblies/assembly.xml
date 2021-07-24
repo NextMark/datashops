@@ -8,7 +8,7 @@
     </formats>
 
     <includeBaseDirectory>true</includeBaseDirectory>
-    <baseDirectory>${project.build.finalName}-bin</baseDirectory>
+    <baseDirectory>datashops-${project.version}</baseDirectory>
 
     <dependencySets>
         <!-- 项目的依赖包 -->

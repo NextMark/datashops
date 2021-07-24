@@ -8,7 +8,7 @@
     </formats>
 
     <includeBaseDirectory>true</includeBaseDirectory>
-    <baseDirectory>datashops-dist-${project.version}-bin</baseDirectory>
+    <baseDirectory>datashops-${project.version}</baseDirectory>
 
     <files>
         <file>
