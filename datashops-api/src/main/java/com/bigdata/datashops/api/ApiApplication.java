@@ -7,13 +7,11 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @EnableTransactionManagement
 @EnableConfigurationProperties
 @EntityScan("com.bigdata.datashops.model")
-@EnableJpaRepositories(basePackages = {"com.bigdata.datashops.dao"})
 @ComponentScan(basePackages = {
         "com.bigdata.datashops"}, excludeFilters = @ComponentScan.Filter(type = FilterType.REGEX, pattern = "com.bigdata.datashops.server.*"))
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class})

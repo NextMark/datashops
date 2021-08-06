@@ -1,23 +1,33 @@
 package com.bigdata.datashops.service;
 
-import org.springframework.data.domain.Page;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bigdata.datashops.dao.data.domain.PageRequest;
-import com.bigdata.datashops.dao.data.service.AbstractMysqlPagingAndSortingQueryService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.bigdata.datashops.dao.mapper.DataSourceMapper;
 import com.bigdata.datashops.model.pojo.DataSource;
 
 @Service
-public class DataSourceService extends AbstractMysqlPagingAndSortingQueryService<DataSource, Integer> {
-    public DataSource findOne(String filter) {
-        return findOneByQuery(filter);
+public class DataSourceService {
+    @Autowired
+    private DataSourceMapper dataSourceMapper;
+
+    public void save(DataSource entity) {
+        dataSourceMapper.insert(entity);
     }
 
-    public void saveEntity(DataSource entity) {
-        save(entity);
+    public void deleteById(int id) {
+        dataSourceMapper.deleteById(id);
     }
 
-    public Page<DataSource> getList(PageRequest pageRequest) {
-        return pageByQuery(pageRequest);
+    public IPage<DataSource> findList(int pageNum, int pageSize, String name) {
+        Page<DataSource> page = new Page(pageNum, pageSize);
+        LambdaQueryWrapper<DataSource> lqw = Wrappers.lambdaQuery();
+        lqw.eq(DataSource::getName, name);
+        lqw.orderByDesc(DataSource::getUpdateTime);
+        return dataSourceMapper.selectPage(page, lqw);
     }
 }

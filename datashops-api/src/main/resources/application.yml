@@ -31,3 +31,10 @@ devtools:
 
 server:
   port: 8666
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      table-prefix: t_

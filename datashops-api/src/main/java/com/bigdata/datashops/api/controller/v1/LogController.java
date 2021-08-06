@@ -20,7 +20,7 @@ import com.bigdata.datashops.model.pojo.rpc.Host;
 public class LogController extends BasicController {
     @RequestMapping(value = "/rollReadLog")
     public Result rollReadLog(@NotNull String instanceId, @NotNull Integer skipLines, @NotNull Integer limit) {
-        JobInstance instance = jobInstanceService.findJobInstance("instanceId=" + instanceId);
+        JobInstance instance = jobInstanceService.findByInstanceId(instanceId);
         Host host = new Host();
         host.setIp(instance.getHost());
         host.setPort(PropertyUtils.getInt(Constants.WORKER_GRPC_SERVER_PORT));

@@ -1,23 +1,33 @@
 package com.bigdata.datashops.service;
 
-import org.springframework.data.domain.Page;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bigdata.datashops.dao.data.domain.PageRequest;
-import com.bigdata.datashops.dao.data.service.AbstractMysqlPagingAndSortingQueryService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.bigdata.datashops.dao.mapper.YarnQueueMapper;
 import com.bigdata.datashops.model.pojo.YarnQueue;
 
 @Service
-public class YarnQueueService extends AbstractMysqlPagingAndSortingQueryService<YarnQueue, Integer> {
-    public YarnQueue findOne(String filter) {
-        return findOneByQuery(filter);
+public class YarnQueueService {
+    @Autowired
+    private YarnQueueMapper yarnQueueMapper;
+
+    public void save(YarnQueue yarnQueue) {
+        yarnQueueMapper.insert(yarnQueue);
     }
 
-    public void saveEntity(YarnQueue entity) {
-        save(entity);
+    public void deleteById(int id) {
+        yarnQueueMapper.deleteById(id);
     }
 
-    public Page<YarnQueue> getList(PageRequest pageRequest) {
-        return pageByQuery(pageRequest);
+    public IPage<YarnQueue> findList(int pageNum, int pageSize, String name) {
+        Page<YarnQueue> page = new Page(pageNum, pageSize);
+        LambdaQueryWrapper<YarnQueue> lqw = Wrappers.lambdaQuery();
+        lqw.eq(YarnQueue::getName, name);
+        lqw.orderByDesc(YarnQueue::getUpdateTime);
+        return yarnQueueMapper.selectPage(page, lqw);
     }
 }

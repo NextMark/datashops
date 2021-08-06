@@ -3,10 +3,8 @@ package com.bigdata.datashops.model.pojo.user;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.bigdata.datashops.common.utils.JSONUtils;
 import com.bigdata.datashops.model.pojo.BaseModel;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -15,8 +13,7 @@ import com.google.common.collect.Lists;
 import lombok.Data;
 
 @Data
-@Entity
-@Table(name = "t_user_menu")
+@TableName(value = "t_user_menu")
 public class Menu extends BaseModel {
 
     private String path;
@@ -37,7 +34,7 @@ public class Menu extends BaseModel {
 
     private String parameters;
 
-    @Transient
+    @TableField(exist = false)
     private List<Menu> children = Lists.newArrayList();
 
     public ObjectNode getMeta() {

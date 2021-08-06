@@ -29,13 +29,13 @@ public class QuartzSchedulerService {
     private Scheduler scheduler;
 
     public void addJobScheduler(Job job) throws SchedulerException {
-        Integer jobId = job.getId();
+        String maskId = job.getMaskId();
         Integer projectId = job.getProjectId();
         Date startDate = job.getValidStartDate();
         Date endDate = job.getValidEndDate();
-        Map<String, Object> dataMap = buildDataMap(projectId, jobId);
-        scheduleCronJob(QuartzJob.class, jobId.toString(), projectId.toString(), startDate, endDate,
-                job.getCronExpression(), dataMap);
+        Map<String, Object> dataMap = buildDataMap(projectId, maskId);
+        scheduleCronJob(QuartzJob.class, maskId, projectId.toString(), startDate, endDate, job.getCronExpression(),
+                dataMap);
     }
 
     @Transactional
@@ -104,10 +104,10 @@ public class QuartzSchedulerService {
         }
     }
 
-    private static Map<String, Object> buildDataMap(int projectId, int jobId) {
+    private static Map<String, Object> buildDataMap(int projectId, String maskId) {
         Map<String, Object> dataMap = new HashMap<>(2);
         dataMap.put("projectId", projectId);
-        dataMap.put("jobId", jobId);
+        dataMap.put("maskId", maskId);
         return dataMap;
     }
 

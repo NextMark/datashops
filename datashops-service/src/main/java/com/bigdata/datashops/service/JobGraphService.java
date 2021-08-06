@@ -2,12 +2,15 @@ package com.bigdata.datashops.service;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import com.bigdata.datashops.dao.data.domain.PageRequest;
-import com.bigdata.datashops.dao.data.service.AbstractMysqlPagingAndSortingQueryService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.bigdata.datashops.dao.mapper.JobGraphMapper;
 import com.bigdata.datashops.model.enums.NodeType;
 import com.bigdata.datashops.model.pojo.job.Edge;
 import com.bigdata.datashops.model.pojo.job.Job;
@@ -18,7 +21,10 @@ import com.bigdata.datashops.model.vo.VoJobNode;
 import com.google.common.collect.Lists;
 
 @Service
-public class JobGraphService extends AbstractMysqlPagingAndSortingQueryService<JobGraph, Integer> {
+public class JobGraphService {
+    @Autowired
+    private JobGraphMapper jobGraphMapper;
+
     @Autowired
     private JobService jobService;
 
@@ -28,21 +34,36 @@ public class JobGraphService extends AbstractMysqlPagingAndSortingQueryService<J
     @Autowired
     private JobRelationService jobRelationService;
 
+    public void save(JobGraph entity) {
+        jobGraphMapper.insert(entity);
+    }
+
     public JobGraph getJobGraph(Integer id) {
-        return findById(id);
+        return jobGraphMapper.selectById(id);
     }
 
-    public JobGraph getJobGraphByMaskId(String id) {
-        return findOneByQuery("maskId=" + id);
+    public JobGraph getJobGraphByMaskId(String maskId) {
+        LambdaQueryWrapper<JobGraph> lqw = Wrappers.lambdaQuery();
+        lqw.like(JobGraph::getMaskId, maskId);
+        return jobGraphMapper.selectOne(lqw);
     }
 
-    public Page<JobGraph> getJobGraphList(PageRequest pageRequest) {
-        return pageByQuery(pageRequest);
+    public IPage<JobGraph> findList(int pageNum, int pageSize, String name, String owner) {
+        Page<JobGraph> page = new Page(pageNum, pageSize);
+        LambdaQueryWrapper<JobGraph> lqw = Wrappers.lambdaQuery();
+        if (StringUtils.isNoneBlank(name)) {
+            lqw.like(JobGraph::getName, name);
+        }
+        if (StringUtils.isNoneBlank(owner)) {
+            lqw.like(JobGraph::getOwner, owner);
+        }
+        lqw.orderByDesc(JobGraph::getUpdateTime);
+        return jobGraphMapper.selectPage(page, lqw);
     }
 
     public void fillJobWithDependency(JobGraph jobGraph) {
         List<VoJobNode> nodes = Lists.newArrayList();
-        List<JobRelation> relations = jobRelationService.getJobRelations("graphMaskId=" + jobGraph.getMaskId());
+        List<JobRelation> relations = jobRelationService.findByGraphMaskId(jobGraph.getMaskId());
         for (JobRelation relation : relations) {
             VoJobNode node = new VoJobNode();
             if (relation.getNodeType() == NodeType.GRAPH.getCode()) {
@@ -67,7 +88,7 @@ public class JobGraphService extends AbstractMysqlPagingAndSortingQueryService<J
         List<Edge> edges = Lists.newArrayList();
         for (VoJobNode node : nodes) {
             String filter = "targetId=" + node.getId() + ";graphId=" + jobGraph.getMaskId();
-            List<JobDependency> jobDependencies = jobDependencyService.getJobDependency(filter);
+            List<JobDependency> jobDependencies = jobDependencyService.findByTargetId(node.getId());
             if (jobDependencies.size() == 0) {
                 Edge edge = new Edge();
                 edge.setFrom("1-+1");
@@ -85,7 +106,7 @@ public class JobGraphService extends AbstractMysqlPagingAndSortingQueryService<J
             }
 
             filter = "sourceId=" + node.getId() + ";graphMaskId=" + jobGraph.getMaskId();
-            jobDependencies = jobDependencyService.getJobDependency(filter);
+            jobDependencies = jobDependencyService.findBySourceId(node.getId());
             if (jobDependencies.size() == 0) {
                 Edge edge = new Edge();
                 edge.setFrom(node.getId());

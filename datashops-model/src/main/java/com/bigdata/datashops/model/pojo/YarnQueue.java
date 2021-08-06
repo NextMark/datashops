@@ -1,15 +1,13 @@
 package com.bigdata.datashops.model.pojo;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import com.baomidou.mybatisplus.annotation.TableName;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Entity
-@Table(name = "t_queue")
+@TableName(value = "t_queue")
 public class YarnQueue extends BaseModel {
     private Integer projectId;
 

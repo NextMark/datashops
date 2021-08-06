@@ -39,14 +39,13 @@ public class Checker {
     private JobDependencyService jobDependencyService;
 
     public RunState check(JobInstance jobInstance) {
-        List<JobDependency> jobDependencies =
-                jobDependencyService.getJobDependency("targetId=" + jobInstance.getJobId());
+        List<JobDependency> jobDependencies = jobDependencyService.findByTargetId(jobInstance.getMaskId());
         if (jobDependencies.size() == 0) {
             return RunState.SUCCESS;
         }
         Date bizTime = jobInstance.getBizTime();
         for (JobDependency s : jobDependencies) {
-            int preJobId = s.getSourceId();
+            String preJobId = s.getSourceId();
             int type = s.getType();
             String offset = s.getOffset();
             String[] offsetRegion = offset.split(Constants.SEPARATOR_COMMA);
@@ -68,13 +67,13 @@ public class Checker {
 
             List<Date> dependencyBizTime;
             String filter;
-            Job preJob = jobService.getJob(preJobId);
+            Job preJob = jobService.getJobByMaskId(preJobId);
             for (Integer o : offsets) {
                 int schedulingPeriod = preJob.getSchedulingPeriod();
                 dependencyBizTime = getDependencyBizTime(bizTime, schedulingPeriod, o, preJob.getCronExpression());
                 for (Date date : dependencyBizTime) {
                     filter = String.format("jobId=%s;bizTime=%s;", preJobId, date);
-                    JobInstance instance = jobInstanceService.findJobInstance(filter);
+                    JobInstance instance = jobInstanceService.findByJobIdAndBizTime(preJobId, date);
                     if (instance == null) {
                         return RunState.WAIT_FOR_DEPENDENCY;
                     }

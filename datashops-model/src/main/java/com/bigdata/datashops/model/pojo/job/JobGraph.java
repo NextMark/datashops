@@ -3,10 +3,8 @@ package com.bigdata.datashops.model.pojo.job;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.bigdata.datashops.model.pojo.BaseModel;
 import com.bigdata.datashops.model.vo.VoJobNode;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -16,8 +14,7 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Entity
-@Table(name = "t_job_graph")
+@TableName(value = "t_job_graph")
 public class JobGraph extends BaseModel {
     private String maskId;
 
@@ -78,10 +75,10 @@ public class JobGraph extends BaseModel {
 
     private Integer hostSelector;
 
-    @Transient
+    @TableField(exist = false)
     private List<VoJobNode> nodeList;
 
-    @Transient
+    @TableField(exist = false)
     private List<Edge> lineList;
 
 }

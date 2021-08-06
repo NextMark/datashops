@@ -35,8 +35,7 @@ public class RunningChecker implements Runnable {
         try {
             mutex = new InterProcessMutex(zookeeperOperator.getZkClient(), ZKUtils.getRunningCheckerLockPath());
             mutex.acquire();
-            String filters = "appId!='';state=" + RunState.RUNNING.getCode();
-            List<JobInstance> jobInstanceList = jobInstanceService.findReadyJob(filters);
+            List<JobInstance> jobInstanceList = jobInstanceService.findRunningYarnApps(RunState.RUNNING.getCode());
             if (jobInstanceList.size() > 0) {
                 LOG.info("Check running status {} instances", jobInstanceList.size());
             }
@@ -49,7 +48,7 @@ public class RunningChecker implements Runnable {
                             continue;
                         }
                         instance.setState(state.getCode());
-                        jobInstanceService.saveEntity(instance);
+                        jobInstanceService.save(instance);
                     } catch (Exception e) {
                         throw new RuntimeException("check error", e);
                     }

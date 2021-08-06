@@ -1,8 +1,6 @@
 package com.bigdata.datashops.model.pojo.job;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.bigdata.datashops.model.pojo.BaseModel;
 
 import lombok.Data;
@@ -10,15 +8,14 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Entity
-@Table(name = "t_job_dependency")
+@TableName(value = "t_job_dependency")
 public class JobDependency extends BaseModel {
     /**
      * default 1, 虚拟根节点
      */
-    private Integer sourceId;
+    private String sourceId;
 
-    private Integer targetId;
+    private String targetId;
 
     /**
      * 依赖类型，1-集合，2-区间

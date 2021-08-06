@@ -43,18 +43,18 @@ public class Dispatcher {
 
     public void dispatch(String instanceId) {
         LOG.info("Dispatch instance {}", instanceId);
-        JobInstance instance = jobInstanceService.findOneByQuery("instanceId=" + instanceId);
+        JobInstance instance = jobInstanceService.findByInstanceId(instanceId);
         boolean workerExist = zookeeperOperator.isExisted(ZKUtils.getWorkerRegistryPath());
         if (!workerExist) {
             instance.setState(RunState.WAIT_FOR_RESOURCE.getCode());
-            jobInstanceService.saveEntity(instance);
+            jobInstanceService.save(instance);
             return;
         }
         List<String> hostsStr = zookeeperOperator.getChildrenKeys(ZKUtils.getWorkerRegistryPath());
         if (hostsStr.size() == 0) {
             LOG.warn("No active worker in {}", ZKUtils.getWorkerRegistryPath());
             instance.setState(RunState.WAIT_FOR_RESOURCE.getCode());
-            jobInstanceService.saveEntity(instance);
+            jobInstanceService.save(instance);
             return;
         }
         jobInstanceService.fillJob(Collections.singletonList(instance));
@@ -90,7 +90,7 @@ public class Dispatcher {
         instance.setHost(host.getIp());
         instance.setState(RunState.RUNNING.getCode());
         instance.setStartTime(new Date());
-        jobInstanceService.saveEntity(instance);
+        jobInstanceService.save(instance);
         GrpcRequest.Request request = GrpcRequest.Request.newBuilder().setIp(NetUtils.getLocalAddress())
                                               .setPort(PropertyUtils.getInt(Constants.MASTER_GRPC_SERVER_PORT))
                                               .setRequestId(instanceId)

@@ -5,19 +5,17 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.bigdata.datashops.api.common.Pagination;
 import com.bigdata.datashops.api.controller.BasicController;
 import com.bigdata.datashops.api.response.ResultCode;
 import com.bigdata.datashops.common.Constants;
-import com.bigdata.datashops.dao.data.domain.PageRequest;
 import com.bigdata.datashops.model.dto.DtoLogin;
 import com.bigdata.datashops.model.dto.DtoPageQuery;
 import com.bigdata.datashops.model.dto.DtoRegister;
@@ -31,11 +29,11 @@ public class UserController extends BasicController {
 
     @PostMapping("/register")
     public Object register(@RequestBody DtoRegister params) {
-        User dbUser = userService.getUser("phone=" + params.getPhone());
+        User dbUser = userService.getUserByPhone(params.getPhone());
         if (dbUser != null) {
             return fail(ResultCode.USER_REGISTERED);
         }
-        dbUser = userService.getUser("email=" + params.getEmail());
+        dbUser = userService.getUserByEmail(params.getEmail());
         if (dbUser != null) {
             return fail(ResultCode.USER_REGISTERED);
         }
@@ -64,14 +62,7 @@ public class UserController extends BasicController {
     @PostMapping(value = "/login")
     public Object login(@RequestBody DtoLogin login) {
         Map<String, Object> map = Maps.newHashMap();
-        String filter = null;
-        if (StringUtils.isNoneBlank(login.getName())) {
-            filter = "name=" + login.getName();
-        }
-        if (StringUtils.isNoneBlank(login.getPhone())) {
-            filter = "phone=" + login.getPhone();
-        }
-        User user = userService.getUser(filter);
+        User user = userService.getUser(login.getName(), login.getPhone());
         if (!userService.verifyPassword(login.getPassword(), user.getPassword())) {
             return fail(ResultCode.USER_INPUT_ILLEGAL);
         }
@@ -100,12 +91,10 @@ public class UserController extends BasicController {
 
     @RequestMapping(value = "/getUserList")
     public Object getUserList(@RequestBody DtoPageQuery query) {
-        PageRequest pageable =
-                new PageRequest(query.getPageNum() - 1, query.getPageSize(), "", Sort.Direction.ASC, "createTime");
-        Page<User> user = userService.getUserList(pageable);
-        List<User> userList = user.getContent();
+        IPage<User> res = userService.findList(query.getPageNum(), query.getPageSize());
+        List<User> userList = res.getRecords();
         userService.fillRoles(userList);
-        Pagination pagination = new Pagination(user);
+        Pagination pagination = new Pagination(res);
         return ok(pagination);
     }
 

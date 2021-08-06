@@ -4,12 +4,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-
 import org.apache.commons.lang3.time.DateFormatUtils;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.bigdata.datashops.common.utils.JSONUtils;
 import com.bigdata.datashops.model.enums.DataType;
 import com.bigdata.datashops.model.pojo.BaseModel;
@@ -23,8 +21,7 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Entity
-@Table(name = "t_job_result")
+@TableName(value = "t_job_result")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class JobResult extends BaseModel {
     private Long time;
@@ -41,7 +38,7 @@ public class JobResult extends BaseModel {
 
     private Long itemId;
 
-    @Transient
+    @TableField(exist = false)
     private JsonNode jsonArray;
 
     public Object getValue() {

@@ -4,37 +4,54 @@ import java.util.List;
 
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.bigdata.datashops.dao.data.domain.PageRequest;
-import com.bigdata.datashops.dao.data.service.AbstractMysqlPagingAndSortingQueryService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.bigdata.datashops.dao.mapper.JobMapper;
 import com.bigdata.datashops.model.pojo.job.Job;
 
 @Service
-public class JobService extends AbstractMysqlPagingAndSortingQueryService<Job, Integer> {
+public class JobService {
     @Autowired
     private QuartzSchedulerService quartzSchedulerService;
 
+    @Autowired
+    private JobMapper jobMapper;
+
     public Job getJob(Integer id) {
-        return findById(id);
+        return jobMapper.selectById(id);
     }
 
-    public Job getJobByMaskId(String id) {
-        return findOneByQuery("maskId=" + id);
+    public Job getJobByMaskId(String maskId) {
+        return jobMapper.findLatestJob(maskId);
     }
 
-    public Job getJobByProjectIdAndId(Integer projectId, Integer id) {
-        return findOneByQuery("projectId=" + projectId + ";id=" + id);
+    public List<Job> getVersionList(String maskId) {
+        LambdaQueryWrapper<Job> lqw = Wrappers.lambdaQuery();
+        lqw.eq(Job::getMaskId, maskId);
+        lqw.orderByDesc(Job::getUpdateTime);
+        return jobMapper.selectList(lqw);
     }
 
-    public List<Job> findJobs(String filters) {
-        return findByQuery(filters);
-    }
+    //    public Job getJobByProjectIdAndId(Integer projectId, Integer id) {
+    //        return findOneByQuery("projectId=" + projectId + ";id=" + id);
+    //    }
+    //
+    //    public List<Job> findJobs(String filters) {
+    //        return findByQuery(filters);
+    //    }
+    //
+    //    public Page<Job> getJobList(PageRequest pageRequest) {
+    //        return pageByQuery(pageRequest);
+    //    }
 
-    public Page<Job> getJobList(PageRequest pageRequest) {
-        return pageByQuery(pageRequest);
+    public IPage<Job> findByNameAndOwner(int pageNum, int pageSize, String name, String owner) {
+        Page<Job> page = new Page(pageNum, pageSize);
+        return jobMapper.findJobListPaging(page, name, owner);
     }
 
     @Transactional
@@ -46,14 +63,19 @@ public class JobService extends AbstractMysqlPagingAndSortingQueryService<Job, I
         if (status == 1) {
             quartzSchedulerService.resumeJob(job.getProjectId(), job.getId());
         }
-        save(job);
+        jobMapper.updateById(job);
     }
 
     @Transactional
     public void modifyJob(Job job) throws SchedulerException {
-        save(job);
+        jobMapper.updateById(job);
         quartzSchedulerService.addJobScheduler(job);
         quartzSchedulerService.rescheduleJob(job);
+    }
+
+    public Job save(Job job) {
+        jobMapper.insert(job);
+        return job;
     }
 
 }

@@ -1,15 +1,13 @@
 package com.bigdata.datashops.model.pojo;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import com.baomidou.mybatisplus.annotation.TableName;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Entity
-@Table(name = "t_datasource")
+@TableName(value = "t_datasource")
 public class DataSource extends BaseModel {
     private int type;
 

@@ -10,7 +10,7 @@ public class VoJobDependency {
 
     private String name;
 
-    private Integer sourceId;
+    private String sourceId;
 
     private String offset;
 

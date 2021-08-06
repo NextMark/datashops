@@ -15,7 +15,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -32,7 +31,6 @@ import com.bigdata.datashops.server.thread.ThreadUtil;
 import com.bigdata.datashops.service.JobInstanceService;
 
 @ComponentScan(basePackages = {"com.bigdata.datashops"})
-@EnableJpaRepositories(basePackages = {"com.bigdata.datashops.dao"})
 @EntityScan("com.bigdata.datashops")
 @EnableScheduling
 @EnableTransactionManagement

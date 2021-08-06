@@ -7,14 +7,16 @@ import java.util.Objects;
 
 import org.quartz.CronExpression;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.common.utils.DateUtils;
 import com.bigdata.datashops.common.utils.JobUtils;
-import com.bigdata.datashops.dao.data.domain.PageRequest;
-import com.bigdata.datashops.dao.data.service.AbstractMysqlPagingAndSortingQueryService;
+import com.bigdata.datashops.dao.mapper.JobInstanceMapper;
 import com.bigdata.datashops.model.enums.JobType;
 import com.bigdata.datashops.model.enums.RunState;
 import com.bigdata.datashops.model.pojo.job.Job;
@@ -22,27 +24,60 @@ import com.bigdata.datashops.model.pojo.job.JobInstance;
 import com.bigdata.datashops.service.utils.CronHelper;
 
 @Service
-public class JobInstanceService extends AbstractMysqlPagingAndSortingQueryService<JobInstance, Integer> {
+public class JobInstanceService {
     @Autowired
     private JobService jobService;
 
     @Autowired
     private JobInstanceService jobInstanceService;
 
-    public List<JobInstance> findReadyJob(String filters) {
-        return findByQuery(filters);
+    @Autowired
+    private JobInstanceMapper jobInstanceMapper;
+
+    public void save(JobInstance jobInstance) {
+        jobInstanceMapper.insert(jobInstance);
     }
 
-    public JobInstance findJobInstance(String filter) {
-        return findOneByQuery(filter);
+    public JobInstance findById(int id) {
+        return jobInstanceMapper.selectById(id);
     }
 
-    public void saveEntity(JobInstance jobInstance) {
-        save(jobInstance);
+    public List<JobInstance> findRunningYarnApps(int state) {
+        LambdaQueryWrapper<JobInstance> lqw = Wrappers.lambdaQuery();
+        lqw.ne(JobInstance::getAppId, "");
+        lqw.eq(JobInstance::getState, state);
+        return jobInstanceMapper.selectList(lqw);
     }
 
-    public Page<JobInstance> getJobInstanceList(PageRequest pageRequest) {
-        return pageByQuery(pageRequest);
+    public List<JobInstance> findByStates(List<Integer> states) {
+        LambdaQueryWrapper<JobInstance> lqw = Wrappers.lambdaQuery();
+        lqw.in(JobInstance::getState, states);
+        return jobInstanceMapper.selectList(lqw);
+    }
+
+    public JobInstance findByInstanceId(String instanceId) {
+        LambdaQueryWrapper<JobInstance> lqw = Wrappers.lambdaQuery();
+        lqw.eq(JobInstance::getInstanceId, instanceId);
+        return jobInstanceMapper.selectOne(lqw);
+    }
+
+    public JobInstance findByJobIdAndBizTime(String jobId, Date bizTime) {
+        LambdaQueryWrapper<JobInstance> lqw = Wrappers.lambdaQuery();
+        lqw.eq(JobInstance::getJobId, jobId);
+        lqw.eq(JobInstance::getBizTime, bizTime);
+        return jobInstanceMapper.selectOne(lqw);
+    }
+
+    public JobInstance findByMaskIdAndBizTime(String maskId, Date bizTime) {
+        LambdaQueryWrapper<JobInstance> lqw = Wrappers.lambdaQuery();
+        lqw.eq(JobInstance::getMaskId, maskId);
+        lqw.eq(JobInstance::getBizTime, bizTime);
+        return jobInstanceMapper.selectOne(lqw);
+    }
+
+    public IPage<JobInstance> findByNameAndOperator(int pageNum, int pageSize, String name, String operator) {
+        Page<JobInstance> page = new Page(pageNum, pageSize);
+        return jobInstanceMapper.findJobInstanceListPaging(page, name, operator);
     }
 
     public void fillJob(List<JobInstance> jobInstances) {
@@ -52,34 +87,34 @@ public class JobInstanceService extends AbstractMysqlPagingAndSortingQueryServic
         }
     }
 
-    public JobInstance createNewJobInstance(Integer id, String operator, Job job) {
+    public JobInstance createNewJobInstance(String id, String operator, Job job) {
         if (job.getType() == JobType.FLINK.getCode() || job.getType() == JobType.KAFKA_2_HDFS.getCode()) {
             return createNewJobInstance(id, operator, job, new Date());
         }
         return createNewJobInstance(id, operator, job, CronHelper.getLastTime(job.getCronExpression()));
     }
 
-    public JobInstance createNewJobInstance(Integer id, String operator, Job job, Date bizDate) {
+    public JobInstance createNewJobInstance(String id, String operator, Job job, Date bizDate) {
         Date now = new Date();
         String instanceId = JobUtils.genJobInstanceId();
         //Date bizDate = CronHelper.getLastTime(job.getCronExpression());
-        JobInstance jobInstance = jobInstanceService.findJobInstance(String.format("jobId=%d;bizTime=%s", id, bizDate));
+        JobInstance jobInstance = jobInstanceService.findByMaskIdAndBizTime(id, bizDate);
         if (!Objects.isNull(jobInstance)) {
             jobInstance.setOperator(operator);
             jobInstance.setSubmitTime(now);
             jobInstance.setState(RunState.CREATED.getCode());
             return jobInstance;
         }
-        return JobInstance.builder().maskId(job.getMaskId()).instanceId(instanceId).submitTime(now).status(1).jobId(id)
+        return JobInstance.builder().maskId(job.getMaskId()).instanceId(instanceId).submitTime(now).status(1).maskId(id)
                        .projectId(job.getProjectId()).state(RunState.CREATED.getCode()).type(job.getType())
                        .operator(operator).bizTime(bizDate).build();
     }
 
-    public void buildBatchJobInstance(Integer id, String startTime, String endTime, String operator)
+    public void buildBatchJobInstance(String id, String startTime, String endTime, String operator)
             throws ParseException {
         Date start = DateUtils.parse(startTime, Constants.YYYYMMDDHH);
         Date end = DateUtils.parse(endTime, Constants.YYYYMMDDHH);
-        Job job = jobService.getJob(id);
+        Job job = jobService.getJobByMaskId(id);
         CronExpression expression = new CronExpression(job.getCronExpression());
         for (; start.getTime() <= end.getTime(); ) {
             start = expression.getNextValidTimeAfter(start);
@@ -87,7 +122,7 @@ public class JobInstanceService extends AbstractMysqlPagingAndSortingQueryServic
                 break;
             }
             JobInstance jobInstance = createNewJobInstance(id, operator, job, start);
-            saveEntity(jobInstance);
+            save(jobInstance);
         }
     }
 

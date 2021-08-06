@@ -49,14 +49,14 @@ public class Finder implements Runnable {
             }
             String filters = "state=" + StringUtils.join(status, Constants.SEPARATOR_COMMA);
 
-            List<JobInstance> jobInstanceList = jobInstanceService.findReadyJob(filters);
+            List<JobInstance> jobInstanceList = jobInstanceService.findByStates(status);
             if (jobInstanceList.size() > 0) {
                 LOG.info("Find {} instances, add to queue", jobInstanceList.size());
             }
             for (JobInstance instance : jobInstanceList) {
                 RunState state = checker.check(instance);
                 instance.setState(state.getCode());
-                jobInstanceService.saveEntity(instance);
+                jobInstanceService.save(instance);
                 if (state == RunState.SUCCESS) {
                     jobQueue.getQueue().put(instance.getInstanceId());
                 }

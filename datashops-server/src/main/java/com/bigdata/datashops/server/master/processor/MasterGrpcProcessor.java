@@ -39,7 +39,7 @@ public class MasterGrpcProcessor implements InitializingBean {
         String body = request.getBody().toStringUtf8();
         int code = request.getCode();
         JobResult result = JSONUtils.parseObject(body, JobResult.class);
-        JobInstance instance = jobInstanceService.findJobInstance("instanceId=" + result.getInstanceId());
+        JobInstance instance = jobInstanceService.findByInstanceId(result.getInstanceId());
         jobInstanceService.fillJob(Collections.singletonList(instance));
         LOG.info("Receive worker finish rpc code={}, name={}, instanceId={}", code, instance.getJob().getName(),
                 result.getInstanceId());
@@ -59,14 +59,14 @@ public class MasterGrpcProcessor implements InitializingBean {
             instance.setEndTime(new Date());
             instance.setState(RunState.TIMEOUT_FAIL.getCode());
         }
-        jobInstanceService.saveEntity(instance);
+        jobInstanceService.save(instance);
     }
 
     public void processJobKill(GrpcRequest.Request request) {
         String body = request.getBody().toStringUtf8();
         int code = request.getCode();
         JobResult result = JSONUtils.parseObject(body, JobResult.class);
-        JobInstance instance = jobInstanceService.findJobInstance("instanceId=" + result.getInstanceId());
+        JobInstance instance = jobInstanceService.findByInstanceId(result.getInstanceId());
         jobInstanceService.fillJob(Collections.singletonList(instance));
         LOG.info("Receive job kill response, name={}, instanceId={}", instance.getJob().getName(),
                 result.getInstanceId());
@@ -78,7 +78,7 @@ public class MasterGrpcProcessor implements InitializingBean {
             instance.setState(RunState.FAIL.getCode());
         }
         LOG.info("Job killed, name={}, instanceId={} update it", instance.getJob().getName(), instance.getInstanceId());
-        jobInstanceService.saveEntity(instance);
+        jobInstanceService.save(instance);
     }
 
     public void processHeartBeat(GrpcRequest.Request request) {

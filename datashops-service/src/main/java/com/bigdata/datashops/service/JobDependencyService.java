@@ -7,7 +7,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bigdata.datashops.dao.data.service.AbstractMysqlPagingAndSortingQueryService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.bigdata.datashops.dao.mapper.JobDependencyMapper;
 import com.bigdata.datashops.model.enums.JobType;
 import com.bigdata.datashops.model.pojo.job.Edge;
 import com.bigdata.datashops.model.pojo.job.Job;
@@ -18,22 +20,37 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 @Service
-public class JobDependencyService extends AbstractMysqlPagingAndSortingQueryService<JobDependency, Integer> {
+public class JobDependencyService {
     @Autowired
     private JobService jobService;
 
-    public List<JobDependency> getJobDependency(String filter) {
-        return findByQuery(filter);
+    @Autowired
+    private JobDependencyMapper jobDependencyMapper;
+
+    public void save(JobDependency entity) {
+        jobDependencyMapper.insert(entity);
     }
 
-    public JobDependency getOne(String filter) {
-        return findOneByQuery(filter);
+    public void deleteById(int id) {
+        jobDependencyMapper.deleteById(id);
+    }
+
+    public List<JobDependency> findBySourceId(String source) {
+        LambdaQueryWrapper<JobDependency> lqw = Wrappers.lambdaQuery();
+        lqw.eq(JobDependency::getSourceId, source);
+        return jobDependencyMapper.selectList(lqw);
+    }
+
+    public List<JobDependency> findByTargetId(String target) {
+        LambdaQueryWrapper<JobDependency> lqw = Wrappers.lambdaQuery();
+        lqw.eq(JobDependency::getTargetId, target);
+        return jobDependencyMapper.selectList(lqw);
     }
 
     public List<VoJobDependency> fillJobInfo(List<JobDependency> dependencies) {
         List<VoJobDependency> vo = Lists.newArrayList();
         for (JobDependency dependency : dependencies) {
-            Job job = jobService.getJob(dependency.getSourceId());
+            Job job = jobService.getJobByMaskId(dependency.getSourceId());
             VoJobDependency v =
                     VoJobDependency.builder().id(dependency.getId()).name(job.getName()).offset(dependency.getOffset())
                             .owner(job.getOwner()).schedulingPeriod(job.getSchedulingPeriod())
@@ -44,11 +61,11 @@ public class JobDependencyService extends AbstractMysqlPagingAndSortingQueryServ
         return vo;
     }
 
-    public Map<String, Object> getJobDependencyGraph(Integer id) {
+    public Map<String, Object> getJobDependencyGraph(String id) {
         Map<String, Object> result = Maps.newHashMap();
         List<Edge> edges = Lists.newArrayList();
         List<Node> nodes = Lists.newArrayList();
-        Job job = jobService.getJob(id);
+        Job job = jobService.getJobByMaskId(id);
         Node node = new Node();
         node.setLabel(job.getName() + "\n" + StringUtils.lowerCase(JobType.of(job.getType()).name()));
         node.setId(id.toString());
@@ -62,11 +79,11 @@ public class JobDependencyService extends AbstractMysqlPagingAndSortingQueryServ
         return result;
     }
 
-    private void findPre(Integer id, List<Edge> edges, List<Node> nodes) {
-        List<JobDependency> pre = getJobDependency("targetId=" + id);
+    private void findPre(String id, List<Edge> edges, List<Node> nodes) {
+        List<JobDependency> pre = findByTargetId(id);
         if (pre.size() > 0) {
             for (JobDependency dependency : pre) {
-                Job job = jobService.getJob(dependency.getSourceId());
+                Job job = jobService.getJobByMaskId(dependency.getSourceId());
 
                 if (dependency.getTargetId().equals(dependency.getSourceId())) {
                     Node node = new Node();
@@ -102,14 +119,14 @@ public class JobDependencyService extends AbstractMysqlPagingAndSortingQueryServ
         }
     }
 
-    private void findPost(Integer id, List<Edge> edges, List<Node> nodes) {
-        List<JobDependency> pre = getJobDependency("sourceId=" + id);
+    private void findPost(String id, List<Edge> edges, List<Node> nodes) {
+        List<JobDependency> pre = findBySourceId(id);
         if (pre.size() > 0) {
             for (JobDependency dependency : pre) {
                 if (dependency.getSourceId().equals(dependency.getTargetId())) {
                     continue;
                 }
-                Job job = jobService.getJob(dependency.getTargetId());
+                Job job = jobService.getJobByMaskId(dependency.getTargetId());
                 Node node = new Node();
                 node.setId(dependency.getTargetId().toString());
                 node.setLabel(job.getName() + "\n" + StringUtils.lowerCase(JobType.of(job.getType()).name()));

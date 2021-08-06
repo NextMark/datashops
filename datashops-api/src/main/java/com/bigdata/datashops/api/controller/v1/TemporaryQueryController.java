@@ -5,18 +5,15 @@ import java.util.Objects;
 
 import javax.validation.constraints.NotNull;
 
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.bigdata.datashops.api.common.Pagination;
 import com.bigdata.datashops.api.controller.BasicController;
 import com.bigdata.datashops.api.response.Result;
-import com.bigdata.datashops.dao.data.domain.PageRequest;
 import com.bigdata.datashops.model.dto.DtoPageQuery;
 import com.bigdata.datashops.model.pojo.job.TemporaryQuery;
 
@@ -25,14 +22,8 @@ import com.bigdata.datashops.model.pojo.job.TemporaryQuery;
 public class TemporaryQueryController extends BasicController {
     @PostMapping(value = "/getTmpQueryList")
     public Result getTmpQueryList(@RequestBody DtoPageQuery query) {
-        StringBuilder filter = new StringBuilder();
-        if (StringUtils.isNoneBlank(query.getName())) {
-            filter.append("name?").append(query.getName());
-        }
-        PageRequest pageRequest =
-                new PageRequest(query.getPageNum() - 1, query.getPageSize(), filter.toString(), Sort.Direction.DESC,
-                        "createTime");
-        Page<TemporaryQuery> projectList = temporaryQueryService.getList(pageRequest);
+        IPage<TemporaryQuery> projectList =
+                temporaryQueryService.findList(query.getPageNum(), query.getPageSize(), query.getName());
         Pagination pagination = new Pagination(projectList);
         return ok(pagination);
     }

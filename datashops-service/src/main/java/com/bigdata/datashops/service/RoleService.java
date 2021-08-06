@@ -1,19 +1,44 @@
 package com.bigdata.datashops.service;
 
-import org.springframework.data.domain.Page;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bigdata.datashops.dao.data.domain.PageRequest;
-import com.bigdata.datashops.dao.data.service.AbstractMysqlPagingAndSortingQueryService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.bigdata.datashops.dao.mapper.RoleMapper;
 import com.bigdata.datashops.model.pojo.user.Role;
 
 @Service
-public class RoleService extends AbstractMysqlPagingAndSortingQueryService<Role, Integer> {
-    public Page<Role> getRoles(PageRequest pageRequest) {
-        return pageByQuery(pageRequest);
+public class RoleService {
+    @Autowired
+    private RoleMapper roleMapper;
+
+    public void deleteById(int id) {
+        roleMapper.deleteById(id);
+    }
+
+    public void save(Role entity) {
+        roleMapper.insert(entity);
     }
 
     public Role getRole(Integer id) {
-        return findById(id);
+        return roleMapper.selectById(id);
+    }
+
+    public IPage<Role> findList(int pageNum, int pageSize) {
+        Page<Role> page = new Page(pageNum, pageSize);
+        LambdaQueryWrapper<Role> lqw = Wrappers.lambdaQuery();
+        lqw.orderByAsc(Role::getCreateTime);
+        return roleMapper.selectPage(page, lqw);
+    }
+
+    public List<Role> findListByIds(List<Integer> ids) {
+        LambdaQueryWrapper<Role> lqw = Wrappers.lambdaQuery();
+        lqw.in(Role::getId, ids);
+        return roleMapper.selectList(lqw);
     }
 }

@@ -1,16 +1,42 @@
 package com.bigdata.datashops.service;
 
-import org.springframework.data.domain.Page;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bigdata.datashops.dao.data.domain.PageRequest;
-import com.bigdata.datashops.dao.data.service.AbstractMysqlPagingAndSortingQueryService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.bigdata.datashops.dao.mapper.TemporaryQueryMapper;
 import com.bigdata.datashops.model.pojo.job.TemporaryQuery;
 
 @Service
-public class TemporaryQueryService extends AbstractMysqlPagingAndSortingQueryService<TemporaryQuery, Integer> {
-    public Page<TemporaryQuery> getList(PageRequest pageRequest) {
-        return pageByQuery(pageRequest);
+public class TemporaryQueryService {
+    @Autowired
+    private TemporaryQueryMapper temporaryQueryMapper;
+
+    public TemporaryQuery save(TemporaryQuery entity) {
+        temporaryQueryMapper.insert(entity);
+        return entity;
+    }
+
+    public TemporaryQuery findById(int id) {
+        return temporaryQueryMapper.selectById(id);
+    }
+
+    public void deleteById(int id) {
+        temporaryQueryMapper.deleteById(id);
+    }
+
+    public IPage<TemporaryQuery> findList(int pageNum, int pageSize, String name) {
+        Page<TemporaryQuery> page = new Page(pageNum, pageSize);
+        LambdaQueryWrapper<TemporaryQuery> lqw = Wrappers.lambdaQuery();
+        if (StringUtils.isNotBlank(name)) {
+            lqw.like(TemporaryQuery::getName, name);
+        }
+        lqw.orderByDesc(TemporaryQuery::getCreateTime);
+        return temporaryQueryMapper.selectPage(page, lqw);
     }
 
 }

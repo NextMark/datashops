@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bigdata.datashops.dao.mapper.JobMapper">
+    <select id="findJobListPaging" resultType="com.bigdata.datashops.model.pojo.job.Job">
+        SELECT a.*
+        FROM t_job a
+        RIGHT JOIN
+        (SELECT mask_id,
+        max(version) AS version
+        FROM t_job
+        where status=1
+        <if test="name != null and name != ''">
+            and b.name like concat('%', #{name}, '%')
+        </if>
+        <if test="owner != null and owner != ''">
+            and a.owner like concat('%', #{owner}, '%')
+        </if>
+        GROUP BY mask_id) b ON a.version=b.version
+        AND a.mask_id=b.mask_id
+        order by a.create_time desc
+
+    </select>
+
+    <select id="findLatestJob" resultType="com.bigdata.datashops.model.pojo.job.Job">
+        SELECT a.*
+        FROM t_job a
+        where 1=1
+        and mask_id = #{maskId}
+        order by version desc limit 1
+    </select>
+
+    <select id="findJobVersionList" resultType="java.util.List">
+        select version,operator,update_time
+        from t_job
+        where mask_id = #{maskId}
+    </select>
+
+</mapper>

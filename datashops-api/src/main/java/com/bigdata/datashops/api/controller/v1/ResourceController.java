@@ -6,11 +6,8 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.bigdata.datashops.api.common.Pagination;
 import com.bigdata.datashops.api.controller.BasicController;
 import com.bigdata.datashops.api.response.Result;
@@ -26,7 +24,6 @@ import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.common.utils.FileUtils;
 import com.bigdata.datashops.common.utils.HadoopUtils;
 import com.bigdata.datashops.common.utils.PropertyUtils;
-import com.bigdata.datashops.dao.data.domain.PageRequest;
 import com.bigdata.datashops.model.dto.DtoPageQuery;
 import com.bigdata.datashops.model.enums.ResourceType;
 import com.bigdata.datashops.model.pojo.hadoop.ResourceFile;
@@ -70,17 +67,9 @@ public class ResourceController extends BasicController {
 
     @PostMapping(value = "/getResourceFileList")
     public Result getResourceFileList(@RequestBody DtoPageQuery query) {
-        StringBuilder filter = new StringBuilder();
-        filter.append("type!=0,1");
-
-        if (StringUtils.isNoneBlank(query.getName())) {
-            filter.append(";name?").append(query.getName());
-        }
-        PageRequest pageRequest =
-                new PageRequest(query.getPageNum() - 1, query.getPageSize(), filter.toString(), Sort.Direction.DESC,
-                        "createTime");
-        Page<ResourceFile> projectList = resourceFileService.getList(pageRequest);
-        Pagination pagination = new Pagination(projectList);
+        IPage<ResourceFile> res =
+                resourceFileService.findList(query.getPageNum(), query.getPageSize(), query.getName());
+        Pagination pagination = new Pagination(res);
         return ok(pagination);
     }
 

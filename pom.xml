@@ -69,7 +69,8 @@
         <sqoop.version>1.4.7-cdh6.3.2</sqoop.version>
         <cronutil.version>9.1.5</cronutil.version>
         <spark.version>2.4.0</spark.version>
-        <dubbo.version>3.0.1</dubbo.version>
+        <dubbo.version>2.7.3</dubbo.version>
+        <mybatis.plus.version>3.4.3.1</mybatis.plus.version>
 
 
         <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
@@ -150,11 +151,11 @@
                 <artifactId>spring-boot-starter-security</artifactId>
                 <version>${spring.boot.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-data-jpa</artifactId>
-                <version>${spring.boot.version}</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>org.springframework.boot</groupId>-->
+<!--                <artifactId>spring-boot-starter-data-jpa</artifactId>-->
+<!--                <version>${spring.boot.version}</version>-->
+<!--            </dependency>-->
 
             <!-- mybatis/database -->
             <dependency>
@@ -167,22 +168,40 @@
                 <artifactId>druid</artifactId>
                 <version>1.1.22</version>
             </dependency>
-            <dependency>
-                <groupId>tk.mybatis</groupId>
-                <artifactId>mapper-spring-boot-starter</artifactId>
-                <version>2.1.5</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>javax.persistence</groupId>
-                        <artifactId>persistence-api</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>tk.mybatis</groupId>-->
+<!--                <artifactId>mapper-spring-boot-starter</artifactId>-->
+<!--                <version>2.1.5</version>-->
+<!--                <exclusions>-->
+<!--                    <exclusion>-->
+<!--                        <groupId>javax.persistence</groupId>-->
+<!--                        <artifactId>persistence-api</artifactId>-->
+<!--                    </exclusion>-->
+<!--                </exclusions>-->
+<!--            </dependency>-->
             <dependency>
                 <groupId>com.github.pagehelper</groupId>
                 <artifactId>pagehelper</artifactId>
                 <version>5.1.11</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus</artifactId>
+                <version>${mybatis.plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis.plus.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.logging.log4j</groupId>
+                        <artifactId>log4j-to-slf4j</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
 
             <!-- utils -->
             <dependency>
@@ -196,12 +215,6 @@
                 <version>${guava.version}</version>
             </dependency>
 
-            <!-- log -->
-            <!--            <dependency>-->
-            <!--                <groupId>org.slf4j</groupId>-->
-            <!--                <artifactId>slf4j-api</artifactId>-->
-            <!--                <version>${slf4j.version}</version>-->
-            <!--            </dependency>-->
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
@@ -288,6 +301,7 @@
                 <groupId>ru.yandex.clickhouse</groupId>
                 <artifactId>clickhouse-jdbc</artifactId>
                 <version>${clickhouse.jdbc.version}</version>
+                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.hive</groupId>
@@ -408,7 +422,7 @@
     </dependencyManagement>
 
     <build>
-<!--        <finalName>datashops-${project.version}</finalName>-->
+        <!--        <finalName>datashops-${project.version}</finalName>-->
 
         <pluginManagement>
             <plugins>

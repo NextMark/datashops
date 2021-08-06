@@ -9,9 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bigdata.datashops.common.Constants;
+import com.bigdata.datashops.dao.mapper.JobMapper;
 import com.bigdata.datashops.model.pojo.job.JobInstance;
 import com.bigdata.datashops.service.JobInstanceService;
-import com.bigdata.datashops.service.JobService;
 
 @Service
 public class QuartzJob implements Job {
@@ -21,16 +21,16 @@ public class QuartzJob implements Job {
     private JobInstanceService jobInstanceService;
 
     @Autowired
-    private JobService jobService;
+    private JobMapper jobMapper;
 
     @Override
     public void execute(JobExecutionContext jobExecutionContext) {
         JobDataMap jobDataMap = jobExecutionContext.getMergedJobDataMap();
         int projectId = jobDataMap.getInt("projectId");
-        int jobId = jobDataMap.getInt("jobId");
-        LOG.info("Run job, projectId={}, jobId={}", projectId, jobId);
-        com.bigdata.datashops.model.pojo.job.Job job = jobService.getJob(jobId);
-        JobInstance instance = jobInstanceService.createNewJobInstance(jobId, Constants.JOB_DEFAULT_OPERATOR, job,
+        String maskId = jobDataMap.getString("maskId");
+        LOG.info("Run job, projectId={}, maskId={}", projectId, maskId);
+        com.bigdata.datashops.model.pojo.job.Job job = jobMapper.findLatestJob(maskId);
+        JobInstance instance = jobInstanceService.createNewJobInstance(maskId, Constants.JOB_DEFAULT_OPERATOR, job,
                 jobExecutionContext.getTrigger().getPreviousFireTime());
         jobInstanceService.save(instance);
     }

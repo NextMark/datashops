@@ -32,7 +32,7 @@ public class JobDependencyController extends BasicController {
     @PostMapping(value = "/getJobDependency")
     public Result getJobDependency(@RequestBody Map<String, String> params) {
         String maskId = params.get("id");
-        List<JobDependency> jobDependencies = jobDependencyService.getJobDependency("targetId=" + maskId);
+        List<JobDependency> jobDependencies = jobDependencyService.findByTargetId(maskId);
         List<VoJobDependency> vos = jobDependencyService.fillJobInfo(jobDependencies);
         return ok(vos);
     }
@@ -51,8 +51,8 @@ public class JobDependencyController extends BasicController {
     }
 
     @RequestMapping(value = "/preview")
-    public Result preview(@NotNull Integer id) {
-        Job job = jobService.getJob(id);
+    public Result preview(@NotNull String id) {
+        Job job = jobService.getJobByMaskId(id);
         Date date = CronHelper.getNextTime(job.getCronExpression());
 
         Map<String, Object> result = Maps.newHashMap();
@@ -63,10 +63,10 @@ public class JobDependencyController extends BasicController {
         node.setId(id.toString());
         nodes.add(node);
 
-        List<JobDependency> dependencyList = jobDependencyService.getJobDependency("targetId=" + id);
+        List<JobDependency> dependencyList = jobDependencyService.findByTargetId(id);
         for (JobDependency dependency : dependencyList) {
-            int preJobId = dependency.getSourceId();
-            Job sourceJob = jobService.getJob(preJobId);
+            String preJobId = dependency.getSourceId();
+            Job sourceJob = jobService.getJobByMaskId(preJobId);
             int type = dependency.getType();
             String offset = dependency.getOffset();
             String[] offsetRegion = offset.split(Constants.SEPARATOR_COMMA);
@@ -84,7 +84,8 @@ public class JobDependencyController extends BasicController {
             for (Integer o : offsets) {
                 Date sourceDate = CronHelper.getOffsetTriggerTime(sourceJob.getCronExpression(), date, o);
                 Node source = new Node();
-                source.setLabel(sourceJob.getName() +"\n\n"+ DateUtils.format(sourceDate, Constants.YYYY_MM_DD_HH_MM_SS));
+                source.setLabel(
+                        sourceJob.getName() + "\n\n" + DateUtils.format(sourceDate, Constants.YYYY_MM_DD_HH_MM_SS));
                 source.setId(sourceDate.toString());
                 nodes.add(source);
 

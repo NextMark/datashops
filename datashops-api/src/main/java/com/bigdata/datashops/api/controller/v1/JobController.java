@@ -2,6 +2,7 @@ package com.bigdata.datashops.api.controller.v1;
 
 import java.text.ParseException;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -10,13 +11,12 @@ import javax.validation.constraints.NotNull;
 import org.apache.commons.lang3.StringUtils;
 import org.quartz.SchedulerException;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.bigdata.datashops.api.common.Pagination;
 import com.bigdata.datashops.api.controller.BasicController;
 import com.bigdata.datashops.api.response.Result;
@@ -26,7 +26,6 @@ import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.common.utils.DateUtils;
 import com.bigdata.datashops.common.utils.JSONUtils;
 import com.bigdata.datashops.common.utils.JobUtils;
-import com.bigdata.datashops.dao.data.domain.PageRequest;
 import com.bigdata.datashops.model.dto.DtoCronExpression;
 import com.bigdata.datashops.model.dto.DtoJobGraph;
 import com.bigdata.datashops.model.dto.DtoPageQuery;
@@ -34,7 +33,6 @@ import com.bigdata.datashops.model.enums.JobType;
 import com.bigdata.datashops.model.enums.RunState;
 import com.bigdata.datashops.model.enums.SchedulingPeriod;
 import com.bigdata.datashops.model.pojo.job.Job;
-import com.bigdata.datashops.model.pojo.job.JobDependency;
 import com.bigdata.datashops.model.pojo.job.JobGraph;
 import com.bigdata.datashops.model.pojo.job.JobInstance;
 import com.bigdata.datashops.model.pojo.job.JobRelation;
@@ -108,35 +106,18 @@ public class JobController extends BasicController {
 
     @PostMapping(value = "/getJobGraphList")
     public Result getJobGraphList(@RequestBody DtoPageQuery query) {
-        StringBuilder filter = new StringBuilder("status=1");
-        if (StringUtils.isNoneBlank(query.getName())) {
-            filter.append(";name?").append(query.getName());
-        }
-        if (StringUtils.isNoneBlank(query.getOwner())) {
-            filter.append(";owner?").append(query.getOwner());
-        }
-        PageRequest pageRequest =
-                new PageRequest(query.getPageNum() - 1, query.getPageSize(), filter.toString(), Sort.Direction.DESC,
-                        "createTime");
-        Page<JobGraph> jobGraphs = jobGraphService.getJobGraphList(pageRequest);
-        Pagination pagination = new Pagination(jobGraphs);
+        IPage<JobGraph> jobs =
+                jobGraphService.findList(query.getPageNum(), query.getPageSize(), query.getName(), query.getOwner());
+        Pagination pagination = new Pagination(jobs);
         return ok(pagination);
     }
 
     @PostMapping(value = "/getJobList")
     public Result getJobList(@RequestBody DtoPageQuery query) {
-        StringBuilder filter = new StringBuilder("status=1");
-        if (StringUtils.isNoneBlank(query.getName())) {
-            filter.append(";name?").append(query.getName());
-        }
-        if (StringUtils.isNoneBlank(query.getOwner())) {
-            filter.append(";owner?").append(query.getOwner());
-        }
-        PageRequest pageRequest =
-                new PageRequest(query.getPageNum() - 1, query.getPageSize(), filter.toString(), Sort.Direction.DESC,
-                        "createTime");
-        Page<Job> jobGraphs = jobService.getJobList(pageRequest);
-        Pagination pagination = new Pagination(jobGraphs);
+        IPage<Job> jobs = jobService.findByNameAndOwner(query.getPageNum(), query.getPageSize(), query.getName(),
+                query.getOwner());
+
+        Pagination pagination = new Pagination(jobs);
         return ok(pagination);
     }
 
@@ -144,6 +125,12 @@ public class JobController extends BasicController {
     public Result getJobByMaskId(@NotNull String maskId) {
         Job job = jobService.getJobByMaskId(maskId);
         return ok(job);
+    }
+
+    @RequestMapping(value = "/getVersionList")
+    public Result getVersionList(@NotNull String maskId) {
+        List<Job> res = jobService.getVersionList(maskId);
+        return ok(res);
     }
 
     @PostMapping(value = "/deleteJob")
@@ -228,43 +215,29 @@ public class JobController extends BasicController {
         if (jobIdStr[1].contains("+")) {
             return ok();
         }
-        String filter = "graphMaskId=" + graphId + ";jobMaskId=" + jobMaskId + ";nodeType=" + jobIdStr[1];
-        JobRelation jobRelation = jobRelationService.findOneByQuery(filter);
+        JobRelation jobRelation = jobRelationService.findByQuery(graphId, jobMaskId, jobIdStr[1]);
         jobRelation.setTopPos(params.get("top"));
         jobRelation.setLeftPos(params.get("left"));
         jobRelationService.save(jobRelation);
         return ok();
     }
 
-    @PostMapping(value = "/modifyOffset")
-    public Result modifyOffset(@RequestBody Map<String, String> params) {
-        String graphMaskId = params.get("graphMaskId");
-        String sourceId = params.get("sourceId");
-        String targetId = params.get("targetId");
-        String offset = params.get("offset");
-        String filter = String.format("graphMaskId=%s;sourceId=%s;targetId=%s", graphMaskId, sourceId, targetId);
-        JobDependency jobDependency = jobDependencyService.getOne(filter);
-        jobDependency.setOffset(offset);
-        jobDependencyService.save(jobDependency);
-        return ok();
-    }
-
     @RequestMapping(value = "/getJobGraph")
-    public Result getJobGraph(@NotNull Integer id) {
+    public Result getJobGraph(@NotNull String id) {
         Map<String, Object> nodes = jobDependencyService.getJobDependencyGraph(id);
         return ok(nodes);
     }
 
     @RequestMapping(value = "/batchRunJob")
-    public Result batchRunJob(@NotNull Integer id, @NotNull String operator, String startTime, String endTime)
+    public Result batchRunJob(@NotNull String id, @NotNull String operator, String startTime, String endTime)
             throws ParseException {
         jobInstanceService.buildBatchJobInstance(id, startTime, endTime, operator);
         return ok();
     }
 
     @RequestMapping(value = "/runJob")
-    public Result runJob(@NotNull Integer id, @NotNull String operator) {
-        Job job = jobService.getJob(id);
+    public Result runJob(@NotNull String id, @NotNull String operator) {
+        Job job = jobService.getJobByMaskId(id);
         JobInstance instance = jobInstanceService.createNewJobInstance(id, operator, job);
         jobInstanceService.save(instance);
         return ok();
