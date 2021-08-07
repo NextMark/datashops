@@ -50,7 +50,7 @@ public class JobDependencyService {
     public List<VoJobDependency> fillJobInfo(List<JobDependency> dependencies) {
         List<VoJobDependency> vo = Lists.newArrayList();
         for (JobDependency dependency : dependencies) {
-            Job job = jobService.getOnlineJobByMaskId(dependency.getSourceId());
+            Job job = jobService.getMaxVersionByMaskId(dependency.getSourceId());
             VoJobDependency v =
                     VoJobDependency.builder().id(dependency.getId()).name(job.getName()).offset(dependency.getOffset())
                             .owner(job.getOwner()).schedulingPeriod(job.getSchedulingPeriod())

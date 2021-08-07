@@ -49,10 +49,18 @@ public class JobService {
         jobMapper.update(null, wrapper);
     }
 
+    @Transactional
+    public void updateStatusOffline(String maskId, int version) {
+        LambdaUpdateWrapper<Job> wrapper = Wrappers.lambdaUpdate();
+        wrapper.eq(Job::getMaskId, maskId).eq(Job::getVersion, version).eq(Job::getStatus, 1).set(Job::getStatus, 0);
+        jobMapper.update(null, wrapper);
+    }
+
 
     public List<Job> getVersionList(String maskId) {
         LambdaQueryWrapper<Job> lqw = Wrappers.lambdaQuery();
         lqw.eq(Job::getMaskId, maskId);
+        lqw.orderByDesc(Job::getStatus);
         lqw.orderByDesc(Job::getUpdateTime);
         return jobMapper.selectList(lqw);
     }

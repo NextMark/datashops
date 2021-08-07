@@ -20,11 +20,6 @@ public class DtoJobGraph {
     private Integer type;
 
     /**
-     * 作业配置
-     */
-    private String configJson;
-
-    /**
      * 0已删除，1存在
      */
     private Integer status;

@@ -67,24 +67,45 @@ public class JobController extends BasicController {
     }
 
     @PostMapping(value = "/modifyJob")
-    public Result modifyJob(@RequestBody Job dtoJob) throws SchedulerException {
-        Job job = jobService.getJob(dtoJob.getId());
-        BeanUtils.copyProperties(dtoJob, job);
+    public Result modifyJob(@RequestBody Job dtoJob) {
+        Job job = jobService.getOnlineJobByMaskId(dtoJob.getMaskId());
+
+        //BeanUtils.copyProperties(dtoJob, job, "data");
         DtoCronExpression cronExpression = DtoCronExpression.builder().schedulingPeriod(dtoJob.getSchedulingPeriod())
                                                    .config(dtoJob.getTimeConfig()).build();
         String cron = CronHelper.buildCronExpression(cronExpression);
-        job.setCronExpression(cron);
+        dtoJob.setCronExpression(cron);
         if (StringUtils.isNotEmpty(dtoJob.getData())) {
-            job.setData(JobUtils.buildJobData(dtoJob.getType(), dtoJob.getData()));
+            dtoJob.setData(JobUtils.buildJobData(dtoJob.getType(), dtoJob.getData()));
         }
-        jobService.modifyJob(job);
-        return ok(job);
+        if (!job.equals(dtoJob)) {
+            dtoJob.setId(null);
+            dtoJob.setVersion(job.getVersion() + 1);
+            jobService.updateStatusOffline(job.getMaskId(), job.getVersion());
+            jobService.save(dtoJob);
+            return ok(dtoJob);
+        } else {
+            return ok(job);
+        }
+
+//        BeanUtils.copyProperties(dtoJob, job);
+//        DtoCronExpression cronExpression = DtoCronExpression.builder().schedulingPeriod(dtoJob.getSchedulingPeriod())
+//                                                   .config(dtoJob.getTimeConfig()).build();
+//        String cron = CronHelper.buildCronExpression(cronExpression);
+//        job.setCronExpression(cron);
+//        if (StringUtils.isNotEmpty(dtoJob.getData())) {
+//            job.setData(JobUtils.buildJobData(dtoJob.getType(), dtoJob.getData()));
+//        }
+//        jobService.modifyJob(job);
+//        return ok(job);
     }
 
     @PostMapping(value = "/addNewJob")
     public Result addNewJob(@RequestBody Map<String, String> params) {
         String name = params.get("name");
         Job job = new Job();
+        job.setRetry(0);
+        job.setNotifyType(1);
         job.setTimeout(86400);
         job.setOwner(params.get("owner"));
         job.setProjectId(Integer.valueOf(params.get("projectId")));
