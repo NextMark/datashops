@@ -52,7 +52,7 @@ public class JobDependencyController extends BasicController {
 
     @RequestMapping(value = "/preview")
     public Result preview(@NotNull String id) {
-        Job job = jobService.getJobByMaskId(id);
+        Job job = jobService.getOnlineJobByMaskId(id);
         Date date = CronHelper.getNextTime(job.getCronExpression());
 
         Map<String, Object> result = Maps.newHashMap();
@@ -66,7 +66,7 @@ public class JobDependencyController extends BasicController {
         List<JobDependency> dependencyList = jobDependencyService.findByTargetId(id);
         for (JobDependency dependency : dependencyList) {
             String preJobId = dependency.getSourceId();
-            Job sourceJob = jobService.getJobByMaskId(preJobId);
+            Job sourceJob = jobService.getOnlineJobByMaskId(preJobId);
             int type = dependency.getType();
             String offset = dependency.getOffset();
             String[] offsetRegion = offset.split(Constants.SEPARATOR_COMMA);

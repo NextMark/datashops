@@ -11,7 +11,11 @@ import com.bigdata.datashops.model.pojo.job.Job;
 public interface JobMapper extends BaseMapper<Job> {
     IPage<Job> findJobListPaging(IPage<Job> page, @Param("name") String name, @Param("owner") String owner);
 
-    Job findLatestJob(@Param("maskId") String maskId);
+    Job findJobByMaskIdAndVersion(@Param("maskId") String maskId, @Param("version") int version);
+
+    Job findMaxVersionJob(@Param("maskId") String maskId);
+
+    Job findOnlineJob(@Param("maskId") String maskId);
 
     List<List<String>> findJobVersionList(@Param("maskId") String maskId);
 }

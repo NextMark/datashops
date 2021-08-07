@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -26,9 +27,28 @@ public class JobService {
         return jobMapper.selectById(id);
     }
 
-    public Job getJobByMaskId(String maskId) {
-        return jobMapper.findLatestJob(maskId);
+    // 获取最新版本
+    public Job getMaxVersionByMaskId(String maskId) {
+        return jobMapper.findMaxVersionJob(maskId);
     }
+
+    public Job getOnlineJobByMaskId(String maskId) {
+        return jobMapper.findOnlineJob(maskId);
+    }
+
+    public Job getJobByMaskIdAndVersion(String maskId, int version) {
+        return jobMapper.findJobByMaskIdAndVersion(maskId, version);
+    }
+
+    public void backToHistoryVersion(String maskId, int version) {
+        LambdaUpdateWrapper<Job> wrapper = Wrappers.lambdaUpdate();
+        wrapper.eq(Job::getMaskId, maskId).eq(Job::getStatus, 1).set(Job::getStatus, 0);
+        jobMapper.update(null, wrapper);
+        wrapper = Wrappers.lambdaUpdate();
+        wrapper.eq(Job::getMaskId, maskId).eq(Job::getVersion, version).set(Job::getStatus, 1);
+        jobMapper.update(null, wrapper);
+    }
+
 
     public List<Job> getVersionList(String maskId) {
         LambdaQueryWrapper<Job> lqw = Wrappers.lambdaQuery();
@@ -36,18 +56,6 @@ public class JobService {
         lqw.orderByDesc(Job::getUpdateTime);
         return jobMapper.selectList(lqw);
     }
-
-    //    public Job getJobByProjectIdAndId(Integer projectId, Integer id) {
-    //        return findOneByQuery("projectId=" + projectId + ";id=" + id);
-    //    }
-    //
-    //    public List<Job> findJobs(String filters) {
-    //        return findByQuery(filters);
-    //    }
-    //
-    //    public Page<Job> getJobList(PageRequest pageRequest) {
-    //        return pageByQuery(pageRequest);
-    //    }
 
     public IPage<Job> findByNameAndOwner(int pageNum, int pageSize, String name, String owner) {
         Page<Job> page = new Page(pageNum, pageSize);

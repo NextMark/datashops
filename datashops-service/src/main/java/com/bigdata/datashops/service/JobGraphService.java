@@ -74,7 +74,7 @@ public class JobGraphService {
                 node.setId(relation.getJobMaskId());
             }
             if (relation.getNodeType() == NodeType.JOB.getCode()) {
-                Job job = jobService.getJobByMaskId(relation.getJobMaskId());
+                Job job = jobService.getOnlineJobByMaskId(relation.getJobMaskId());
                 node.setName(job.getName());
                 node.setIco(job.getIco());
                 node.setType(NodeType.JOB.getCode());

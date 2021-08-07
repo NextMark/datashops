@@ -1,5 +1,6 @@
 package com.bigdata.datashops.service;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,9 @@ public class YarnQueueService {
     public IPage<YarnQueue> findList(int pageNum, int pageSize, String name) {
         Page<YarnQueue> page = new Page(pageNum, pageSize);
         LambdaQueryWrapper<YarnQueue> lqw = Wrappers.lambdaQuery();
-        lqw.eq(YarnQueue::getName, name);
+        if (StringUtils.isNoneBlank(name)) {
+            lqw.like(YarnQueue::getName, name);
+        }
         lqw.orderByDesc(YarnQueue::getUpdateTime);
         return yarnQueueMapper.selectPage(page, lqw);
     }

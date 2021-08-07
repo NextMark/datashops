@@ -123,7 +123,7 @@ public class JobController extends BasicController {
 
     @RequestMapping(value = "/getJobByMaskId")
     public Result getJobByMaskId(@NotNull String maskId) {
-        Job job = jobService.getJobByMaskId(maskId);
+        Job job = jobService.getOnlineJobByMaskId(maskId);
         return ok(job);
     }
 
@@ -154,7 +154,7 @@ public class JobController extends BasicController {
     @PostMapping(value = "/modifySchedulerStatus")
     public Result modifySchedulerStatus(@RequestBody Map<String, Object> params) throws SchedulerException {
         int status = (int) params.get("status");
-        Job job = jobService.getJobByMaskId(params.get("maskId").toString());
+        Job job = jobService.getOnlineJobByMaskId(params.get("maskId").toString());
         if (!Objects.isNull(job)) {
             jobService.modifySchedulerStatus(job, status);
         }
@@ -237,7 +237,7 @@ public class JobController extends BasicController {
 
     @RequestMapping(value = "/runJob")
     public Result runJob(@NotNull String id, @NotNull String operator) {
-        Job job = jobService.getJobByMaskId(id);
+        Job job = jobService.getOnlineJobByMaskId(id);
         JobInstance instance = jobInstanceService.createNewJobInstance(id, operator, job);
         jobInstanceService.save(instance);
         return ok();
@@ -265,6 +265,12 @@ public class JobController extends BasicController {
         instance.setSubmitTime(new Date());
         instance.setEndTime(null);
         jobInstanceService.save(instance);
+        return ok();
+    }
+
+    @RequestMapping(value = "/backToVersion")
+    public Result backToVersion(@NotNull Integer version, @NotNull String maskId) {
+        jobService.backToHistoryVersion(maskId, version);
         return ok();
     }
 }

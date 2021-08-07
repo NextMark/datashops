@@ -29,7 +29,7 @@ public class QuartzJob implements Job {
         int projectId = jobDataMap.getInt("projectId");
         String maskId = jobDataMap.getString("maskId");
         LOG.info("Run job, projectId={}, maskId={}", projectId, maskId);
-        com.bigdata.datashops.model.pojo.job.Job job = jobMapper.findLatestJob(maskId);
+        com.bigdata.datashops.model.pojo.job.Job job = jobMapper.findOnlineJob(maskId);
         JobInstance instance = jobInstanceService.createNewJobInstance(maskId, Constants.JOB_DEFAULT_OPERATOR, job,
                 jobExecutionContext.getTrigger().getPreviousFireTime());
         jobInstanceService.save(instance);

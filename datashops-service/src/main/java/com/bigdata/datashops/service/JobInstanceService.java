@@ -35,7 +35,11 @@ public class JobInstanceService {
     private JobInstanceMapper jobInstanceMapper;
 
     public void save(JobInstance jobInstance) {
-        jobInstanceMapper.insert(jobInstance);
+        if(jobInstanceMapper.selectById(jobInstance.getId()) != null) {
+            jobInstanceMapper.updateById(jobInstance);
+        } else {
+            jobInstanceMapper.insert(jobInstance);
+        }
     }
 
     public JobInstance findById(int id) {
@@ -82,7 +86,7 @@ public class JobInstanceService {
 
     public void fillJob(List<JobInstance> jobInstances) {
         for (JobInstance jobInstance : jobInstances) {
-            Job job = jobService.getJobByMaskId(jobInstance.getMaskId());
+            Job job = jobService.getJobByMaskIdAndVersion(jobInstance.getMaskId(), jobInstance.getVersion());
             jobInstance.setJob(job);
         }
     }
@@ -114,7 +118,7 @@ public class JobInstanceService {
             throws ParseException {
         Date start = DateUtils.parse(startTime, Constants.YYYYMMDDHH);
         Date end = DateUtils.parse(endTime, Constants.YYYYMMDDHH);
-        Job job = jobService.getJobByMaskId(id);
+        Job job = jobService.getOnlineJobByMaskId(id);
         CronExpression expression = new CronExpression(job.getCronExpression());
         for (; start.getTime() <= end.getTime(); ) {
             start = expression.getNextValidTimeAfter(start);

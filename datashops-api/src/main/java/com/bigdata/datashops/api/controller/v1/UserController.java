@@ -67,7 +67,7 @@ public class UserController extends BasicController {
             return fail(ResultCode.USER_INPUT_ILLEGAL);
         }
         user.setLastLoginTime(new Date());
-        userService.save(user);
+        userService.updateById(user);
         String token = jwtUtil.sign(
                 String.format("%s%s%s%s%s", user.getId(), Constants.SEPARATOR_USER_TOKEN_SALT, user.getEmail(),
                         Constants.SEPARATOR_USER_TOKEN_SALT, user.getPhone()));

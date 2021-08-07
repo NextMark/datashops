@@ -1,8 +1,4 @@
 spring:
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: false
   jackson:
     serialization:
       indent_output: true
@@ -38,3 +34,5 @@ mybatis-plus:
   global-config:
     db-config:
       table-prefix: t_
+  mapper-locations: classpath*:mapper/**.xml
+  type-aliases-package: com.bigdata.datashops.model

@@ -5,13 +5,16 @@ import java.util.List;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.bigdata.datashops.common.utils.JSONUtils;
 import com.bigdata.datashops.model.pojo.BaseModel;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Lists;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @TableName(value = "t_user_menu")
 public class Menu extends BaseModel {
@@ -41,8 +44,8 @@ public class Menu extends BaseModel {
         return JSONUtils.parseObject(meta);
     }
 
-    public void setMeta(LinkedHashMap map) {
-        this.meta = JSONUtils.toJsonString(map);
-    }
+//    public void setMeta(LinkedHashMap map) {
+//        this.meta = JSONUtils.toJsonString(map);
+//    }
 
 }

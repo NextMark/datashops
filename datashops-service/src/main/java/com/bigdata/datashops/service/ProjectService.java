@@ -1,5 +1,6 @@
 package com.bigdata.datashops.service;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,9 @@ public class ProjectService {
     public IPage<Project> findList(int pageNum, int pageSize, String name) {
         Page<Project> page = new Page(pageNum, pageSize);
         LambdaQueryWrapper<Project> lqw = Wrappers.lambdaQuery();
-        lqw.eq(Project::getName, name);
+        if (StringUtils.isNoneBlank(name)) {
+            lqw.like(Project::getName, name);
+        }
         lqw.orderByDesc(Project::getUpdateTime);
         return projectMapper.selectPage(page, lqw);
     }

@@ -37,8 +37,8 @@ public class UserService {
         return userMapper.selectById(uid);
     }
 
-    public void save(User entity) {
-        userMapper.insert(entity);
+    public void updateById(User entity) {
+        userMapper.updateById(entity);
     }
 
     public User getUserByPhone(String phone) {

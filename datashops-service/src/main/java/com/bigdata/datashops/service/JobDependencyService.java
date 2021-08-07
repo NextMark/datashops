@@ -50,7 +50,7 @@ public class JobDependencyService {
     public List<VoJobDependency> fillJobInfo(List<JobDependency> dependencies) {
         List<VoJobDependency> vo = Lists.newArrayList();
         for (JobDependency dependency : dependencies) {
-            Job job = jobService.getJobByMaskId(dependency.getSourceId());
+            Job job = jobService.getOnlineJobByMaskId(dependency.getSourceId());
             VoJobDependency v =
                     VoJobDependency.builder().id(dependency.getId()).name(job.getName()).offset(dependency.getOffset())
                             .owner(job.getOwner()).schedulingPeriod(job.getSchedulingPeriod())
@@ -65,7 +65,7 @@ public class JobDependencyService {
         Map<String, Object> result = Maps.newHashMap();
         List<Edge> edges = Lists.newArrayList();
         List<Node> nodes = Lists.newArrayList();
-        Job job = jobService.getJobByMaskId(id);
+        Job job = jobService.getOnlineJobByMaskId(id);
         Node node = new Node();
         node.setLabel(job.getName() + "\n" + StringUtils.lowerCase(JobType.of(job.getType()).name()));
         node.setId(id.toString());
@@ -83,18 +83,18 @@ public class JobDependencyService {
         List<JobDependency> pre = findByTargetId(id);
         if (pre.size() > 0) {
             for (JobDependency dependency : pre) {
-                Job job = jobService.getJobByMaskId(dependency.getSourceId());
+                Job job = jobService.getMaxVersionByMaskId(dependency.getSourceId());
 
                 if (dependency.getTargetId().equals(dependency.getSourceId())) {
                     Node node = new Node();
-                    node.setId(dependency.getSourceId().toString() + dependency.getOffset());
+                    node.setId(dependency.getSourceId() + dependency.getOffset());
                     node.setLabel(job.getName() + "\n" + StringUtils.lowerCase(JobType.of(job.getType()).name()));
                     node.setClassName("type-normal");
                     nodes.add(node);
 
                     Edge edge = new Edge();
-                    edge.setFrom(dependency.getSourceId().toString() + dependency.getOffset());
-                    edge.setTo(dependency.getTargetId().toString());
+                    edge.setFrom(dependency.getSourceId() + dependency.getOffset());
+                    edge.setTo(dependency.getTargetId());
                     edge.setLabel(
                             String.format("%s: [%s]", dependency.getType() == 1 ? "集合" : "区间", dependency.getOffset()));
                     edges.add(edge);
@@ -102,14 +102,14 @@ public class JobDependencyService {
                 }
 
                 Node node = new Node();
-                node.setId(dependency.getSourceId().toString());
+                node.setId(dependency.getSourceId());
                 node.setLabel(job.getName() + "\n" + StringUtils.lowerCase(JobType.of(job.getType()).name()));
                 node.setClassName("type-normal");
                 nodes.add(node);
 
                 Edge edge = new Edge();
-                edge.setFrom(dependency.getSourceId().toString());
-                edge.setTo(dependency.getTargetId().toString());
+                edge.setFrom(dependency.getSourceId());
+                edge.setTo(dependency.getTargetId());
                 edge.setLabel(
                         String.format("%s: [%s]", dependency.getType() == 1 ? "集合" : "区间", dependency.getOffset()));
                 edges.add(edge);
@@ -126,16 +126,16 @@ public class JobDependencyService {
                 if (dependency.getSourceId().equals(dependency.getTargetId())) {
                     continue;
                 }
-                Job job = jobService.getJobByMaskId(dependency.getTargetId());
+                Job job = jobService.getMaxVersionByMaskId(dependency.getTargetId());
                 Node node = new Node();
-                node.setId(dependency.getTargetId().toString());
+                node.setId(dependency.getTargetId());
                 node.setLabel(job.getName() + "\n" + StringUtils.lowerCase(JobType.of(job.getType()).name()));
                 node.setClassName("type-normal");
                 nodes.add(node);
 
                 Edge edge = new Edge();
-                edge.setFrom(dependency.getSourceId().toString());
-                edge.setTo(dependency.getTargetId().toString());
+                edge.setFrom(dependency.getSourceId());
+                edge.setTo(dependency.getTargetId());
                 edge.setLabel(
                         String.format("%s: [%s]", dependency.getType() == 1 ? "集合" : "区间", dependency.getOffset()));
                 edges.add(edge);

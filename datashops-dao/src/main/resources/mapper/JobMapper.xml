@@ -21,7 +21,7 @@
 
     </select>
 
-    <select id="findLatestJob" resultType="com.bigdata.datashops.model.pojo.job.Job">
+    <select id="findMaxVersionJob" resultType="com.bigdata.datashops.model.pojo.job.Job">
         SELECT a.*
         FROM t_job a
         where 1=1
@@ -29,10 +29,24 @@
         order by version desc limit 1
     </select>
 
+    <select id="findOnlineJob" resultType="com.bigdata.datashops.model.pojo.job.Job">
+        SELECT a.*
+        FROM t_job a
+        where 1=1
+        and mask_id = #{maskId} and status = 1
+        limit 1
+    </select>
+
     <select id="findJobVersionList" resultType="java.util.List">
         select version,operator,update_time
         from t_job
         where mask_id = #{maskId}
+    </select>
+
+    <select id="findJobByMaskIdAndVersion" resultType="com.bigdata.datashops.model.pojo.job.Job">
+        select *
+        from t_job
+        where mask_id = #{maskId} and version = #{version}
     </select>
 
 </mapper>
