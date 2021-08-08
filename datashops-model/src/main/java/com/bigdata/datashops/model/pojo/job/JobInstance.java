@@ -19,8 +19,6 @@ import lombok.extern.jackson.Jacksonized;
 @Data
 @Builder
 @Jacksonized
-@AllArgsConstructor(access = AccessLevel.PACKAGE)
-@NoArgsConstructor(access = AccessLevel.PACKAGE)
 @TableName(value = "t_job_instance")
 public class JobInstance extends BaseModel implements Comparable<JobInstance> {
     private Integer projectId;
