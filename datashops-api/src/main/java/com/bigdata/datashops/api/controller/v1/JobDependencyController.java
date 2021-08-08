@@ -60,7 +60,7 @@ public class JobDependencyController extends BasicController {
         List<Node> nodes = Lists.newArrayList();
         Node node = new Node();
         node.setLabel(job.getName() + "\n" + DateUtils.format(date, Constants.YYYY_MM_DD_HH_MM_SS));
-        node.setId(id.toString());
+        node.setId(id);
         nodes.add(node);
 
         List<JobDependency> dependencyList = jobDependencyService.findByTargetId(id);
@@ -91,7 +91,7 @@ public class JobDependencyController extends BasicController {
 
                 Edge edge = new Edge();
                 edge.setFrom(sourceDate.toString());
-                edge.setTo(id.toString());
+                edge.setTo(id);
                 //edge.setLabel("1");
                 edges.add(edge);
             }

@@ -71,6 +71,7 @@
         <spark.version>2.4.0</spark.version>
         <dubbo.version>2.7.3</dubbo.version>
         <mybatis.plus.version>3.4.3.1</mybatis.plus.version>
+        <jgrapht.version>1.5.1</jgrapht.version>
 
 
         <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
@@ -391,7 +392,11 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-
+            <dependency>
+                <groupId>org.jgrapht</groupId>
+                <artifactId>jgrapht-core</artifactId>
+                <version>${jgrapht.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

@@ -20,9 +20,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 @Service
-public class JobDependencyService {
-    @Autowired
-    private JobService jobService;
+public class JobDependencyService extends BaseService {
 
     @Autowired
     private JobDependencyMapper jobDependencyMapper;

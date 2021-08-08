@@ -62,6 +62,7 @@ public class JobService {
         lqw.eq(Job::getMaskId, maskId);
         lqw.orderByDesc(Job::getStatus);
         lqw.orderByDesc(Job::getUpdateTime);
+        lqw.orderByDesc(Job::getVersion);
         return jobMapper.selectList(lqw);
     }
 
