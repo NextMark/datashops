@@ -1,4 +1,4 @@
-package com.bigdata.datashops.dao.conf;
+package com.bigdata.datashops.dao.config;
 
 import javax.sql.DataSource;
 
