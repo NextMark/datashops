@@ -17,6 +17,7 @@
         </if>
         GROUP BY mask_id) b ON a.version=b.version
         AND a.mask_id=b.mask_id
+        where a.mask_id is not null
         order by a.create_time desc
 
     </select>
