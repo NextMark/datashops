@@ -7,12 +7,9 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.bigdata.datashops.model.pojo.BaseModel;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
 
 @EqualsAndHashCode(callSuper = true)
@@ -87,6 +84,17 @@ public class JobInstance extends BaseModel implements Comparable<JobInstance> {
     //     * 下游依赖节点，数组，逗号分隔
     //     */
     //    private String postDependency;
+
+    //    /**
+    //     * 依赖的上游，数组，逗号分隔
+    //     * example: mask_id|version|biz_date，1-1-210304112627065|1|2021-08-10 10:00:00
+    //     */
+    //    private String upstreamVertex;
+    //
+    //    /**
+    //     * 下游依赖，数组，逗号分隔
+    //     */
+    //    private String downstreamVertex;
 
     private String extension;
 

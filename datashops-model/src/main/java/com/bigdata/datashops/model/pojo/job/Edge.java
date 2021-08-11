@@ -21,11 +21,11 @@ public class Edge {
             return false;
         }
         Edge edge = (Edge) o;
-        return from.equals(edge.from) && to.equals(edge.to);
+        return from.equals(edge.from) && to.equals(edge.to) && label.equals(edge.label);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getFrom(), getTo());
+        return Objects.hash(getFrom(), getTo(), getLabel());
     }
 }

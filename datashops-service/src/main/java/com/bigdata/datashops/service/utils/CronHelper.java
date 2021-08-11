@@ -80,12 +80,7 @@ public class CronHelper {
      */
     public static Date getNextTime(String cronExpr) {
         Cron cron = validCron(cronExpr);
-        ExecutionTime executionTime = ExecutionTime.forCron(cron);
-        ZonedDateTime nextTime = executionTime.nextExecution(ZonedDateTime.now()).orElse(null);
-        if (Objects.isNull(nextTime)) {
-            throw new RuntimeException("获取下一次执行时间失败");
-        }
-        return Date.from(nextTime.toInstant());
+        return getNextTime(cron);
     }
 
     /**

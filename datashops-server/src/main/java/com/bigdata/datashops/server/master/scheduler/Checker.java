@@ -66,13 +66,11 @@ public class Checker {
             }
 
             List<Date> dependencyBizTime;
-            String filter;
             Job preJob = jobService.getOnlineJobByMaskId(preJobId);
             for (Integer o : offsets) {
                 int schedulingPeriod = preJob.getSchedulingPeriod();
                 dependencyBizTime = getDependencyBizTime(bizTime, schedulingPeriod, o, preJob.getCronExpression());
                 for (Date date : dependencyBizTime) {
-                    filter = String.format("jobId=%s;bizTime=%s;", preJobId, date);
                     JobInstance instance = jobInstanceService.findByJobIdAndBizTime(preJobId, date);
                     if (instance == null) {
                         return RunState.WAIT_FOR_DEPENDENCY;

@@ -2,7 +2,6 @@ package com.bigdata.datashops.model.pojo.job;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -11,7 +10,6 @@ import com.bigdata.datashops.model.vo.VoJobNode;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
 @TableName(value = "t_job")
@@ -109,23 +107,51 @@ public class Job extends BaseModel {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         Job job = (Job) o;
 
-        if (!name.equals(job.name)) return false;
-        if (!data.equals(job.data)) return false;
-        if (!schedulingPeriod.equals(job.schedulingPeriod)) return false;
-        if (!cronExpression.equals(job.cronExpression)) return false;
-        if (!schedulerStatus.equals(job.schedulerStatus)) return false;
-        if (!notifyType.equals(job.notifyType)) return false;
-        if (!priority.equals(job.priority)) return false;
-        if (!timeout.equals(job.timeout)) return false;
-        if (!retry.equals(job.retry)) return false;
-        if (!retryTimes.equals(job.retryTimes)) return false;
-        if (!retryInterval.equals(job.retryInterval)) return false;
-        if (!queueId.equals(job.queueId)) return false;
+        if (!name.equals(job.name)) {
+            return false;
+        }
+        if (!data.equals(job.data)) {
+            return false;
+        }
+        if (!schedulingPeriod.equals(job.schedulingPeriod)) {
+            return false;
+        }
+        if (!cronExpression.equals(job.cronExpression)) {
+            return false;
+        }
+        if (!schedulerStatus.equals(job.schedulerStatus)) {
+            return false;
+        }
+        if (!notifyType.equals(job.notifyType)) {
+            return false;
+        }
+        if (!priority.equals(job.priority)) {
+            return false;
+        }
+        if (!timeout.equals(job.timeout)) {
+            return false;
+        }
+        if (!retry.equals(job.retry)) {
+            return false;
+        }
+        if (!retryTimes.equals(job.retryTimes)) {
+            return false;
+        }
+        if (!retryInterval.equals(job.retryInterval)) {
+            return false;
+        }
+        if (!queueId.equals(job.queueId)) {
+            return false;
+        }
         return timeConfig.equals(job.timeConfig);
     }
 

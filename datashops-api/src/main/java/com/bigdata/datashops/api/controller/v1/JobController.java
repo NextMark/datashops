@@ -1,14 +1,19 @@
 package com.bigdata.datashops.api.controller.v1;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.StringUtils;
+import org.glassfish.jersey.internal.guava.Sets;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.DirectedWeightedPseudograph;
 import org.quartz.SchedulerException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,10 +37,12 @@ import com.bigdata.datashops.model.dto.DtoPageQuery;
 import com.bigdata.datashops.model.enums.JobType;
 import com.bigdata.datashops.model.enums.RunState;
 import com.bigdata.datashops.model.enums.SchedulingPeriod;
+import com.bigdata.datashops.model.pojo.job.Edge;
 import com.bigdata.datashops.model.pojo.job.Job;
 import com.bigdata.datashops.model.pojo.job.JobGraph;
 import com.bigdata.datashops.model.pojo.job.JobInstance;
 import com.bigdata.datashops.model.pojo.job.JobRelation;
+import com.bigdata.datashops.service.graph.Vertex;
 import com.bigdata.datashops.service.utils.CronHelper;
 import com.google.common.collect.Maps;
 
@@ -88,16 +95,17 @@ public class JobController extends BasicController {
             return ok(job);
         }
 
-//        BeanUtils.copyProperties(dtoJob, job);
-//        DtoCronExpression cronExpression = DtoCronExpression.builder().schedulingPeriod(dtoJob.getSchedulingPeriod())
-//                                                   .config(dtoJob.getTimeConfig()).build();
-//        String cron = CronHelper.buildCronExpression(cronExpression);
-//        job.setCronExpression(cron);
-//        if (StringUtils.isNotEmpty(dtoJob.getData())) {
-//            job.setData(JobUtils.buildJobData(dtoJob.getType(), dtoJob.getData()));
-//        }
-//        jobService.modifyJob(job);
-//        return ok(job);
+        //        BeanUtils.copyProperties(dtoJob, job);
+        //        DtoCronExpression cronExpression = DtoCronExpression.builder().schedulingPeriod(dtoJob
+        //        .getSchedulingPeriod())
+        //                                                   .config(dtoJob.getTimeConfig()).build();
+        //        String cron = CronHelper.buildCronExpression(cronExpression);
+        //        job.setCronExpression(cron);
+        //        if (StringUtils.isNotEmpty(dtoJob.getData())) {
+        //            job.setData(JobUtils.buildJobData(dtoJob.getType(), dtoJob.getData()));
+        //        }
+        //        jobService.modifyJob(job);
+        //        return ok(job);
     }
 
     @PostMapping(value = "/addNewJob")
@@ -245,8 +253,32 @@ public class JobController extends BasicController {
 
     @RequestMapping(value = "/getJobGraph")
     public Result getJobGraph(@NotNull String id) {
-        Map<String, Object> nodes = jobDependencyService.getJobDependencyGraph(id);
-        return ok(nodes);
+        //        Map<String, Object> nodes = jobDependencyService.getJobDependencyGraph(id);
+        //        return ok(nodes);
+
+        DirectedWeightedPseudograph<String, DefaultWeightedEdge> dag =
+                new DirectedWeightedPseudograph<>(DefaultWeightedEdge.class);
+        Set<Edge> dependencyList = Sets.newHashSet();
+        Set<String> vertexSet = Sets.newHashSet();
+        graphService.buildGraph(dag, dependencyList, vertexSet, id);
+        Map<String, Object> res = Maps.newHashMap();
+        Set<Edge> edges = Sets.newHashSet();
+        for (DefaultWeightedEdge edge : dag.edgeSet()) {
+            Edge e = new Edge();
+            e.setFrom(dag.getEdgeSource(edge));
+            e.setTo(dag.getEdgeTarget(edge));
+            e.setLabel(new DecimalFormat("#").format(dag.getEdgeWeight(edge)));
+            edges.add(e);
+        }
+        Set<Vertex> vertices = Sets.newHashSet();
+        for (String s : dag.vertexSet()) {
+            Job job = jobService.getOnlineJobByMaskId(s);
+            Vertex vertex = new Vertex(s, job.getName(), "2021-08-10", job.getType());
+            vertices.add(vertex);
+        }
+        res.put("edges", edges);
+        res.put("nodes", vertices);
+        return ok(res);
     }
 
     @RequestMapping(value = "/batchRunJob")
@@ -293,5 +325,18 @@ public class JobController extends BasicController {
     public Result backToVersion(@NotNull Integer version, @NotNull String maskId) {
         jobService.backToHistoryVersion(maskId, version);
         return ok();
+    }
+
+    @RequestMapping(value = "/getGraph")
+    public Result getGraph(@NotNull String maskId) {
+        DirectedWeightedPseudograph<String, DefaultWeightedEdge> dag =
+                new DirectedWeightedPseudograph<>(DefaultWeightedEdge.class);
+        Set<Edge> dependencyList = Sets.newHashSet();
+        Set<String> vertexSet = Sets.newHashSet();
+        graphService.buildGraph(dag, dependencyList, vertexSet, maskId);
+        Map<String, Object> res = Maps.newHashMap();
+        res.put("edge", dependencyList);
+        res.put("vertex", vertexSet);
+        return ok(res);
     }
 }

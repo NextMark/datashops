@@ -34,6 +34,7 @@ import com.bigdata.datashops.service.SysOperationService;
 import com.bigdata.datashops.service.TemporaryQueryService;
 import com.bigdata.datashops.service.UserService;
 import com.bigdata.datashops.service.YarnQueueService;
+import com.bigdata.datashops.service.graph.GraphService;
 import com.bigdata.datashops.service.hadoop.HadoopService;
 import com.bigdata.datashops.service.zookeeper.ZookeeperOperator;
 
@@ -109,6 +110,9 @@ public class BasicController {
 
     @Autowired
     protected HadoopService hadoopService;
+
+    @Autowired
+    protected GraphService graphService;
 
     private static final Map<String, Boolean> HAS_FACADE_METHOD = new ConcurrentHashMap<>();
     private static final Map<String, Method> FACADE_METHOD_CACHE = new ConcurrentHashMap<>();

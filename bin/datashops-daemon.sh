@@ -66,6 +66,6 @@ export DATASHOPS_OPTS="-server -Xms$HEAP_INITIAL_SIZE -Xmx$HEAP_MAX_SIZE -Xmn$HE
 
 exec_command="$LOG_FILE $DATASHOPS_OPTS -classpath $DATASHOPS_CONF_DIR:$DATASHOPS_LIB_JARS $CLASS --server.port=$PORT"
 
-echo "nohup $JAVA_HOME/bin/java $exec_command > $log 2>&1 &"
-nohup $JAVA_HOME/bin/java $exec_command >$log 2>&1 &
+echo "nohup $JAVA_11_HOME/bin/java $exec_command > $log 2>&1 &"
+nohup $JAVA_11_HOME/bin/java $exec_command >$log 2>&1 &
 echo $! >$pid

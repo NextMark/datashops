@@ -6,8 +6,10 @@ import org.springframework.stereotype.Component;
 
 import com.bigdata.datashops.common.utils.FileUtils;
 import com.bigdata.datashops.model.enums.JobType;
+import com.bigdata.datashops.model.pojo.job.Job;
 import com.bigdata.datashops.model.pojo.job.JobInstance;
 import com.bigdata.datashops.remote.rpc.GrpcRemotingClient;
+import com.bigdata.datashops.service.JobService;
 import com.bigdata.datashops.service.zookeeper.ZookeeperOperator;
 
 @Component
@@ -18,8 +20,12 @@ public class JobManager {
     @Autowired
     ZookeeperOperator zookeeperOperator;
 
+    @Autowired
+    protected JobService jobService;
+
     public AbstractJob createJob(JobInstance instance, Logger logger) {
-        JobType jobType = JobType.of(instance.getType());
+        Job job = jobService.getOnlineJobByMaskId(instance.getMaskId());
+        JobType jobType = JobType.of(job.getType());
         JobContext jobContext = new JobContext();
         jobContext.setGrpcRemotingClient(grpcRemotingClient);
         jobContext.setZookeeperOperator(zookeeperOperator);
