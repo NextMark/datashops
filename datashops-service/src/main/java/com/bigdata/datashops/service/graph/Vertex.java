@@ -6,17 +6,17 @@ import lombok.Data;
 
 @Data
 public class Vertex {
-    String maskId;
+    String id;
 
-    String name;
+    String label;
 
     String bizTime;
 
     Integer type;
 
-    public Vertex(String maskId, String name, String bizTime, Integer type) {
-        this.maskId = maskId;
-        this.name = name;
+    public Vertex(String maskId, String label, String bizTime, Integer type) {
+        this.id = maskId;
+        this.label = label;
         this.bizTime = bizTime;
         this.type = type;
     }
@@ -35,7 +35,7 @@ public class Vertex {
         }
         if (o instanceof Vertex) {
             Vertex vertex = (Vertex) o;
-            return maskId.equals(vertex.maskId) && name.equals(vertex.name) && bizTime.equals(vertex.bizTime)
+            return id.equals(vertex.id) && label.equals(vertex.label) && bizTime.equals(vertex.bizTime)
                            && type.equals(vertex.type);
         }
         return false;
@@ -43,6 +43,6 @@ public class Vertex {
 
     @Override
     public int hashCode() {
-        return Objects.hash(maskId, name, bizTime, type);
+        return Objects.hash(id, label, bizTime, type);
     }
 }
