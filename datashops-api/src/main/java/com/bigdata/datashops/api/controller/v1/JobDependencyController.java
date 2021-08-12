@@ -22,6 +22,7 @@ import com.bigdata.datashops.model.pojo.job.Job;
 import com.bigdata.datashops.model.pojo.job.JobDependency;
 import com.bigdata.datashops.model.pojo.job.Node;
 import com.bigdata.datashops.model.vo.VoJobDependency;
+import com.bigdata.datashops.service.graph.Vertex;
 import com.bigdata.datashops.service.utils.CronHelper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -57,11 +58,11 @@ public class JobDependencyController extends BasicController {
 
         Map<String, Object> result = Maps.newHashMap();
         List<Edge> edges = Lists.newArrayList();
-        List<Node> nodes = Lists.newArrayList();
-        Node node = new Node();
-        node.setLabel(job.getName() + "\n" + DateUtils.format(date, Constants.YYYY_MM_DD_HH_MM_SS));
-        node.setId(id);
-        nodes.add(node);
+        List<Vertex> nodes = Lists.newArrayList();
+        Vertex vertex = new Vertex(job.getMaskId(), job.getName(), DateUtils.format(date,
+                Constants.YYYY_MM_DD_HH_MM_SS), job.getType(), job.getSchedulingPeriod());
+
+        nodes.add(vertex);
 
         List<JobDependency> dependencyList = jobDependencyService.findByTargetId(id);
         for (JobDependency dependency : dependencyList) {
@@ -83,16 +84,15 @@ public class JobDependencyController extends BasicController {
             }
             for (Integer o : offsets) {
                 Date sourceDate = CronHelper.getOffsetTriggerTime(sourceJob.getCronExpression(), date, o);
-                Node source = new Node();
-                source.setLabel(
-                        sourceJob.getName() + "\n\n" + DateUtils.format(sourceDate, Constants.YYYY_MM_DD_HH_MM_SS));
-                source.setId(sourceDate.toString());
+                Vertex source = new Vertex(sourceJob.getMaskId() + "_" + o, sourceJob.getName(),
+                        DateUtils.format(sourceDate,
+                        Constants.YYYY_MM_DD_HH_MM_SS), sourceJob.getType(), sourceJob.getSchedulingPeriod());
                 nodes.add(source);
 
                 Edge edge = new Edge();
-                edge.setFrom(sourceDate.toString());
+                edge.setFrom(sourceJob.getMaskId() + "_" + o);
                 edge.setTo(id);
-                //edge.setLabel("1");
+                edge.setLabel(o.toString());
                 edges.add(edge);
             }
         }

@@ -252,9 +252,6 @@ public class JobController extends BasicController {
 
     @RequestMapping(value = "/getJobGraph")
     public Result getJobGraph(@NotNull String id) {
-        //        Map<String, Object> nodes = jobDependencyService.getJobDependencyGraph(id);
-        //        return ok(nodes);
-
         DirectedWeightedPseudograph<String, DefaultWeightedEdge> dag =
                 new DirectedWeightedPseudograph<>(DefaultWeightedEdge.class);
         Set<Edge> edges = Sets.newHashSet();
@@ -272,7 +269,7 @@ public class JobController extends BasicController {
         Set<Vertex> vertices = Sets.newHashSet();
         for (String s : dag.vertexSet()) {
             Job job = jobService.getOnlineJobByMaskId(s);
-            Vertex vertex = new Vertex(s, job.getName(), "2021-08-10", job.getType());
+            Vertex vertex = new Vertex(s, job.getName(), "", job.getType(), job.getSchedulingPeriod());
             vertices.add(vertex);
         }
         res.put("edges", edges);
