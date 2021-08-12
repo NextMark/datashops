@@ -1,6 +1,5 @@
 package com.bigdata.datashops.api.controller.v1;
 
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -258,18 +257,18 @@ public class JobController extends BasicController {
 
         DirectedWeightedPseudograph<String, DefaultWeightedEdge> dag =
                 new DirectedWeightedPseudograph<>(DefaultWeightedEdge.class);
-        Set<Edge> dependencyList = Sets.newHashSet();
-        Set<String> vertexSet = Sets.newHashSet();
-        graphService.buildGraph(dag, dependencyList, vertexSet, id);
-        Map<String, Object> res = Maps.newHashMap();
         Set<Edge> edges = Sets.newHashSet();
-        for (DefaultWeightedEdge edge : dag.edgeSet()) {
-            Edge e = new Edge();
-            e.setFrom(dag.getEdgeSource(edge));
-            e.setTo(dag.getEdgeTarget(edge));
-            e.setLabel(new DecimalFormat("#").format(dag.getEdgeWeight(edge)));
-            edges.add(e);
-        }
+        Set<String> vertexSet = Sets.newHashSet();
+        graphService.buildGraph(dag, edges, vertexSet, id);
+        Map<String, Object> res = Maps.newHashMap();
+        //        Set<Edge> edges = Sets.newHashSet();
+        //        for (DefaultWeightedEdge edge : dag.edgeSet()) {
+        //            Edge e = new Edge();
+        //            e.setFrom(dag.getEdgeSource(edge));
+        //            e.setTo(dag.getEdgeTarget(edge));
+        //            e.setLabel(new DecimalFormat("#").format(dag.getEdgeWeight(edge)));
+        //            edges.add(e);
+        //        }
         Set<Vertex> vertices = Sets.newHashSet();
         for (String s : dag.vertexSet()) {
             Job job = jobService.getOnlineJobByMaskId(s);
