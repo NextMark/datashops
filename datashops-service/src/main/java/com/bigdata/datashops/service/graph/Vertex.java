@@ -10,18 +10,15 @@ public class Vertex {
 
     String label;
 
-    String bizTime;
-
     Integer type;
 
-    Integer schedulingPeriod;
+    String extra;
 
-    public Vertex(String maskId, String label, String bizTime, Integer type, Integer schedulingPeriod) {
+    public Vertex(String maskId, String label, Integer type, String extra) {
         this.id = maskId;
         this.label = label;
-        this.bizTime = bizTime;
         this.type = type;
-        this.schedulingPeriod = schedulingPeriod;
+        this.extra = extra;
     }
 
     public Vertex() {
@@ -38,14 +35,14 @@ public class Vertex {
         }
         if (o instanceof Vertex) {
             Vertex vertex = (Vertex) o;
-            return id.equals(vertex.id) && label.equals(vertex.label) && bizTime.equals(vertex.bizTime)
-                           && type.equals(vertex.type) && schedulingPeriod.equals(vertex.schedulingPeriod);
+            return id.equals(vertex.id) && label.equals(vertex.label) && type.equals(vertex.type) && extra.equals(
+                    vertex.extra);
         }
         return false;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, label, bizTime, type, schedulingPeriod);
+        return Objects.hash(id, label, type, extra);
     }
 }

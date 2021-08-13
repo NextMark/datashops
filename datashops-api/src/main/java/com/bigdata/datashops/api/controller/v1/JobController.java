@@ -258,18 +258,13 @@ public class JobController extends BasicController {
         Set<String> vertexSet = Sets.newHashSet();
         graphService.buildGraph(dag, edges, vertexSet, id);
         Map<String, Object> res = Maps.newHashMap();
-        //        Set<Edge> edges = Sets.newHashSet();
-        //        for (DefaultWeightedEdge edge : dag.edgeSet()) {
-        //            Edge e = new Edge();
-        //            e.setFrom(dag.getEdgeSource(edge));
-        //            e.setTo(dag.getEdgeTarget(edge));
-        //            e.setLabel(new DecimalFormat("#").format(dag.getEdgeWeight(edge)));
-        //            edges.add(e);
-        //        }
         Set<Vertex> vertices = Sets.newHashSet();
         for (String s : dag.vertexSet()) {
             Job job = jobService.getOnlineJobByMaskId(s);
-            Vertex vertex = new Vertex(s, job.getName(), "", job.getType(), job.getSchedulingPeriod());
+            Map<String, Object> extra = Maps.newHashMap();
+            extra.put("period", job.getSchedulingPeriod());
+            extra.put("owner", job.getOwner());
+            Vertex vertex = new Vertex(s, job.getName(), job.getType(), JSONUtils.toJsonString(extra));
             vertices.add(vertex);
         }
         res.put("edges", edges);

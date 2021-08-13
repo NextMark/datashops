@@ -20,6 +20,7 @@ public class GraphService extends BaseService {
         List<JobDependency> upstream = jobDependencyService.findByTargetId(maskId);
         List<JobDependency> downstream = jobDependencyService.findBySourceId(maskId);
         upstream.addAll(downstream);
+        dag.addVertex(maskId);
         vertexSet.add(maskId);
 
         for (JobDependency dep : upstream) {

@@ -35,7 +35,7 @@ public class JobInstanceService {
     private JobInstanceMapper jobInstanceMapper;
 
     public void save(JobInstance jobInstance) {
-        if(jobInstanceMapper.selectById(jobInstance.getId()) != null) {
+        if (jobInstanceMapper.selectById(jobInstance.getId()) != null) {
             jobInstanceMapper.updateById(jobInstance);
         } else {
             jobInstanceMapper.insert(jobInstance);
@@ -109,9 +109,17 @@ public class JobInstanceService {
             jobInstance.setState(RunState.CREATED.getCode());
             return jobInstance;
         }
-        return JobInstance.builder().maskId(job.getMaskId()).instanceId(instanceId).submitTime(now).status(1).maskId(id)
-                       .projectId(job.getProjectId()).state(RunState.CREATED.getCode()).type(job.getType())
-                       .operator(operator).bizTime(bizDate).build();
+        JobInstance instance = new JobInstance();
+        instance.setMaskId(id);
+        instance.setInstanceId(instanceId);
+        instance.setSubmitTime(now);
+        instance.setStatus(1);
+        instance.setProjectId(job.getProjectId());
+        instance.setState(RunState.CREATED.getCode());
+        instance.setType(job.getType());
+        instance.setOperator(operator);
+        instance.setBizTime(bizDate);
+        return instance;
     }
 
     public void buildBatchJobInstance(String id, String startTime, String endTime, String operator)

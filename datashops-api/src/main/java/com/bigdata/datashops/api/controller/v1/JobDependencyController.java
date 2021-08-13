@@ -17,10 +17,10 @@ import com.bigdata.datashops.api.controller.BasicController;
 import com.bigdata.datashops.api.response.Result;
 import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.common.utils.DateUtils;
+import com.bigdata.datashops.common.utils.JSONUtils;
 import com.bigdata.datashops.model.pojo.job.Edge;
 import com.bigdata.datashops.model.pojo.job.Job;
 import com.bigdata.datashops.model.pojo.job.JobDependency;
-import com.bigdata.datashops.model.pojo.job.Node;
 import com.bigdata.datashops.model.vo.VoJobDependency;
 import com.bigdata.datashops.service.graph.Vertex;
 import com.bigdata.datashops.service.utils.CronHelper;
@@ -59,8 +59,10 @@ public class JobDependencyController extends BasicController {
         Map<String, Object> result = Maps.newHashMap();
         List<Edge> edges = Lists.newArrayList();
         List<Vertex> nodes = Lists.newArrayList();
-        Vertex vertex = new Vertex(job.getMaskId(), job.getName(), DateUtils.format(date,
-                Constants.YYYY_MM_DD_HH_MM_SS), job.getType(), job.getSchedulingPeriod());
+        Map<String, Object> extra = Maps.newHashMap();
+        extra.put("bizTime", DateUtils.format(date, Constants.YYYY_MM_DD_HH_MM_SS));
+        extra.put("period", job.getSchedulingPeriod());
+        Vertex vertex = new Vertex(job.getMaskId(), job.getName(), job.getType(), JSONUtils.toJsonString(extra));
 
         nodes.add(vertex);
 
@@ -84,9 +86,11 @@ public class JobDependencyController extends BasicController {
             }
             for (Integer o : offsets) {
                 Date sourceDate = CronHelper.getOffsetTriggerTime(sourceJob.getCronExpression(), date, o);
-                Vertex source = new Vertex(sourceJob.getMaskId() + "_" + o, sourceJob.getName(),
-                        DateUtils.format(sourceDate,
-                        Constants.YYYY_MM_DD_HH_MM_SS), sourceJob.getType(), sourceJob.getSchedulingPeriod());
+                extra = Maps.newHashMap();
+                extra.put("bizTime", DateUtils.format(sourceDate, Constants.YYYY_MM_DD_HH_MM_SS));
+                extra.put("period", sourceJob.getSchedulingPeriod());
+                Vertex source = new Vertex(sourceJob.getMaskId() + "_" + o, sourceJob.getName(), sourceJob.getType(),
+                        JSONUtils.toJsonString(extra));
                 nodes.add(source);
 
                 Edge edge = new Edge();

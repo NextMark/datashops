@@ -7,15 +7,15 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.bigdata.datashops.model.pojo.BaseModel;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
 @Jacksonized
+@NoArgsConstructor
 @TableName(value = "t_job_instance")
 public class JobInstance extends BaseModel implements Comparable<JobInstance> {
     private Integer projectId;
