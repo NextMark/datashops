@@ -10,6 +10,7 @@ public class Vertex {
 
     String label;
 
+    // 作业类型
     Integer type;
 
     String extra;

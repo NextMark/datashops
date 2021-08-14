@@ -79,6 +79,14 @@ public class JobInstanceService {
         return jobInstanceMapper.selectOne(lqw);
     }
 
+    public JobInstance findByMaskIdAndVersionAndBizTime(String maskId, int version, String bizTime) {
+        LambdaQueryWrapper<JobInstance> lqw = Wrappers.lambdaQuery();
+        lqw.eq(JobInstance::getVersion, version);
+        lqw.eq(JobInstance::getMaskId, maskId);
+        lqw.eq(JobInstance::getBizTime, bizTime);
+        return jobInstanceMapper.selectOne(lqw);
+    }
+
     public IPage<JobInstance> findByNameAndOperator(int pageNum, int pageSize, String name, String operator) {
         Page<JobInstance> page = new Page(pageNum, pageSize);
         return jobInstanceMapper.findJobInstanceListPaging(page, name, operator);

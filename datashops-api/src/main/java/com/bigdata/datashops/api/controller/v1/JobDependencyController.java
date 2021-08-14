@@ -52,8 +52,8 @@ public class JobDependencyController extends BasicController {
     }
 
     @RequestMapping(value = "/preview")
-    public Result preview(@NotNull String id) {
-        Job job = jobService.getOnlineJobByMaskId(id);
+    public Result preview(@NotNull String maskId) {
+        Job job = jobService.getOnlineJobByMaskId(maskId);
         Date date = CronHelper.getNextTime(job.getCronExpression());
 
         Map<String, Object> result = Maps.newHashMap();
@@ -66,7 +66,7 @@ public class JobDependencyController extends BasicController {
 
         nodes.add(vertex);
 
-        List<JobDependency> dependencyList = jobDependencyService.findByTargetId(id);
+        List<JobDependency> dependencyList = jobDependencyService.findByTargetId(maskId);
         for (JobDependency dependency : dependencyList) {
             String preJobId = dependency.getSourceId();
             Job sourceJob = jobService.getOnlineJobByMaskId(preJobId);
@@ -95,7 +95,7 @@ public class JobDependencyController extends BasicController {
 
                 Edge edge = new Edge();
                 edge.setFrom(sourceJob.getMaskId() + "_" + o);
-                edge.setTo(id);
+                edge.setTo(maskId);
                 edge.setLabel(o.toString());
                 edges.add(edge);
             }

@@ -11,7 +11,6 @@ import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.jersey.internal.guava.Sets;
-import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.DirectedWeightedPseudograph;
 import org.quartz.SchedulerException;
 import org.springframework.beans.BeanUtils;
@@ -41,6 +40,7 @@ import com.bigdata.datashops.model.pojo.job.Job;
 import com.bigdata.datashops.model.pojo.job.JobGraph;
 import com.bigdata.datashops.model.pojo.job.JobInstance;
 import com.bigdata.datashops.model.pojo.job.JobRelation;
+import com.bigdata.datashops.model.pojo.job.RelationshipEdge;
 import com.bigdata.datashops.service.graph.Vertex;
 import com.bigdata.datashops.service.utils.CronHelper;
 import com.google.common.collect.Maps;
@@ -251,24 +251,28 @@ public class JobController extends BasicController {
     }
 
     @RequestMapping(value = "/getJobGraph")
-    public Result getJobGraph(@NotNull String id) {
-        DirectedWeightedPseudograph<String, DefaultWeightedEdge> dag =
-                new DirectedWeightedPseudograph<>(DefaultWeightedEdge.class);
+    public Result getJobGraph(@NotNull String maskId) {
+        DirectedWeightedPseudograph<String, RelationshipEdge> dag =
+                new DirectedWeightedPseudograph<>(RelationshipEdge.class);
+        graphService.buildGraph(dag, maskId);
         Set<Edge> edges = Sets.newHashSet();
-        Set<String> vertexSet = Sets.newHashSet();
-        graphService.buildGraph(dag, edges, vertexSet, id);
-        Map<String, Object> res = Maps.newHashMap();
-        Set<Vertex> vertices = Sets.newHashSet();
+        Set<Vertex> vertexSet = Sets.newHashSet();
         for (String s : dag.vertexSet()) {
-            Job job = jobService.getOnlineJobByMaskId(s);
-            Map<String, Object> extra = Maps.newHashMap();
-            extra.put("period", job.getSchedulingPeriod());
-            extra.put("owner", job.getOwner());
-            Vertex vertex = new Vertex(s, job.getName(), job.getType(), JSONUtils.toJsonString(extra));
-            vertices.add(vertex);
+            Vertex vertex = JSONUtils.parseObject(s, Vertex.class);
+            vertexSet.add(vertex);
         }
+        for (RelationshipEdge relationshipEdge : dag.edgeSet()) {
+            Edge edge = new Edge();
+            Vertex from = JSONUtils.parseObject(dag.getEdgeSource(relationshipEdge), Vertex.class);
+            Vertex to = JSONUtils.parseObject(dag.getEdgeTarget(relationshipEdge), Vertex.class);
+            edge.setFrom(from.getId());
+            edge.setTo(to.getId());
+            edge.setLabel(relationshipEdge.getLabel());
+            edges.add(edge);
+        }
+        Map<String, Object> res = Maps.newHashMap();
         res.put("edges", edges);
-        res.put("nodes", vertices);
+        res.put("nodes", vertexSet);
         return ok(res);
     }
 
@@ -316,18 +320,5 @@ public class JobController extends BasicController {
     public Result backToVersion(@NotNull Integer version, @NotNull String maskId) {
         jobService.backToHistoryVersion(maskId, version);
         return ok();
-    }
-
-    @RequestMapping(value = "/getGraph")
-    public Result getGraph(@NotNull String maskId) {
-        DirectedWeightedPseudograph<String, DefaultWeightedEdge> dag =
-                new DirectedWeightedPseudograph<>(DefaultWeightedEdge.class);
-        Set<Edge> dependencyList = Sets.newHashSet();
-        Set<String> vertexSet = Sets.newHashSet();
-        graphService.buildGraph(dag, dependencyList, vertexSet, maskId);
-        Map<String, Object> res = Maps.newHashMap();
-        res.put("edge", dependencyList);
-        res.put("vertex", vertexSet);
-        return ok(res);
     }
 }

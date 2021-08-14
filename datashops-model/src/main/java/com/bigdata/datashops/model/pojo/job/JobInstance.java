@@ -85,16 +85,16 @@ public class JobInstance extends BaseModel implements Comparable<JobInstance> {
     //     */
     //    private String postDependency;
 
-    //    /**
-    //     * 依赖的上游，数组，逗号分隔
-    //     * example: mask_id|version|biz_date，1-1-210304112627065|1|2021-08-10 10:00:00
-    //     */
-    //    private String upstreamVertex;
-    //
-    //    /**
-    //     * 下游依赖，数组，逗号分隔
-    //     */
-    //    private String downstreamVertex;
+    /**
+     * 依赖的上游
+     * example: [{"maskId": "1-1-210304112627065", "version": "1", "bizTime":"2021-08-10 10:00:00", "upstream": true}]
+     */
+    private String upstreamVertex;
+
+    /**
+     * 下游
+     */
+    private String downstreamVertex;
 
     private String extension;
 
