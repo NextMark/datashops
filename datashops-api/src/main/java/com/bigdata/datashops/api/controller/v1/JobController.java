@@ -43,6 +43,7 @@ import com.bigdata.datashops.model.pojo.job.JobRelation;
 import com.bigdata.datashops.model.pojo.job.RelationshipEdge;
 import com.bigdata.datashops.service.graph.Vertex;
 import com.bigdata.datashops.service.utils.CronHelper;
+import com.bigdata.datashops.service.utils.GraphHelper;
 import com.google.common.collect.Maps;
 
 @RestController
@@ -255,24 +256,7 @@ public class JobController extends BasicController {
         DirectedWeightedPseudograph<String, RelationshipEdge> dag =
                 new DirectedWeightedPseudograph<>(RelationshipEdge.class);
         graphService.buildGraph(dag, maskId);
-        Set<Edge> edges = Sets.newHashSet();
-        Set<Vertex> vertexSet = Sets.newHashSet();
-        for (String s : dag.vertexSet()) {
-            Vertex vertex = JSONUtils.parseObject(s, Vertex.class);
-            vertexSet.add(vertex);
-        }
-        for (RelationshipEdge relationshipEdge : dag.edgeSet()) {
-            Edge edge = new Edge();
-            Vertex from = JSONUtils.parseObject(dag.getEdgeSource(relationshipEdge), Vertex.class);
-            Vertex to = JSONUtils.parseObject(dag.getEdgeTarget(relationshipEdge), Vertex.class);
-            edge.setFrom(from.getId());
-            edge.setTo(to.getId());
-            edge.setLabel(relationshipEdge.getLabel());
-            edges.add(edge);
-        }
-        Map<String, Object> res = Maps.newHashMap();
-        res.put("edges", edges);
-        res.put("nodes", vertexSet);
+        Map<String, Object> res = GraphHelper.parseToGraph(dag);
         return ok(res);
     }
 

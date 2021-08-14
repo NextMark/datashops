@@ -23,7 +23,9 @@ import com.bigdata.datashops.model.dto.DtoPageQuery;
 import com.bigdata.datashops.model.pojo.job.Edge;
 import com.bigdata.datashops.model.pojo.job.Job;
 import com.bigdata.datashops.model.pojo.job.JobInstance;
+import com.bigdata.datashops.model.pojo.job.RelationshipEdge;
 import com.bigdata.datashops.service.graph.Vertex;
+import com.bigdata.datashops.service.utils.GraphHelper;
 import com.google.common.collect.Maps;
 
 @RestController
@@ -42,23 +44,11 @@ public class JobInstanceController extends BasicController {
     }
 
     @RequestMapping(value = "/getJobInstanceGraph")
-    public Result getJobInstanceGraph(@NotNull String maskId) {
-        DirectedWeightedPseudograph<String, DefaultWeightedEdge> dag =
-                new DirectedWeightedPseudograph<>(DefaultWeightedEdge.class);
-        Set<Edge> edges = Sets.newHashSet();
-        graphService.buildInstanceGraph(dag, maskId);
-        Map<String, Object> res = Maps.newHashMap();
-        Set<Vertex> vertices = Sets.newHashSet();
-        for (String s : dag.vertexSet()) {
-            Job job = jobService.getOnlineJobByMaskId(s);
-            Map<String, Object> extra = Maps.newHashMap();
-            extra.put("period", job.getSchedulingPeriod());
-            extra.put("owner", job.getOwner());
-            Vertex vertex = new Vertex(s, job.getName(), job.getType(), JSONUtils.toJsonString(extra));
-            vertices.add(vertex);
-        }
-        res.put("edges", edges);
-        res.put("nodes", vertices);
+    public Result getJobInstanceGraph(@NotNull String instanceId) {
+        DirectedWeightedPseudograph<String, RelationshipEdge> dag =
+                new DirectedWeightedPseudograph<>(RelationshipEdge.class);
+        graphService.buildInstanceGraph(dag, instanceId);
+        Map<String, Object> res = GraphHelper.parseToGraph(dag);
         return ok(res);
     }
 }
