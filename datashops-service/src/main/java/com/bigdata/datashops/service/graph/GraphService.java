@@ -3,15 +3,12 @@ package com.bigdata.datashops.service.graph;
 import java.util.List;
 import java.util.Map;
 
-import org.jgrapht.Graphs;
-import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.DirectedWeightedPseudograph;
 import org.springframework.stereotype.Service;
 
 import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.common.utils.DateUtils;
 import com.bigdata.datashops.common.utils.JSONUtils;
-import com.bigdata.datashops.model.enums.RunState;
 import com.bigdata.datashops.model.pojo.job.Job;
 import com.bigdata.datashops.model.pojo.job.JobDependency;
 import com.bigdata.datashops.model.pojo.job.JobInstance;
@@ -120,12 +117,13 @@ public class GraphService extends BaseService {
                 String depVertexStr = JSONUtils.toJsonString(depVertex);
                 String sourceEdge = isUpstream ? depVertexStr : vertexStr;
                 String targetEdge = isUpstream ? vertexStr : depVertexStr;
+                String label = isUpstream ? depInstance.getState().toString() : instance.getState().toString();
                 if (dag.containsVertex(depVertexStr)) {
-                    dag.addEdge(sourceEdge, targetEdge, new RelationshipEdge(""));
+                    dag.addEdge(sourceEdge, targetEdge, new RelationshipEdge(label));
                     continue;
                 }
                 dag.addVertex(depVertexStr);
-                dag.addEdge(sourceEdge, targetEdge, new RelationshipEdge(""));
+                dag.addEdge(sourceEdge, targetEdge, new RelationshipEdge(label));
                 buildInstanceGraph(dag, depInstance.getInstanceId());
             }
         }

@@ -5,12 +5,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.StringUtils;
-import org.glassfish.jersey.internal.guava.Sets;
 import org.jgrapht.graph.DirectedWeightedPseudograph;
 import org.quartz.SchedulerException;
 import org.springframework.beans.BeanUtils;
@@ -35,13 +33,11 @@ import com.bigdata.datashops.model.dto.DtoPageQuery;
 import com.bigdata.datashops.model.enums.JobType;
 import com.bigdata.datashops.model.enums.RunState;
 import com.bigdata.datashops.model.enums.SchedulingPeriod;
-import com.bigdata.datashops.model.pojo.job.Edge;
 import com.bigdata.datashops.model.pojo.job.Job;
 import com.bigdata.datashops.model.pojo.job.JobGraph;
 import com.bigdata.datashops.model.pojo.job.JobInstance;
 import com.bigdata.datashops.model.pojo.job.JobRelation;
 import com.bigdata.datashops.model.pojo.job.RelationshipEdge;
-import com.bigdata.datashops.service.graph.Vertex;
 import com.bigdata.datashops.service.utils.CronHelper;
 import com.bigdata.datashops.service.utils.GraphHelper;
 import com.google.common.collect.Maps;

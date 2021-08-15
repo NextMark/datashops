@@ -18,7 +18,7 @@ BIN_DIR=$(
 )
 DATASHOPS_HOME=$BIN_DIR/..
 
-export JAVA_HOME=$JAVA_HOME
+export JAVA_HOME=$JAVA_11_HOME
 export HOSTNAME=$(hostname)
 mkdir $DATASHOPS_HOME/pid
 export DATASHOPS_PID_DIR=$DATASHOPS_HOME/pid
@@ -62,10 +62,10 @@ elif [ "$command" = "api" ]; then
   CLASS=com.bigdata.datashops.api.ApiApplication
 fi
 
-export DATASHOPS_OPTS="-server -Xms$HEAP_INITIAL_SIZE -Xmx$HEAP_MAX_SIZE -Xmn$HEAP_NEW_GENERATION__SIZE -Djava.ext.dirs=$EXT -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m  -Xss512k -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:+CMSParallelRemarkEnabled -XX:LargePageSizeInBytes=128m -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=70 -XX:+PrintGCDetails -Xloggc:${DATASHOPS_LOG_DIR}/gc-$command.log -XX:+HeapDumpOnOutOfMemoryError  -XX:HeapDumpPath=dump.hprof"
+export DATASHOPS_OPTS="-server -Xms$HEAP_INITIAL_SIZE -Xmx$HEAP_MAX_SIZE -Xmn$HEAP_NEW_GENERATION__SIZE --class-path=$EXT -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m  -Xss512k -XX:+UseConcMarkSweepGC -XX:+CMSParallelRemarkEnabled -XX:LargePageSizeInBytes=128m -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=70 -XX:+PrintGCDetails -Xloggc:${DATASHOPS_LOG_DIR}/gc-$command.log -XX:+HeapDumpOnOutOfMemoryError  -XX:HeapDumpPath=dump.hprof"
 
 exec_command="$LOG_FILE $DATASHOPS_OPTS -classpath $DATASHOPS_CONF_DIR:$DATASHOPS_LIB_JARS $CLASS --server.port=$PORT"
 
-echo "nohup $JAVA_11_HOME/bin/java $exec_command > $log 2>&1 &"
-nohup $JAVA_11_HOME/bin/java $exec_command >$log 2>&1 &
+echo "nohup $JAVA_HOME/bin/java $exec_command > $log 2>&1 &"
+nohup $JAVA_HOME/bin/java $exec_command >$log 2>&1 &
 echo $! >$pid
