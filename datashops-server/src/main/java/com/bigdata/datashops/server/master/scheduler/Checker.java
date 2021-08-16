@@ -1,7 +1,5 @@
 package com.bigdata.datashops.server.master.scheduler;
 
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -14,9 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bigdata.datashops.common.Constants;
-import com.bigdata.datashops.common.utils.LocalDateUtils;
 import com.bigdata.datashops.model.enums.RunState;
-import com.bigdata.datashops.model.enums.SchedulingPeriod;
 import com.bigdata.datashops.model.pojo.job.Job;
 import com.bigdata.datashops.model.pojo.job.JobDependency;
 import com.bigdata.datashops.model.pojo.job.JobInstance;
@@ -69,7 +65,8 @@ public class Checker {
             Job preJob = jobService.getOnlineJobByMaskId(preJobId);
             for (Integer o : offsets) {
                 int schedulingPeriod = preJob.getSchedulingPeriod();
-                dependencyBizTime = getDependencyBizTime(bizTime, schedulingPeriod, o, preJob.getCronExpression());
+                dependencyBizTime =
+                        CronHelper.getDependencyBizTime(bizTime, schedulingPeriod, o, preJob.getCronExpression());
                 for (Date date : dependencyBizTime) {
                     JobInstance instance = jobInstanceService.findByJobIdAndBizTime(preJobId, date);
                     if (instance == null) {
@@ -85,39 +82,5 @@ public class Checker {
             }
         }
         return RunState.SUCCESS;
-    }
-
-    private List<Date> getDependencyBizTime(Date date, int schedulingPeriod, int offset, String weekOrMonthStr) {
-        List<Date> result = Lists.newArrayList();
-        LocalDateTime ldt = LocalDateUtils.dateToLocalDateTime(date);
-        LocalDateTime bizTime;
-        switch (SchedulingPeriod.of(schedulingPeriod)) {
-            case MINUTE:
-            case HOUR:
-            case DAY:
-                result.add(CronHelper.getOffsetTriggerTime(weekOrMonthStr, date, offset));
-                break;
-            case WEEK:
-                bizTime = LocalDateUtils.plus(ldt, offset, ChronoUnit.WEEKS);
-                String[] weeks =
-                        weekOrMonthStr.split(Constants.SEPARATOR_WHITE_SPACE)[5].split(Constants.SEPARATOR_COMMA);
-                for (String week : weeks) {
-                    result.add(LocalDateUtils.parseStringToDate(
-                            LocalDateUtils.getDateOfWeekStr(bizTime, Integer.parseInt(week))));
-                }
-                break;
-            case MONTH:
-                bizTime = LocalDateUtils.plus(ldt, offset, ChronoUnit.MONTHS);
-                String[] months =
-                        weekOrMonthStr.split(Constants.SEPARATOR_WHITE_SPACE)[3].split(Constants.SEPARATOR_COMMA);
-                for (String month : months) {
-                    result.add(LocalDateUtils.parseStringToDate(
-                            LocalDateUtils.getDateOfMonthStr(bizTime, Integer.parseInt(month))));
-                }
-                break;
-            default:
-                break;
-        }
-        return result;
     }
 }

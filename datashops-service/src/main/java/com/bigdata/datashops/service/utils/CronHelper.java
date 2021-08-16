@@ -1,14 +1,20 @@
 package com.bigdata.datashops.service.utils;
 
 import java.text.ParseException;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
+import org.apache.commons.compress.utils.Lists;
 import org.quartz.CronExpression;
 
+import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.common.utils.JSONUtils;
+import com.bigdata.datashops.common.utils.LocalDateUtils;
 import com.bigdata.datashops.model.dto.DtoCronExpression;
 import com.bigdata.datashops.model.enums.SchedulingPeriod;
 import com.bigdata.datashops.model.exception.ValidationException;
@@ -165,5 +171,37 @@ public class CronHelper {
         } catch (Exception e) {
             throw new RuntimeException("cron表达式验证失败");
         }
+    }
+
+    public static List<Date> getDependencyBizTime(Date date, int schedulingPeriod, int offset, String cron) {
+        List<Date> result = Lists.newArrayList();
+        LocalDateTime ldt = LocalDateUtils.dateToLocalDateTime(date);
+        LocalDateTime bizTime;
+        switch (SchedulingPeriod.of(schedulingPeriod)) {
+            case MINUTE:
+            case HOUR:
+            case DAY:
+                result.add(CronHelper.getOffsetTriggerTime(cron, date, offset));
+                break;
+            case WEEK:
+                bizTime = LocalDateUtils.plus(ldt, offset, ChronoUnit.WEEKS);
+                String[] weeks = cron.split(Constants.SEPARATOR_WHITE_SPACE)[5].split(Constants.SEPARATOR_COMMA);
+                for (String week : weeks) {
+                    result.add(LocalDateUtils.parseStringToDate(
+                            LocalDateUtils.getDateOfWeekStr(bizTime, Integer.parseInt(week))));
+                }
+                break;
+            case MONTH:
+                bizTime = LocalDateUtils.plus(ldt, offset, ChronoUnit.MONTHS);
+                String[] months = cron.split(Constants.SEPARATOR_WHITE_SPACE)[3].split(Constants.SEPARATOR_COMMA);
+                for (String month : months) {
+                    result.add(LocalDateUtils.parseStringToDate(
+                            LocalDateUtils.getDateOfMonthStr(bizTime, Integer.parseInt(month))));
+                }
+                break;
+            default:
+                break;
+        }
+        return result;
     }
 }
