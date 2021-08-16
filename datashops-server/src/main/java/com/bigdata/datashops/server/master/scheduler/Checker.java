@@ -64,9 +64,8 @@ public class Checker {
             List<Date> dependencyBizTime;
             Job preJob = jobService.getOnlineJobByMaskId(preJobId);
             for (Integer o : offsets) {
-                int schedulingPeriod = preJob.getSchedulingPeriod();
                 dependencyBizTime =
-                        CronHelper.getDependencyBizTime(bizTime, schedulingPeriod, o, preJob.getCronExpression());
+                        CronHelper.getDependencyBizTime(bizTime, preJob.getSchedulingPeriod(), o, preJob.getCronExpression());
                 for (Date date : dependencyBizTime) {
                     JobInstance instance = jobInstanceService.findByJobIdAndBizTime(preJobId, date);
                     if (instance == null) {

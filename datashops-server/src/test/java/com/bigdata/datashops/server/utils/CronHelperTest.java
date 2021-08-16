@@ -11,6 +11,7 @@ import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.common.utils.DateUtils;
 import com.bigdata.datashops.common.utils.JSONUtils;
 import com.bigdata.datashops.model.dto.DtoCronExpression;
+import com.bigdata.datashops.model.enums.SchedulingPeriod;
 import com.bigdata.datashops.model.pojo.quartz.Week;
 import com.bigdata.datashops.service.utils.CronHelper;
 
@@ -30,10 +31,10 @@ public class CronHelperTest {
     public void testGetDependencyBizTime() {
         Date now = new Date();
         String cron = "00 29 19 * * ?";
-        int period = 2;
+        int period = SchedulingPeriod.DAY.getCode();
         int offset = -1;
         for (int i = offset; i <= 0; i++) {
-            List<Date> date = CronHelper.getDependencyBizTime(now, period, offset, cron);
+            List<Date> date = CronHelper.getDependencyBizTime(now, period, i, cron);
             date.forEach(x -> System.out.println(DateUtils.format(x, Constants.YYYY_MM_DD_HH_MM_SS)));
         }
     }
