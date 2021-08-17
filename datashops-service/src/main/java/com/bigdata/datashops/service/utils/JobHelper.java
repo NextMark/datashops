@@ -34,7 +34,18 @@ public class JobHelper {
     public static Set<JobDependency> split(JobDependency dependency) {
         Set<JobDependency> dependencyList = Sets.newHashSet();
         int type = dependency.getType();
-        String offset = dependency.getOffset();
+        List<Integer> offsets = JobHelper.parseOffsetToList(dependency.getOffset(), type);
+        for (Integer o : offsets) {
+            JobDependency jobDependency = new JobDependency();
+            jobDependency.setSourceId(dependency.getSourceId());
+            jobDependency.setTargetId(dependency.getTargetId());
+            jobDependency.setOffset(String.valueOf(o));
+            dependencyList.add(jobDependency);
+        }
+        return dependencyList;
+    }
+
+    public static List<Integer> parseOffsetToList(String offset, int type) {
         String[] offsetRegion = offset.split(Constants.SEPARATOR_COMMA);
         List<Integer> offsets = Lists.newArrayList();
         if (type == 1) {
@@ -43,19 +54,11 @@ public class JobHelper {
             int begin = Integer.parseInt(offsetRegion[0]);
             int end = Integer.parseInt(offsetRegion[1]);
 
-            for (int i = begin; i <= end; i++) {
+            for (int i = begin; i < end; i++) {
                 offsets.add(i);
             }
         }
-        for (Integer o : offsets) {
-            JobDependency jobDependency = new JobDependency();
-            jobDependency.setSourceId(dependency.getSourceId());
-            jobDependency.setTargetId(dependency.getTargetId());
-            jobDependency.setOffset(String.valueOf(o));
-            dependencyList.add(jobDependency);
-        }
-
-        return dependencyList;
+        return offsets;
     }
 
 }

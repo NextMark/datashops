@@ -87,7 +87,7 @@ public class JobInstance extends BaseModel implements Comparable<JobInstance> {
 
     /**
      * 依赖的上游
-     * example: [{"maskId": "1-1-210304112627065", "version": "1", "bizTime":"2021-08-10 10:00:00", "upstream": true}]
+     * example: [{"maskId": "1-1-210304112627065", "version": "1", "bizTime":"2021-08-10 10:00:00"}]
      */
     private String upstreamVertex;
 

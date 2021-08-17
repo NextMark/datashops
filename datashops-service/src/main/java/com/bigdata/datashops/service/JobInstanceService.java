@@ -3,6 +3,7 @@ package com.bigdata.datashops.service;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import org.quartz.CronExpression;
@@ -15,21 +16,21 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.bigdata.datashops.common.Constants;
 import com.bigdata.datashops.common.utils.DateUtils;
+import com.bigdata.datashops.common.utils.JSONUtils;
 import com.bigdata.datashops.common.utils.JobUtils;
 import com.bigdata.datashops.dao.mapper.JobInstanceMapper;
 import com.bigdata.datashops.model.enums.JobType;
 import com.bigdata.datashops.model.enums.RunState;
 import com.bigdata.datashops.model.pojo.job.Job;
+import com.bigdata.datashops.model.pojo.job.JobDependency;
 import com.bigdata.datashops.model.pojo.job.JobInstance;
 import com.bigdata.datashops.service.utils.CronHelper;
+import com.bigdata.datashops.service.utils.JobHelper;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 @Service
-public class JobInstanceService {
-    @Autowired
-    private JobService jobService;
-
-    @Autowired
-    private JobInstanceService jobInstanceService;
+public class JobInstanceService extends BaseService {
 
     @Autowired
     private JobInstanceMapper jobInstanceMapper;
@@ -127,6 +128,9 @@ public class JobInstanceService {
         instance.setType(job.getType());
         instance.setOperator(operator);
         instance.setBizTime(bizDate);
+        // 计算上下游
+        fillUpstreamVertex(instance);
+        fillDownstreamVertex(instance);
         return instance;
     }
 
@@ -146,42 +150,47 @@ public class JobInstanceService {
         }
     }
 
-    public static void main(String[] args) throws ParseException {
-        String startTime = "2021040111";
-        String endTime = "2021040112";
-        Date start = DateUtils.parse(startTime, "yyyyMMddHH");
-        Date end = DateUtils.parse(endTime, "yyyyMMddHH");
-        CronExpression expression = new CronExpression("00 */10 04-23 * * ?");
-        for (; start.getTime() <= end.getTime(); ) {
-            start = expression.getNextValidTimeAfter(start);
-            //System.out.println(start);
-            if (start.getTime() >= end.getTime()) {
-                break;
+    public void fillUpstreamVertex(JobInstance instance) {
+        List<JobDependency> dependencyList = jobDependencyService.findByTargetId(instance.getMaskId());
+        List<Map> upstream = Lists.newArrayList();
+        for (JobDependency dependency : dependencyList) {
+            String preJobId = dependency.getSourceId();
+            Job sourceJob = jobService.getOnlineJobByMaskId(preJobId);
+            int type = dependency.getType();
+            List<Integer> offsets = JobHelper.parseOffsetToList(dependency.getOffset(), type);
+            for (Integer offset : offsets) {
+                Date date = CronHelper.getUpstreamBizTime(sourceJob.getCronExpression(), instance.getBizTime(), offset);
+                Map<String, Object> map = Maps.newHashMap();
+                map.put("maskId", preJobId);
+                map.put("version", sourceJob.getVersion());
+                map.put("bizTime", date);
+                upstream.add(map);
             }
         }
-        try {
-            Date date = DateUtils.stringToDate("2021-04-09 10:15:00");
-            System.out.println(CronHelper.getOffsetTriggerTime("00 */5 13-14 * * ?", date, 0));
-            System.out.println(CronHelper.getOffsetTriggerTime("00 */5 10-14 * * ?", date, 0));
-
-            System.out.println(CronHelper.getOffsetTriggerTime("00 */5 13-14 * * ?", date, -2));
-
-            System.out.println(CronHelper.getOffsetTriggerTime("00 */5 13-14 * * ?", date, -14));
-            System.out.println(CronHelper.getOffsetTriggerTime("00 10 23 * * ?", date, -2));
-            System.out.println(CronHelper.getOffsetTriggerTime("00 */10 04-23 * * ?", date, 0));
-            System.out.println(CronHelper.getOffsetTriggerTime("00 */10 04-23 * * ?", date, 3));
-
-            //            Date nextValidTime = expression.getNextValidTimeAfter(new Date());
-            //            Date subsequentNextValidTime = expression.getNextValidTimeAfter(nextValidTime);
-            //            System.out.println(expression.getTimeBefore(new Date()));
-            //            System.out.println(expression.getTimeAfter(new Date()));
-            //            System.out.println(expression.getExpressionSummary());
-            //
-            //            long interval = subsequentNextValidTime.getTime() - nextValidTime.getTime();
-            //            System.out.println(new Date(nextValidTime.getTime() - interval));
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Unsupported cron or date", e);
-        }
+        instance.setUpstreamVertex(JSONUtils.toJsonString(upstream));
     }
 
+    public void fillDownstreamVertex(JobInstance instance) {
+        List<JobDependency> dependencyList = jobDependencyService.findBySourceId(instance.getMaskId());
+        List<Map> downstream = Lists.newArrayList();
+        for (JobDependency dependency : dependencyList) {
+            String jobId = dependency.getSourceId();
+            Job sourceJob = jobService.getOnlineJobByMaskId(dependency.getSourceId());
+            Job targetJob = jobService.getOnlineJobByMaskId(dependency.getTargetId());
+            int type = dependency.getType();
+            List<Integer> offsets = JobHelper.parseOffsetToList(dependency.getOffset(), type);
+            for (Integer offset : offsets) {
+                List<Date> dateList = CronHelper.getDownstreamBizTime(instance.getBizTime(), offset,
+                        sourceJob.getSchedulingPeriod(), sourceJob.getCronExpression(), targetJob.getCronExpression());
+                for (Date date : dateList) {
+                    Map<String, Object> map = Maps.newHashMap();
+                    map.put("maskId", jobId);
+                    map.put("version", targetJob.getVersion());
+                    map.put("bizTime", date);
+                    downstream.add(map);
+                }
+            }
+        }
+        instance.setDownstreamVertex(JSONUtils.toJsonString(downstream));
+    }
 }

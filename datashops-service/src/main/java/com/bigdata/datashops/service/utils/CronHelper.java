@@ -84,17 +84,30 @@ public class CronHelper {
     /**
      * 获取下一次执行时间
      */
-    public static Date getNextTime(String cronExpr) {
+    public static Date getNextExecutionTime(String cronExpr) {
         Cron cron = validCron(cronExpr);
-        return getNextTime(cron);
+        return getNextExecutionTime(cron);
     }
 
     /**
      * 获取下一次执行时间
      */
-    public static Date getNextTime(Cron cron) {
+    public static Date getNextExecutionTime(Cron cron) {
         ExecutionTime executionTime = ExecutionTime.forCron(cron);
         ZonedDateTime nextTime = executionTime.nextExecution(ZonedDateTime.now()).orElse(null);
+        if (Objects.isNull(nextTime)) {
+            throw new RuntimeException("获取下一次执行时间失败");
+        }
+        return Date.from(nextTime.toInstant());
+    }
+
+    /**
+     * 根据指定时间获取上一次执行时间
+     */
+    public static Date getNextExecutionTime(String cronExpr, Date date) {
+        Cron cron = validCron(cronExpr);
+        ExecutionTime executionTime = ExecutionTime.forCron(cron);
+        ZonedDateTime nextTime = executionTime.nextExecution(toZonedDateTime(date)).orElse(null);
         if (Objects.isNull(nextTime)) {
             throw new RuntimeException("获取下一次执行时间失败");
         }
@@ -109,17 +122,10 @@ public class CronHelper {
         return ZonedDateTime.ofInstant(utilDate.toInstant(), systemDefault);
     }
 
-    public static Date getLastTime(String cronExpr, Date date) {
-        Cron cron = validCron(cronExpr);
-        ExecutionTime executionTime = ExecutionTime.forCron(cron);
-        ZonedDateTime lastTime = executionTime.lastExecution(toZonedDateTime(date)).orElse(null);
-        if (Objects.isNull(lastTime)) {
-            throw new RuntimeException("获取上一次执行时间失败");
-        }
-        return Date.from(lastTime.toInstant());
-    }
-
-    public static Date getOffsetTriggerTime(String cron, Date date, int offset) {
+    /**
+     * 获取上游基准时间
+     */
+    public static Date getUpstreamBizTime(String cron, Date date, int offset) {
         CronExpression expression = null;
         try {
             expression = new CronExpression(cron);
@@ -134,7 +140,20 @@ public class CronHelper {
     }
 
     /**
-     * 获取上一次执行时间
+     * 根据指定时间获取上一次执行时间
+     */
+    public static Date getLastTime(String cronExpr, Date date) {
+        Cron cron = validCron(cronExpr);
+        ExecutionTime executionTime = ExecutionTime.forCron(cron);
+        ZonedDateTime lastTime = executionTime.lastExecution(toZonedDateTime(date)).orElse(null);
+        if (Objects.isNull(lastTime)) {
+            throw new RuntimeException("获取上一次执行时间失败");
+        }
+        return Date.from(lastTime.toInstant());
+    }
+
+    /**
+     * 根据当前时间获取上一次执行时间
      */
     public static Date getLastTime(String cronExpr) {
         Cron cron = validCron(cronExpr);
@@ -173,6 +192,7 @@ public class CronHelper {
         }
     }
 
+    // TODO 参考获取下游基准时间重构
     public static List<Date> getDependencyBizTime(Date date, int schedulingPeriod, int offset, String cron) {
         List<Date> result = Lists.newArrayList();
         LocalDateTime ldt = LocalDateUtils.dateToLocalDateTime(date);
@@ -181,7 +201,7 @@ public class CronHelper {
             case MINUTE:
             case HOUR:
             case DAY:
-                result.add(CronHelper.getOffsetTriggerTime(cron, date, offset));
+                result.add(CronHelper.getUpstreamBizTime(cron, date, offset));
                 break;
             case WEEK:
                 bizTime = LocalDateUtils.plus(ldt, offset, ChronoUnit.WEEKS);
@@ -204,4 +224,40 @@ public class CronHelper {
         }
         return result;
     }
+
+    /**
+     * 根据上游时间、偏移获取下游基准时间
+     *
+     * @param date
+     * @param offset
+     * @param sourcePeriod
+     * @param sourceCron
+     * @param targetCron
+     * @return
+     */
+    public static List<Date> getDownstreamBizTime(Date date, int offset, int sourcePeriod, String sourceCron,
+                                                  String targetCron) {
+        Date sourceNextExecutionTime = getNextExecutionTime(sourceCron, date);
+        Date targetNextExecutionTime = getNextExecutionTime(targetCron, date);
+        List<Date> res = Lists.newArrayList();
+        while (true) {
+            List<Date> upstreams = getDependencyBizTime(targetNextExecutionTime, sourcePeriod, offset, sourceCron);
+            boolean end = false;
+            for (Date upstream : upstreams) {
+                if (sourceNextExecutionTime.before(upstream)) {
+                    end = true;
+                    break;
+                }
+                if (upstream.equals(date)) {
+                    res.add(targetNextExecutionTime);
+                }
+            }
+            if (end) {
+                break;
+            }
+            targetNextExecutionTime = getNextExecutionTime(targetCron, targetNextExecutionTime);
+        }
+        return res;
+    }
+
 }
