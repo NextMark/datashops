@@ -2,6 +2,7 @@ package com.bigdata.datashops.service.graph;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.jgrapht.graph.DirectedWeightedPseudograph;
 import org.springframework.stereotype.Service;
@@ -52,23 +53,16 @@ public class GraphService extends BaseService {
                     JSONUtils.toJsonString(otherExtra));
             String otherVertexStr = JSONUtils.toJsonString(otherDepVertex);
             // 构造边
-            String label = null;
-            if (dep.getType() == 1) {
-                label = "集合: [" + dep.getOffset() + "]";
-            }
-            if (dep.getType() == 2) {
-                label = "区间: [" + dep.getOffset() + "]";
-            }
             String sourceEdge = isTarget ? otherVertexStr : vertexStr;
             String targetEdge = isTarget ? vertexStr : otherVertexStr;
             // 已包含节点就只添加边
             if (dag.containsVertex(otherVertexStr)) {
-                dag.addEdge(sourceEdge, targetEdge, new RelationshipEdge(label));
+                dag.addEdge(sourceEdge, targetEdge, new RelationshipEdge(dep.getId(), dep.getType(), dep.getOffset()));
                 continue;
             }
             // 不包含节点则添加节点、边，并递归
             dag.addVertex(otherVertexStr);
-            dag.addEdge(sourceEdge, targetEdge, new RelationshipEdge(label));
+            dag.addEdge(sourceEdge, targetEdge, new RelationshipEdge(dep.getId(), dep.getType(), dep.getOffset()));
             buildGraph(dag, otherMaskId);
         }
     }
@@ -108,9 +102,9 @@ public class GraphService extends BaseService {
                     String depVertexStr = JSONUtils.toJsonString(depVertex);
                     dag.addVertex(depVertexStr);
                     if (isUpstream) {
-                        dag.addEdge(depVertexStr, vertexStr, new RelationshipEdge(""));
+                        dag.addEdge(depVertexStr, vertexStr, new RelationshipEdge());
                     } else {
-                        dag.addEdge(vertexStr, depVertexStr, new RelationshipEdge(""));
+                        dag.addEdge(vertexStr, depVertexStr, new RelationshipEdge());
                     }
                 } else {
                     Map<String, Object> depExtra = Maps.newHashMap();
@@ -121,13 +115,13 @@ public class GraphService extends BaseService {
                     String depVertexStr = JSONUtils.toJsonString(depVertex);
                     String sourceEdge = isUpstream ? depVertexStr : vertexStr;
                     String targetEdge = isUpstream ? vertexStr : depVertexStr;
-                    String label = isUpstream ? depInstance.getState().toString() : instance.getState().toString();
+                    Integer id = isUpstream ? depInstance.getState() : instance.getState();
                     if (dag.containsVertex(depVertexStr)) {
-                        dag.addEdge(sourceEdge, targetEdge, new RelationshipEdge(label));
+                        dag.addEdge(sourceEdge, targetEdge, new RelationshipEdge());
                         continue;
                     }
                     dag.addVertex(depVertexStr);
-                    dag.addEdge(sourceEdge, targetEdge, new RelationshipEdge(label));
+                    dag.addEdge(sourceEdge, targetEdge, new RelationshipEdge());
                     buildInstanceGraph(dag, depInstance.getInstanceId());
                 }
             }

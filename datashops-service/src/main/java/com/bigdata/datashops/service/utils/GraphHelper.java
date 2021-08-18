@@ -24,9 +24,13 @@ public class GraphHelper {
             Edge edge = new Edge();
             Vertex from = JSONUtils.parseObject(dag.getEdgeSource(relationshipEdge), Vertex.class);
             Vertex to = JSONUtils.parseObject(dag.getEdgeTarget(relationshipEdge), Vertex.class);
+            edge.setId(relationshipEdge.getId());
             edge.setFrom(from.getId());
             edge.setTo(to.getId());
-            edge.setLabel(relationshipEdge.getLabel());
+            Map<String, Object> map = Maps.newHashMap();
+            map.put("type", relationshipEdge.getType());
+            map.put("value", relationshipEdge.getValue());
+            edge.setLabel(JSONUtils.toJsonString(map));
             edges.add(edge);
         }
         Map<String, Object> res = Maps.newHashMap();

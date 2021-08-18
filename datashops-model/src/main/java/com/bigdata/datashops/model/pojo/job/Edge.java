@@ -6,6 +6,8 @@ import lombok.Data;
 
 @Data
 public class Edge {
+    private Integer id;
+
     private String from;
 
     private String to;
@@ -21,11 +23,11 @@ public class Edge {
             return false;
         }
         Edge edge = (Edge) o;
-        return from.equals(edge.from) && to.equals(edge.to) && label.equals(edge.label);
+        return id.equals(edge.id) && from.equals(edge.from) && to.equals(edge.to) && label.equals(edge.label);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getFrom(), getTo(), getLabel());
+        return Objects.hash(getId(), getFrom(), getTo(), getLabel());
     }
 }
