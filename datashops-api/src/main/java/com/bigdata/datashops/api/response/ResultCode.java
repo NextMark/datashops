@@ -5,7 +5,8 @@ package com.bigdata.datashops.api.response;
  */
 public enum ResultCode {
     SUCCESS(1000, "OK"), FAILURE(1001, "Params error"), SERVER_ERROR(1002, "Server error"),
-    USER_REGISTERED(2000, "user registered"), USER_INPUT_ILLEGAL(2001, "input illegal");
+    USER_REGISTERED(2000, "user registered"), USER_INPUT_ILLEGAL(2001, "input illegal"),
+    GRAPH_HAS_CYCLE(2002, "graph has cycle");
 
     private Integer code;
     private String message;

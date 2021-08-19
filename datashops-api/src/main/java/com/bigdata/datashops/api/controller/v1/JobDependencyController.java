@@ -37,10 +37,14 @@ public class JobDependencyController extends BasicController {
         return ok(vos);
     }
 
-    @PostMapping(value = "/addDependency")
+    @PostMapping(value = "/modifyDependency")
     public Result addDependency(@RequestBody JobDependency jobDependency) {
-        jobDependencyService.save(jobDependency);
-        return ok();
+        if (jobDependency.getId() != null) {
+            jobDependencyService.update(jobDependency);
+        } else {
+            jobDependencyService.save(jobDependency);
+        }
+        return ok(jobDependency);
     }
 
     @PostMapping(value = "/deleteJobDependency")

@@ -2,12 +2,14 @@ package com.bigdata.datashops.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.bigdata.datashops.dao.mapper.JobDependencyMapper;
 import com.bigdata.datashops.model.enums.JobType;
@@ -27,6 +29,18 @@ public class JobDependencyService extends BaseService {
 
     public void save(JobDependency entity) {
         jobDependencyMapper.insert(entity);
+    }
+
+    public void update(JobDependency entity) {
+        LambdaUpdateWrapper<JobDependency> wrapper = Wrappers.lambdaUpdate();
+        if (StringUtils.isNotBlank(entity.getOffset())) {
+            wrapper.set(JobDependency::getOffset, entity.getOffset());
+        }
+        if (!Objects.isNull(entity.getType())) {
+            wrapper.set(JobDependency::getType, entity.getType());
+        }
+        wrapper.eq(JobDependency::getId, entity.getId());
+        jobDependencyMapper.update(null, wrapper);
     }
 
     public void deleteById(int id) {
