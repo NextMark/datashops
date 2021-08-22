@@ -150,8 +150,32 @@
 					<groupId>com.sun.jersey</groupId>
 				</exclusion>
 				<exclusion>
+					<groupId>com.sun.jersey</groupId>
+					<artifactId>jersey-servlet</artifactId>
+				</exclusion>
+				<exclusion>
 					<artifactId>xz</artifactId>
 					<groupId>org.tukaani</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jetty-server</artifactId>
+					<groupId>org.eclipse.jetty</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jetty-util</artifactId>
+					<groupId>org.eclipse.jetty</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jetty-servlet</artifactId>
+					<groupId>org.eclipse.jetty</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jetty-webapp</artifactId>
+					<groupId>org.eclipse.jetty</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jcip-annotations</artifactId>
+					<groupId>com.github.stephenc.jcip</groupId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -204,6 +228,10 @@
 					<artifactId>log4j</artifactId>
 					<groupId>log4j</groupId>
 				</exclusion>
+				<exclusion>
+					<artifactId>jetty-util</artifactId>
+					<groupId>org.eclipse.jetty</groupId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 
@@ -246,6 +274,18 @@
 				<exclusion>
 					<artifactId>log4j</artifactId>
 					<groupId>log4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jetty-server</artifactId>
+					<groupId>org.eclipse.jetty</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jetty-util</artifactId>
+					<groupId>org.eclipse.jetty</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jetty-util-ajax</artifactId>
+					<groupId>org.eclipse.jetty</groupId>
 				</exclusion>
 			</exclusions>
 		</dependency>

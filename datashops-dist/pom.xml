@@ -59,6 +59,9 @@
                             <descriptors>
                                 <descriptor>src/main/assemblies/assembly.xml</descriptor>
                             </descriptors>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
                         </configuration>
                     </execution>
                     <execution>
@@ -71,6 +74,9 @@
                             <descriptors>
                                 <descriptor>src/main/assemblies/plugins.xml</descriptor>
                             </descriptors>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
                         </configuration>
                     </execution>
                 </executions>

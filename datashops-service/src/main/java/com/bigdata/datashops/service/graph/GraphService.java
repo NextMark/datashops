@@ -97,6 +97,7 @@ public class GraphService extends BaseService {
                 if (depInstance == null) {
                     Map<String, Object> depExtra = Maps.newHashMap();
                     depExtra.put("virtual", true);
+                    depExtra.put("bizTime", bizTime);
                     Vertex depVertex = new Vertex(depJob.getMaskId() + i, depJob.getName(), depJob.getType(),
                             JSONUtils.toJsonString(depExtra));
                     String depVertexStr = JSONUtils.toJsonString(depVertex);
@@ -109,7 +110,7 @@ public class GraphService extends BaseService {
                 } else {
                     Map<String, Object> depExtra = Maps.newHashMap();
                     depExtra.put("state", depInstance.getState());
-                    depExtra.put("bizTime", DateUtils.format(depInstance.getBizTime(), Constants.YYYY_MM_DD_HH_MM_SS));
+                    depExtra.put("bizTime", bizTime);
                     Vertex depVertex = new Vertex(depInstance.getInstanceId(), depJob.getName(), depJob.getType(),
                             JSONUtils.toJsonString(depExtra));
                     String depVertexStr = JSONUtils.toJsonString(depVertex);

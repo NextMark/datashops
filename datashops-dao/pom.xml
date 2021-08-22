@@ -110,7 +110,6 @@
                     <groupId>org.apache.hadoop</groupId>
                     <artifactId>hadoop-yarn-api</artifactId>
                 </exclusion>
-
                 <exclusion>
                     <groupId>org.apache.zookeeper</groupId>
                     <artifactId>zookeeper</artifactId>
@@ -251,6 +250,30 @@
                 <exclusion>
                     <artifactId>jasper-compiler</artifactId>
                     <groupId>tomcat</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>bonecp</artifactId>
+                    <groupId>com.jolbox</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>datanucleus-api-jdo</artifactId>
+                    <groupId>org.datanucleus</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>datanucleus-core</artifactId>
+                    <groupId>org.datanucleus</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>datanucleus-rdbms</artifactId>
+                    <groupId>org.datanucleus</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>joda-time</artifactId>
+                    <groupId>joda-time</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>jdo-api</artifactId>
+                    <groupId>javax.jdo</groupId>
                 </exclusion>
             </exclusions>
         </dependency>

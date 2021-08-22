@@ -43,8 +43,6 @@ public class Job extends BaseModel {
 
     private String ico;
 
-    private Integer state;
-
     /**
      * 调度周期
      */
