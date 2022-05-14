@@ -62,7 +62,7 @@
         <oshi.version>5.7.1</oshi.version>
         <postgresql.version>42.2.19</postgresql.version>
         <clickhouse.jdbc.version>0.2.6</clickhouse.jdbc.version>
-        <hadoop.version>3.0.0</hadoop.version>
+        <hadoop.version>3.2.3</hadoop.version>
         <scala.binary.version>2.11</scala.binary.version>
         <flink.version>1.13.1</flink.version>
         <aliyun.oss.version>3.11.3</aliyun.oss.version>
