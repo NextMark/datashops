@@ -29,27 +29,27 @@ public class HadoopService {
     protected RestTemplate restTemplate;
 
     public void readLog(String appId) throws IOException {
-        Map<String, String> map = HadoopLogUtils.getContaines(appId, "hive");
-        map.forEach((containeId, nodeId) -> {
-            OutputStream in = null;
-            try {
-                File file = new File("/Users/qinshiwei/1.txt");
-                if (!file.exists()) {
-                    file.createNewFile();
-                }
-                in = new FileOutputStream(file);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            PrintStream printStream = new PrintStream(in);
-            List<String> logType = new ArrayList<>(1);
-            logType.add("stdout");
-            try {
-                HadoopLogUtils.dumpAContainersLogs(appId, containeId, nodeId, "hive", printStream, logType);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+//        Map<String, String> map = HadoopLogUtils.getContaines(appId, "hive");
+//        map.forEach((containeId, nodeId) -> {
+//            OutputStream in = null;
+//            try {
+//                File file = new File("/Users/qinshiwei/1.txt");
+//                if (!file.exists()) {
+//                    file.createNewFile();
+//                }
+//                in = new FileOutputStream(file);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            PrintStream printStream = new PrintStream(in);
+//            List<String> logType = new ArrayList<>(1);
+//            logType.add("stdout");
+//            try {
+//                HadoopLogUtils.dumpAContainersLogs(appId, containeId, nodeId, "hive", printStream, logType);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        });
     }
 
     public void cancelApplication(String appId) {
